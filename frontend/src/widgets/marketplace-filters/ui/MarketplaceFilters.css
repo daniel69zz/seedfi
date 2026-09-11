@@ -1,0 +1,33 @@
+.marketplace-filters {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.05fr 0.99fr 1fr 1.22fr;
+  gap: 11px;
+  width: min(100%, 1030px);
+}
+
+.marketplace-filters__risk .select-control__icon {
+  color: white;
+  fill: var(--color-primary);
+  stroke-width: 2;
+}
+
+@media (max-width: 900px) {
+  .marketplace-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .marketplace-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .marketplace-filters .select-control {
+    height: 53px;
+  }
+}

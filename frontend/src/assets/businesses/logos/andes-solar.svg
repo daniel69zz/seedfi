@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <defs><clipPath id="circle"><circle cx="160" cy="160" r="142"/></clipPath><linearGradient id="mountain" x1="0" y1="120" x2="0" y2="310" gradientUnits="userSpaceOnUse"><stop stop-color="#21aa70"/><stop offset="1" stop-color="#00684e"/></linearGradient><linearGradient id="panel" x1="110" y1="193" x2="160" y2="315" gradientUnits="userSpaceOnUse"><stop stop-color="#197ca6"/><stop offset="1" stop-color="#063c60"/></linearGradient></defs>
+  <circle cx="160" cy="160" r="150" fill="#fffdf2" stroke="#063247" stroke-width="10"/>
+  <g clip-path="url(#circle)">
+    <circle cx="160" cy="125" r="34" fill="#ffb900"/><circle cx="160" cy="125" r="41" fill="none" stroke="#ffb900" stroke-width="3"/>
+    <g fill="#ffb900"><path d="M156 70L160 55L165 70Z"/><path d="M156 180L160 194L165 180Z"/><path d="M106 120L92 125L106 129Z"/><path d="M214 120L228 125L214 129Z"/><path d="M119 90L115 76L129 82Z"/><path d="M191 81L205 76L200 90Z"/><path d="M119 160L115 174L129 168Z"/><path d="M191 169L205 174L200 160Z"/></g>
+    <path d="M-4 240L62 181Q77 173 88 182L132 223L202 179Q214 170 226 182L319 263V320H0Z" fill="url(#mountain)"/>
+    <path d="M4 263L79 200L129 244L207 205L307 272V320H0Z" fill="#027d59"/>
+    <path d="M110 205H212L260 322H62Z" fill="url(#panel)" stroke="#fffdf0" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M141 205L131 319M178 205L192 319M94 247H230M78 288H247" fill="none" stroke="#fffdf0" stroke-width="6"/>
+  </g>
+</svg>

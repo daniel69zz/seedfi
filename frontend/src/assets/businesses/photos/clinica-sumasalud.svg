@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="480" gradientUnits="userSpaceOnUse"><stop stop-color="#9ac5e5"/><stop offset="1" stop-color="#e1e9de"/></linearGradient><linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#688c9b"/><stop offset=".5" stop-color="#a9c7cb"/><stop offset="1" stop-color="#375f70"/></linearGradient><linearGradient id="wall" x1="40" y1="50" x2="470" y2="350" gradientUnits="userSpaceOnUse"><stop stop-color="#f1ebde"/><stop offset="1" stop-color="#c0bdae"/></linearGradient></defs>
+  <rect width="480" height="480" fill="url(#sky)"/><path d="M48 27L361 0L480 30V480H48Z" fill="url(#wall)"/><path d="M362 0L480 30V480H362Z" fill="#aaa899"/>
+  <path d="M71 45L170 37V130L71 135ZM191 34L292 24V122L191 128ZM313 22L346 19V117L313 120Z" fill="url(#glass)"/>
+  <path d="M119 42V133M240 29V125M71 83L170 75M191 75L292 66M313 62L346 59" stroke="#e0dccc" stroke-width="7"/>
+  <path d="M383 26L467 48V139L383 122Z" fill="url(#glass)"/><path d="M424 37V131M384 73L467 96" stroke="#c1c5bc" stroke-width="6"/>
+  <path d="M29 141L361 118L480 145V290L361 270L29 296Z" fill="#fffdf1"/><path d="M362 118L480 145V290L362 269Z" fill="#dedecf"/>
+  <g transform="translate(79 167)"><path d="M24 0L47 13V36L24 23Z" fill="#0c8168"/><path d="M0 15L23 28V52L0 39Z" fill="#187c64"/><path d="M27 28L50 41V65L27 52Z" fill="#27a080"/><path d="M53 15L76 29L53 42L30 28Z" fill="#63b49b"/></g>
+  <g transform="translate(172 173) rotate(-3)"><text x="0" y="26" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#0a7c69">Clínica</text><text x="0" y="65" font-family="Arial,sans-serif" font-size="38" font-weight="700" letter-spacing="-1" fill="#133e53">SumaSalud</text></g>
+  <path d="M40 299L362 272L480 295V312L362 291L40 319Z" fill="#817f70"/><path d="M75 319L178 311V471H75ZM194 309L344 296V472H194Z" fill="url(#glass)"/>
+  <path d="M83 329L167 322V457H83Z" fill="#7c9d9e"/><path d="M123 326V463M201 319L336 306M270 311V472" stroke="#e3e4d8" stroke-width="7"/>
+  <path d="M201 376L336 368M81 378L168 373" stroke="#c4d7cf" stroke-width="9" opacity=".8"/><path d="M201 435L336 432" stroke="#b7c6ba" stroke-width="4"/>
+  <path d="M253 398V419M285 396V417" stroke="#e5e7dd" stroke-width="5" stroke-linecap="round"/>
+  <path d="M377 303L453 319V472H377Z" fill="url(#glass)"/><path d="M414 311V472M377 366L453 378" stroke="#d3d4c5" stroke-width="7"/>
+  <path d="M0 475L175 459L480 474V480H0Z" fill="#b9b7a8"/><path d="M185 480L193 463H344L366 480Z" fill="#e0ded2"/>
+  <g fill="#4c733c"><ellipse cx="23" cy="343" rx="35" ry="64"/><ellipse cx="52" cy="379" rx="29" ry="47"/><ellipse cx="24" cy="278" rx="27" ry="42"/><ellipse cx="473" cy="395" rx="32" ry="53"/></g><g fill="#829652"><ellipse cx="9" cy="310" rx="21" ry="37"/><ellipse cx="42" cy="336" rx="24" ry="34"/><ellipse cx="462" cy="365" rx="20" ry="32"/></g><path d="M31 333L33 480M472 386L467 480" stroke="#766147" stroke-width="8"/>
+  <path d="M83 461L93 423L110 447L127 420L145 459L152 480H75Z" fill="#758d57"/>
+</svg>

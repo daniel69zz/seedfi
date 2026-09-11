@@ -1,0 +1,222 @@
+.detail-page.page-shell {
+  max-width: 850px;
+  padding-top: 33px;
+  padding-bottom: 50px;
+}
+
+.detail-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 20px 2px;
+  color: var(--color-primary-dark);
+  font-size: 17px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.detail-page__back:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.detail-card {
+  min-width: 0;
+  border: 3px solid var(--color-border);
+  border-radius: 28px;
+  padding: 28px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.detail-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin: 27px 0;
+}
+
+.detail-card__identity > :first-child {
+  width: 155px;
+  height: 155px;
+  flex: 0 0 155px;
+}
+
+.detail-card__business {
+  min-width: 0;
+}
+
+.detail-card__eyebrow {
+  margin: 0 0 6px;
+  color: var(--color-primary-dark);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
+.detail-card h1 {
+  margin: 0;
+  color: var(--color-ink, #080e2b);
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.detail-card__description {
+  margin: 10px 0 0;
+  color: var(--color-text-muted);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.detail-card__stats {
+  margin: 25px 0;
+  border-top: 1px solid #e7e7dc;
+  border-bottom: 1px solid #e7e7dc;
+  padding: 20px 2px;
+}
+
+.detail-card__preview {
+  margin: 0 0 25px;
+  border: 1px solid #b6decf;
+  border-radius: 18px;
+  padding: 20px 23px;
+  background: #eaf7ef;
+}
+
+.detail-card__preview h2 {
+  margin: 0 0 8px;
+  color: var(--color-primary-dark);
+  font-size: 21px;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.detail-card__preview p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.detail-card__browse {
+  width: 100%;
+}
+
+.detail-card--missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 45px 32px;
+  text-align: center;
+}
+
+.detail-card__missing-icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 20px;
+  border: 2px solid #b6decf;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.detail-card--missing p {
+  max-width: 500px;
+  margin: 16px 0 25px;
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .detail-page.page-shell {
+    padding-top: 25px;
+  }
+
+  .detail-page__back {
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+
+  .detail-card {
+    border-radius: 24px;
+    padding: 17px;
+  }
+
+  .detail-card__identity {
+    align-items: flex-start;
+    gap: 15px;
+    margin: 25px 0;
+  }
+
+  .detail-card__identity > :first-child {
+    width: 100px;
+    height: 100px;
+    flex-basis: 100px;
+  }
+
+  .detail-card__eyebrow {
+    font-size: 11px;
+  }
+
+  .detail-card h1 {
+    font-size: 29px;
+    letter-spacing: -0.8px;
+  }
+
+  .detail-card__description {
+    margin-top: 8px;
+    font-size: 17px;
+  }
+
+  .detail-card__preview {
+    padding: 17px;
+  }
+
+  .detail-card__preview h2 {
+    font-size: 20px;
+  }
+
+  .detail-card__preview p {
+    font-size: 16px;
+  }
+
+  .detail-card--missing {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .detail-card__identity {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 17px;
+  }
+
+  .detail-card__identity > :first-child {
+    width: 112px;
+    height: 112px;
+    flex-basis: 112px;
+  }
+
+  .detail-card__stats {
+    padding: 17px 0;
+  }
+
+  .detail-card__stats .opportunity-stats {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .detail-card__stats .opportunity-stats > * {
+    border: 0;
+    padding-left: 0;
+  }
+}

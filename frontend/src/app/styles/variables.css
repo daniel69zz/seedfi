@@ -1,0 +1,25 @@
+:root {
+  --color-background: #fbf8ee;
+  --color-surface: #fffdf7;
+  --color-primary: #238b68;
+  --color-primary-dark: #087354;
+  --color-primary-soft: #d8f3e8;
+  --color-text: #111328;
+  --color-heading: #171513;
+  --color-text-muted: #3d5d85;
+  --color-border: #181512;
+  --color-peach: #ffe8cf;
+  --color-blue: #e0efff;
+  --color-lavender: #ede1fb;
+  --color-mint: #d9f9ed;
+  --color-pink: #fce3f5;
+  --color-dot: #e4d4b4;
+  --border-width: 3px;
+  --radius-card: 30px;
+  --radius-control: 999px;
+  --radius-pill: 999px;
+  --shadow-card: 0 5px 0 rgb(110 79 30 / 12%), 0 9px 13px rgb(110 79 30 / 15%);
+  --shadow-control: 0 4px 0 rgb(137 94 33 / 21%), 0 7px 12px rgb(110 79 30 / 13%);
+  --font-body: 'Nunito Sans', system-ui, sans-serif;
+  --font-handwritten: 'Kalam', cursive;
+}
