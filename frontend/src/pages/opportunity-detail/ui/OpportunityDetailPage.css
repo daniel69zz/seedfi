@@ -87,6 +87,32 @@
   background: #eaf7ef;
 }
 
+.detail-card__funding-summary {
+  display: grid;
+  grid-template-columns: minmax(170px, .55fr) minmax(0, 1.45fr);
+  align-items: end;
+  gap: 26px;
+  margin: 0 0 24px;
+  border: 1px solid #b6decf;
+  border-radius: 18px;
+  padding: 17px 20px;
+  background: #f0f9f4;
+}
+
+.detail-card__funding-summary > p {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.detail-card__funding-summary > p strong {
+  margin-top: 3px;
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 900;
+}
+
 .detail-card__preview h2 {
   margin: 0 0 8px;
   color: var(--color-primary-dark);
@@ -186,6 +212,12 @@
 
   .detail-card__preview p {
     font-size: 16px;
+  }
+
+  .detail-card__funding-summary {
+    grid-template-columns: 1fr;
+    gap: 13px;
+    padding: 15px;
   }
 
   .detail-card--missing {

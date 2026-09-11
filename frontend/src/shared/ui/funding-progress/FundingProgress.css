@@ -1,0 +1,32 @@
+.funding-progress { min-width: 0; }
+
+.funding-progress__labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.funding-progress__labels strong {
+  flex: 0 0 auto;
+  color: var(--color-primary-dark);
+  font-weight: 900;
+}
+
+.funding-progress__track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+}
+
+.funding-progress__track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-primary);
+}

@@ -1,8 +1,8 @@
-export type BusinessImageType = 'logo' | 'photo' | 'icon'
+export type ImageType = 'logo' | 'photo' | 'icon'
 
 export interface Business {
   id: string
   name: string
   image: string
-  imageType: BusinessImageType
+  imageType: ImageType
 }

@@ -1,0 +1,37 @@
+.opportunity-stats {
+  display: grid;
+  grid-template-columns: 1.22fr 0.9fr 0.92fr;
+  margin: 0;
+}
+
+.opportunity-stats > div {
+  min-width: 0;
+  padding: 1px 13px;
+}
+
+.opportunity-stats > div:first-child { padding-left: 0; }
+.opportunity-stats > div + div { border-left: 1px solid #ebe6da; }
+
+.opportunity-stats dd {
+  margin: 0;
+  color: #11132b;
+  font-size: 17px;
+  font-weight: 950;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.opportunity-stats dt {
+  margin-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .opportunity-stats > div { padding-inline: 8px; }
+  .opportunity-stats dd { font-size: 15px; }
+  .opportunity-stats dt { font-size: 10px; }
+}

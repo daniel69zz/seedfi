@@ -1,21 +1,18 @@
-# NORA marketplace assets
+# Assets del marketplace Seed 2 Deed
 
-These are original, local placeholder illustrations created to match the supplied visual reference. They do not require an external image service or network connection. Business images are illustrative placeholders rather than real photographs or official business identities.
+Todos los recursos visuales de la interfaz son locales y sus imports están centralizados en `assets.ts`. Los logos y fotos de empresas son ilustraciones temporales, no identidades oficiales.
 
-The frontend uses the PNG/JPG exports below. Editable SVG sources live beside each export so the art can be replaced or adjusted without changing component markup.
-
-| Asset | Export dimensions | Notes |
+| Asset activo | Tipo | Uso |
 | --- | --- | --- |
-| `brand/nora-logo.png` | 96 × 112 | Transparent sprout icon; the wordmark is rendered as interface text. |
-| `illustrations/marketplace-hero.png` | 1000 × 440 | Transparent sky, mountains, sun, hills, and trees; decorative copy is rendered separately. |
-| `businesses/logos/andes-solar.png` | 320 × 320 | Transparent corners around the circular solar logo. |
-| `businesses/logos/altiplano-quinoa.png` | 320 × 320 | Transparent corners around the circular quinoa logo. |
-| `businesses/logos/andesoft.png` | 320 × 320 | Transparent corners around the rounded green identity. |
-| `businesses/photos/vallesur-desarrollos.jpg` | 480 × 480 | Modern home and Andean mountain illustration. |
-| `businesses/photos/rutas-del-oriente.jpg` | 480 × 480 | Freight truck on an Andean mountain road illustration. |
-| `businesses/photos/clinica-sumasalud.jpg` | 480 × 480 | Clinic facade illustration. |
-| `placeholders/fallback.svg` | 320 × 320 | Generic landscape and sprout used when a business image cannot load. |
+| `brand/seed-2-deed-placeholder.svg` | SVG | Marca temporal de semilla y crecimiento. |
+| `businesses/logos/andes-solar-placeholder.svg` | SVG | Logo temporal de Andes Solar SRL. |
+| `businesses/logos/altiplano-quinoa-placeholder.svg` | SVG | Logo temporal de Altiplano Quinoa. |
+| `businesses/logos/andesoft-placeholder.svg` | SVG | Logo temporal de AndeSoft. |
+| `businesses/photos/vallesur-placeholder.svg` | SVG | Imagen temporal de ValleSur Desarrollos. |
+| `businesses/photos/rutas-oriente-placeholder.svg` | SVG | Imagen temporal de Rutas del Oriente. |
+| `businesses/photos/sumasalud-placeholder.svg` | SVG | Imagen temporal de Clínica SumaSalud. |
+| `illustrations/investor-marketplace-hero.png` | PNG 2048 × 768 | Ilustración generada para el hero. |
+| `illustrations/investor-marketplace-placeholder.svg` | SVG | Respaldo local del hero. |
+| `placeholders/fallback.svg` | SVG | Respaldo si falla una imagen de empresa. |
 
-To replace a placeholder, keep the same filename and export type. Square business images work best with the card's `object-fit: cover` treatment. Preserve alpha transparency for the brand and hero PNGs. Keep the hero's artwork low in the frame to leave space for the overlaid decorative phrases.
-
-The existing `hero.png`, `react.svg`, and `vite.svg` files predate this implementation and are preserved.
+Para sustituir cualquier recurso, añade el archivo final en su destino recomendado y cambia únicamente el import correspondiente al inicio de `assets.ts`.

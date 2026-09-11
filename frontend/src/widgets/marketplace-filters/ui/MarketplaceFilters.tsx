@@ -17,30 +17,31 @@ interface MarketplaceFiltersProps {
 }
 
 const categoryOptions: SelectOption<OpportunityFilters['category']>[] = [
-  { value: 'all', label: 'All Categories' },
+  { value: 'all', label: 'Todas las categorías' },
   ...categories.map((category) => ({ value: category, label: category })),
 ]
 
 const riskOptions: SelectOption<OpportunityFilters['risk']>[] = [
-  { value: 'all', label: 'All Risk Levels' },
-  { value: 'low', label: 'Low Risk' },
-  { value: 'medium', label: 'Medium Risk' },
-  { value: 'high', label: 'High Risk' },
+  { value: 'all', label: 'Todos los riesgos' },
+  { value: 'low', label: 'Bajo' },
+  { value: 'medium', label: 'Medio' },
+  { value: 'high', label: 'Alto' },
 ]
 
 const durationOptions: SelectOption<OpportunityFilters['duration']>[] = [
-  { value: 'all', label: 'All Durations' },
-  { value: 'short', label: '≤ 12 months' },
-  { value: 'medium', label: '13–24 months' },
-  { value: 'long', label: '> 24 months' },
+  { value: 'all', label: 'Todas las duraciones' },
+  { value: 'short', label: '≤ 12 meses' },
+  { value: 'medium', label: '13–24 meses' },
+  { value: 'long', label: '> 24 meses' },
 ]
 
 const sortOptions: SelectOption<OpportunitySort>[] = [
-  { value: 'recommended', label: 'Sort by: Recommended' },
-  { value: 'apy-desc', label: 'Sort by: Highest APY' },
-  { value: 'apy-asc', label: 'Sort by: Lowest APY' },
-  { value: 'funding-desc', label: 'Sort by: Highest Funding' },
-  { value: 'duration-asc', label: 'Sort by: Shortest Duration' },
+  { value: 'recommended', label: 'Ordenar por: Recomendado' },
+  { value: 'apy-desc', label: 'Mayor APY' },
+  { value: 'apy-asc', label: 'Menor APY' },
+  { value: 'funding-desc', label: 'Mayor financiación' },
+  { value: 'duration-asc', label: 'Menor duración' },
+  { value: 'funded-desc', label: 'Mayor porcentaje financiado' },
 ]
 
 export function MarketplaceFilters({
@@ -50,16 +51,16 @@ export function MarketplaceFilters({
   onSortChange,
 }: MarketplaceFiltersProps) {
   return (
-    <div className="marketplace-filters" role="group" aria-label="Filter and sort opportunities">
+    <div className="marketplace-filters" role="group" aria-label="Filtrar y ordenar oportunidades">
       <Select
-        label="Category"
+        label="Categoría"
         value={filters.category}
         onChange={(value) => onFilterChange('category', value)}
         options={categoryOptions}
         icon={LayoutGrid}
       />
       <Select
-        label="Risk level"
+        label="Nivel de riesgo"
         value={filters.risk}
         onChange={(value) => onFilterChange('risk', value)}
         options={riskOptions}
@@ -67,14 +68,14 @@ export function MarketplaceFilters({
         className="marketplace-filters__risk"
       />
       <Select
-        label="Duration"
+        label="Duración"
         value={filters.duration}
         onChange={(value) => onFilterChange('duration', value)}
         options={durationOptions}
         icon={CalendarDays}
       />
       <Select
-        label="Sort opportunities"
+        label="Ordenar oportunidades"
         value={sort}
         onChange={onSortChange}
         options={sortOptions}

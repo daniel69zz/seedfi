@@ -1,164 +1,128 @@
 .marketplace-hero {
-  padding: 0 12px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(380px, 1fr);
+  align-items: center;
+  min-height: 144px;
 }
 
 .marketplace-hero__copy {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  padding-left: 8px;
 }
 
 .marketplace-hero__eyebrow {
-  margin: 0 0 1px;
-  color: var(--color-primary-dark, #087c5b);
-  font-size: 18px;
-  font-weight: 900;
-  line-height: 1.35;
-  letter-spacing: -0.2px;
+  margin-bottom: 2px;
+  color: var(--color-primary-dark);
+  font-size: 15px;
+  font-weight: 950;
+  letter-spacing: .15px;
 }
 
 .marketplace-hero h1 {
-  margin: 0;
   color: #0d0b0a;
-  font-size: clamp(37px, 3.35vw, 56px);
+  font-size: clamp(38px, 3.2vw, 53px);
   font-weight: 950;
-  letter-spacing: -1.8px;
-  line-height: 1.1;
+  letter-spacing: -2px;
+  line-height: 1.02;
 }
 
 .marketplace-hero__subtitle {
-  max-width: 1040px;
-  margin: 5px 0 0;
-  color: var(--color-text-muted);
-  font-size: 20px;
-  font-weight: 650;
-  letter-spacing: -0.1px;
-  line-height: 1.5;
+  max-width: 920px;
+  margin-top: 4px;
+  color: #315b81;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .marketplace-hero__art {
   position: absolute;
-  z-index: 0;
-  top: 8px;
-  right: -65px;
+  z-index: 1;
+  inset: -2px -8px 0 auto;
   width: 520px;
-  height: 215px;
+  overflow: hidden;
   pointer-events: none;
-  user-select: none;
 }
 
 .marketplace-hero__art img {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  right: -44px;
+  bottom: -2px;
+  width: 500px;
+  height: 158px;
+  object-fit: cover;
   object-position: center bottom;
+  filter: saturate(.82) contrast(.94);
 }
 
 .marketplace-hero__art p {
   position: absolute;
+  z-index: 2;
   margin: 0;
   color: #087b71;
-  font-family: 'Kalam', cursive;
+  font-family: var(--font-handwritten);
   font-weight: 700;
   line-height: 1.02;
 }
 
 .marketplace-hero__invest {
-  top: 18px;
-  left: 68px;
-  transform: rotate(-10deg);
-  font-size: 32px;
+  top: 11px;
+  left: 32px;
+  transform: rotate(-8deg);
+  font-size: 25px;
 }
 
-.marketplace-hero__invest::after {
+.marketplace-hero__invest::after,
+.marketplace-hero__community::after {
   display: block;
-  width: 145px;
   height: 3px;
-  margin: 7px 0 0 22px;
+  margin-top: 5px;
   border-radius: 50%;
   background: currentColor;
   content: '';
   transform: rotate(-6deg);
 }
 
+.marketplace-hero__invest::after { width: 127px; margin-left: 16px; }
+
 .marketplace-hero__community {
-  top: 15px;
-  right: -15px;
-  transform: rotate(-8deg);
-  font-size: 23px;
+  top: 9px;
+  right: 1px;
+  transform: rotate(-7deg);
+  font-size: 18px;
 }
 
-.marketplace-hero__community::after {
-  display: block;
-  width: 73px;
-  height: 2px;
-  margin: 8px 0 0 13px;
-  border-radius: 50%;
-  background: currentColor;
-  content: '';
-  transform: rotate(-10deg);
+.marketplace-hero__community::after { width: 70px; margin-left: 8px; height: 2px; }
+
+@media (max-width: 1220px) {
+  .marketplace-hero { grid-template-columns: 1fr 330px; }
+  .marketplace-hero h1 { max-width: 760px; font-size: 42px; }
+  .marketplace-hero__subtitle { max-width: 700px; font-size: 15px; }
+  .marketplace-hero__art { right: -15px; width: 390px; opacity: .82; }
+  .marketplace-hero__art img { right: -75px; width: 425px; }
+  .marketplace-hero__invest { left: 20px; font-size: 20px; }
+  .marketplace-hero__community { right: 0; font-size: 15px; }
 }
 
-@media (max-width: 1550px) {
-  .marketplace-hero__art {
-    right: -14px;
-    width: 405px;
-  }
-
-  .marketplace-hero__invest {
-    left: 45px;
-    font-size: 27px;
-  }
-
-  .marketplace-hero__community {
-    right: 3px;
-    font-size: 20px;
-  }
-
-  .marketplace-hero__subtitle {
-    max-width: 76%;
-  }
+@media (max-width: 850px) {
+  .marketplace-hero { display: block; min-height: 0; }
+  .marketplace-hero__copy { padding: 3px 2px 0; }
+  .marketplace-hero h1 { max-width: 650px; }
+  .marketplace-hero__subtitle { max-width: 620px; }
+  .marketplace-hero__art { position: relative; inset: auto; width: 100%; height: 118px; margin-top: 6px; }
+  .marketplace-hero__art img { right: -2%; width: 76%; height: 118px; }
+  .marketplace-hero__invest { top: 7px; left: 21%; }
+  .marketplace-hero__community { top: 7px; right: 3%; }
 }
 
-@media (max-width: 1200px) {
-  .marketplace-hero {
-    padding: 0 5px;
-  }
-
-  .marketplace-hero h1 {
-    max-width: 800px;
-    font-size: 44px;
-    letter-spacing: -1.5px;
-  }
-
-  .marketplace-hero__subtitle {
-    max-width: 760px;
-    font-size: 18px;
-  }
-
-  .marketplace-hero__art {
-    display: none;
-  }
-}
-
-@media (max-width: 600px) {
-  .marketplace-hero__eyebrow {
-    margin-bottom: 7px;
-    font-size: 12px;
-    letter-spacing: 0;
-  }
-
-  .marketplace-hero h1 {
-    font-size: clamp(30px, 8.6vw, 42px);
-    letter-spacing: -1.1px;
-    line-height: 1.08;
-  }
-
-  .marketplace-hero__subtitle {
-    margin-top: 11px;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.4;
-  }
+@media (max-width: 520px) {
+  .marketplace-hero__eyebrow { font-size: 11px; }
+  .marketplace-hero h1 { margin-top: 4px; font-size: clamp(31px, 9.5vw, 41px); letter-spacing: -1.3px; line-height: 1.04; }
+  .marketplace-hero__subtitle { margin-top: 9px; font-size: 15px; line-height: 1.38; }
+  .marketplace-hero__art { height: 92px; }
+  .marketplace-hero__art img { width: 90%; height: 92px; }
+  .marketplace-hero__invest { left: 4%; font-size: 17px; }
+  .marketplace-hero__community { font-size: 13px; }
 }

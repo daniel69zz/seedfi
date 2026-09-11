@@ -2,9 +2,9 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1.05fr 0.99fr 1fr 1.22fr;
-  gap: 11px;
-  width: min(100%, 1030px);
+  grid-template-columns: 1.02fr .92fr .98fr 1.22fr;
+  gap: 12px;
+  width: min(100%, 1060px);
 }
 
 .marketplace-filters__risk .select-control__icon {

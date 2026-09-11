@@ -39,22 +39,23 @@ body {
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-body:has(dialog[open]) { overflow: hidden; }
+#root { min-height: 100svh; }
 button, input, select, textarea { font: inherit; }
 button, a, select { -webkit-tap-highlight-color: transparent; }
 button, select { cursor: pointer; }
 button { color: inherit; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
-h1, h2, h3, p { margin: 0; }
+h1, h2, h3, p, dl, dd { margin: 0; }
 button:disabled, select:disabled { cursor: not-allowed; }
 
 :focus-visible { outline: 3px solid #2869ba; outline-offset: 5px; }
 ::selection { color: var(--color-text); background: #b8e7d4; }
 
-.page-shell { width: calc(100% - 64px); max-width: 1450px; margin-inline: auto; }
+.page-shell { width: calc(100% - 48px); max-width: 1450px; margin-inline: auto; }
 
 .sr-only {
   position: absolute;
@@ -81,7 +82,7 @@ button:disabled, select:disabled { cursor: not-allowed; }
 }
 .skip-link:focus { transform: translateY(0); }
 
-@media (max-width: 767px) { .page-shell { width: calc(100% - 32px); } }
+@media (max-width: 767px) { .page-shell { width: calc(100% - 28px); } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

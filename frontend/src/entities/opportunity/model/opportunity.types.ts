@@ -1,14 +1,14 @@
 import type { Business } from '../../business/model/business.types'
 
 export type OpportunityCategory =
-  | 'Clean Energy'
-  | 'Agriculture'
-  | 'Real Estate'
-  | 'Logistics'
-  | 'Healthcare'
-  | 'Technology'
+  | 'Energía Limpia'
+  | 'Agricultura'
+  | 'Bienes Raíces'
+  | 'Logística'
+  | 'Salud'
+  | 'Tecnología'
 
-export type Risk = 'low' | 'medium' | 'high'
+export type RiskLevel = 'low' | 'medium' | 'high'
 
 export interface Opportunity {
   id: string
@@ -18,6 +18,8 @@ export interface Opportunity {
   fundingRequested: number
   expectedApy: number
   durationMonths: number
+  minimumInvestment: number
+  fundedPercentage: number
   verified: boolean
-  risk: Risk
+  risk: RiskLevel
 }

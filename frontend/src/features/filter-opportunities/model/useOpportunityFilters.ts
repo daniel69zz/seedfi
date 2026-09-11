@@ -2,14 +2,14 @@ import { useMemo, useState } from 'react'
 import type {
   Opportunity,
   OpportunityCategory,
-  Risk,
+  RiskLevel,
 } from '../../../entities/opportunity/model/opportunity.types'
 
 export type DurationFilter = 'all' | 'short' | 'medium' | 'long'
 
 export interface OpportunityFilters {
   category: OpportunityCategory | 'all'
-  risk: Risk | 'all'
+  risk: RiskLevel | 'all'
   duration: DurationFilter
 }
 

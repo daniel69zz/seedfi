@@ -7,6 +7,7 @@ export type OpportunitySort =
   | 'apy-asc'
   | 'funding-desc'
   | 'duration-asc'
+  | 'funded-desc'
 
 export function useOpportunitySort(opportunities: readonly Opportunity[]) {
   const [sort, setSort] = useState<OpportunitySort>('recommended')
@@ -23,6 +24,8 @@ export function useOpportunitySort(opportunities: readonly Opportunity[]) {
         return sorted.sort((first, second) => second.fundingRequested - first.fundingRequested)
       case 'duration-asc':
         return sorted.sort((first, second) => first.durationMonths - second.durationMonths)
+      case 'funded-desc':
+        return sorted.sort((first, second) => second.fundedPercentage - first.fundedPercentage)
       default:
         return sorted
     }

@@ -1,0 +1,33 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 39px;
+  border: 2px solid currentColor;
+  border-radius: var(--radius-pill);
+  padding: 6px 15px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge svg { flex: 0 0 auto; }
+.badge--mint { color: #08745a; background: #dff7ee; border-color: #55d8b8; }
+.badge--peach { color: #82501f; background: #ffead3; border-color: #f1ad68; }
+.badge--lavender { color: #56408d; background: #eee3fb; border-color: #b98ee8; }
+.badge--blue { color: #165b9b; background: #e3f2ff; border-color: #68b9eb; }
+.badge--pink { color: #a3185c; background: #f9e0f0; border-color: #e590c3; }
+.badge--emerald { color: #08745a; background: #dcf7ee; border-color: #50d8b8; }
+
+@media (max-width: 420px) {
+  .badge {
+    min-height: 35px;
+    gap: 6px;
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .badge svg { width: 17px; height: 17px; }
+}

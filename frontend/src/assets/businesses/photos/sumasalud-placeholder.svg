@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480">
+  <defs><linearGradient id="ss-glass" x2="1" y2="1"><stop stop-color="#91BAC1"/><stop offset="1" stop-color="#3F6A77"/></linearGradient></defs>
+  <rect width="480" height="480" fill="#DDE9E4"/><path d="M42 31h393v449H42Z" fill="#D0CDBE"/>
+  <path d="M54 61h95v103H54Zm119 0h101v103H173Zm124 0h112v103H297Z" fill="url(#ss-glass)"/><path d="M100 61v103m124-103v103m129-103v103" stroke="#E9E7DA" stroke-width="7"/>
+  <path d="M28 181h420v143H28Z" fill="#FFFDF7"/>
+  <g transform="translate(69 210)"><path d="m28 0 28 16v30L28 30Z" fill="#238B68"/><path d="m0 18 26 15v30L0 48Z" fill="#187052"/><path d="m30 34 27 16v29L30 64Z" fill="#48AE8C"/></g>
+  <text x="160" y="241" font-family="Arial,sans-serif" font-weight="700" font-size="29" fill="#238B68">Clínica</text><text x="160" y="280" font-family="Arial,sans-serif" font-weight="800" font-size="39" fill="#183B4A">SumaSalud</text>
+  <path d="M70 338h128v142H70Zm151 0h178v142H221Z" fill="url(#ss-glass)"/><path d="M134 338v142m176-142v142" stroke="#E5E7DF" stroke-width="8"/>
+  <g fill="#557E47"><circle cx="30" cy="385" r="49"/><circle cx="445" cy="404" r="49"/></g><path d="M31 384v96m414-77v77" stroke="#755A40" stroke-width="9"/>
+</svg>
