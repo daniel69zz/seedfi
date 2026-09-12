@@ -83,7 +83,6 @@ export interface Opportunity {
   investorCount: number
   verified: boolean
   risk: RiskLevel
-  assessedBy: string
   riskRationale: string
   status: OpportunityStatus
   startDate: string
