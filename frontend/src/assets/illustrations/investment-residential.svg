@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="216" viewBox="0 0 240 216" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="120" y1="0" x2="120" y2="180" gradientUnits="userSpaceOnUse"><stop stop-color="#b5e3e7"/><stop offset="1" stop-color="#e3eee0"/></linearGradient>
+    <linearGradient id="hill" x1="0" y1="88" x2="216" y2="172" gradientUnits="userSpaceOnUse"><stop stop-color="#a5bb72"/><stop offset="1" stop-color="#719d62"/></linearGradient>
+    <linearGradient id="front" x1="120" y1="145" x2="120" y2="216" gradientUnits="userSpaceOnUse"><stop stop-color="#d1d889"/><stop offset="1" stop-color="#9fb862"/></linearGradient>
+    <linearGradient id="tree" x1="-10" y1="0" x2="11" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5e9860"/><stop offset="1" stop-color="#3b7950"/></linearGradient>
+    <g id="cypress"><path d="M0 0C-8 1-12 25-12 45C-12 64-4 71 1 69C10 68 14 57 12 41C10 18 7-1 0 0Z" fill="url(#tree)"/><path d="M1 29V80" stroke="#547345" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="sprig"><path d="M0 0C-17-6-20-21-14-26C-3-28 1-12 0 0Z" fill="#59894d"/><path d="M0 2C-2-13 5-29 12-29C24-28 15-8 0 2Z" fill="#6b9c51"/><path d="M0 5V-10" stroke="#598048" stroke-width="2"/></g>
+    <clipPath id="round"><rect width="240" height="216" rx="16"/></clipPath>
+  </defs>
+  <g clip-path="url(#round)">
+    <path fill="url(#sky)" d="M0 0H240V216H0Z"/>
+    <g fill="#fffbea"><path d="M15 48C14 42 21 37 26 41C26 25 40 21 46 30C52 31 54 36 54 40C62 36 67 41 67 46Z"/><path d="M84 80C85 75 91 73 95 76C94 65 104 60 111 66C116 68 117 72 117 76C124 73 131 77 131 81Z"/></g>
+    <circle cx="171" cy="44" r="21" fill="#ffe08b"/>
+    <g stroke="#ffe591" stroke-width="1.8" stroke-linecap="round"><path d="M171 13V7M171 81V75M140 44H134M208 44H202M149 23L144 18M193 23L198 18M148 66L143 71M194 66L199 71"/></g>
+    <path d="M-19 94C12 50 53 51 80 71C106 87 114 100 137 106C166 79 205 65 251 91V216H-19Z" fill="url(#hill)"/>
+    <path d="M-14 140C17 103 41 95 67 100C97 101 102 135 130 129C154 120 156 100 182 102C205 104 221 121 250 137V216H-14Z" fill="#7aab70"/>
+    <path d="M-8 160C42 108 62 121 87 140C112 160 145 136 171 134C201 133 221 150 250 157V216H-8Z" fill="#639961"/>
+    <g><use href="#cypress" transform="translate(17 84) scale(.54)"/><use href="#cypress" transform="translate(46 92) scale(.7)"/><use href="#cypress" transform="translate(64 102) scale(.42)"/><use href="#cypress" transform="translate(98 108) scale(.45)"/><use href="#cypress" transform="translate(192 91) scale(.74)"/><use href="#cypress" transform="translate(213 77) scale(1.16)"/></g>
+    <path d="M-5 155C53 149 82 174 128 170C164 164 204 176 247 187V218H-5Z" fill="url(#front)"/>
+    <path d="M52 142C90 157 103 174 101 216H137C125 175 84 151 58 140Z" fill="#ece6aa"/>
+    <g transform="translate(12 107)">
+      <path d="M0 14L18 0L37 14V40H0Z" fill="#fffcdf"/><path d="M-3 14L18-3L39 14L35 17L18 3L1 17Z" fill="#b9763b"/>
+      <path d="M19 8L30-3L45 10V40H20Z" fill="#fff8d5"/><path d="M18 8L30-6L47 9L44 12L30 0L21 12Z" fill="#df9549"/>
+      <path d="M5 25H11V40H5Z" fill="#769563"/><path d="M25 15H30V21H25ZM8 18H13V24H8ZM35 23H40V30H35Z" fill="#9ec0ac"/>
+      <path d="M37-1H41V7H37Z" fill="#bc7840"/>
+    </g>
+    <g transform="translate(79 124)">
+      <path d="M0 10H42V31H0Z" fill="#fffce3"/><path d="M-4 11L10-3H35L47 11Z" fill="#cd843a"/>
+      <path d="M12 9L23 0L36 10V33H12Z" fill="#fffbe1"/><path d="M10 10L23-3L39 10L35 13L23 3L13 13Z" fill="#e69b43"/>
+      <path d="M20 22H27V33H20ZM3 18H8V24H3ZM32 18H37V24H32Z" fill="#86a479"/><path d="M20 10H25V16H20Z" fill="#aacabd"/>
+    </g>
+    <g transform="translate(148 143) scale(.66)"><path d="M0 12L19-5L40 12V40H0Z" fill="#fffce7"/><path d="M-3 12L19-9L43 12L38 16L19-2L1 16Z" fill="#c28b49"/><path d="M17 27H24V40H17Z" fill="#7e9d74"/><path d="M6 18H12V25H6ZM28 18H34V25H28Z" fill="#a3c5b4"/></g>
+    <g><use href="#sprig" transform="translate(10 204) scale(.75)"/><use href="#sprig" transform="translate(30 218) scale(1.18)"/><use href="#sprig" transform="translate(84 217) scale(.74)"/><use href="#sprig" transform="translate(115 213) scale(.65)"/><use href="#sprig" transform="translate(151 218) scale(1.1)"/><use href="#sprig" transform="translate(192 212) scale(.64)"/><use href="#sprig" transform="translate(231 218) scale(1.05)"/></g>
+    <g fill="#dce399" opacity=".9"><ellipse cx="67" cy="183" rx="2" ry="4" transform="rotate(-30 67 183)"/><ellipse cx="169" cy="189" rx="2" ry="4"/><ellipse cx="186" cy="176" rx="2" ry="4"/></g>
+  </g>
+</svg>

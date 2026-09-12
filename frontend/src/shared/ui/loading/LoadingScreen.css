@@ -1,0 +1,35 @@
+.loading-screen {
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - 90px);
+  padding: 28px 20px 78px;
+}
+
+.loading-screen__content { display: grid; justify-items: center; gap: 24px; }
+.loading-screen__content > p { max-width: 320px; color: #11132b; font-size: 18px; font-weight: 800; text-align: center; }
+
+.beaver-loader {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  aspect-ratio: 220 / 224;
+  /* The source has an off-white background. Blend that into the existing cream. */
+  mix-blend-mode: multiply;
+}
+
+.beaver-loader__frame {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  background-repeat: no-repeat;
+  /* Each frame is a discrete pose: never interpolate background-position. */
+}
+
+@media (max-width: 767px) {
+  .loading-screen { min-height: calc(100svh - 120px); padding-bottom: 64px; }
+  .beaver-loader { width: 230px; }
+  .loading-screen__content { gap: 20px; }
+  .loading-screen__content > p { font-size: 16px; }
+}

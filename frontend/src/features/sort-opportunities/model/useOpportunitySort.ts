@@ -3,6 +3,8 @@ import type { Opportunity } from '../../../entities/opportunity/model/opportunit
 
 export type OpportunitySort =
   | 'recommended'
+  | 'apy-desc'
+  | 'apy-asc'
   | 'return-desc'
   | 'return-asc'
   | 'funding-desc'
@@ -16,6 +18,10 @@ export function useOpportunitySort(opportunities: readonly Opportunity[]) {
     const sorted = [...opportunities]
 
     switch (sort) {
+      case 'apy-desc':
+        return sorted.sort((first, second) => second.expectedApy - first.expectedApy)
+      case 'apy-asc':
+        return sorted.sort((first, second) => first.expectedApy - second.expectedApy)
       case 'return-desc':
         return sorted.sort((first, second) => second.totalReturnPct - first.totalReturnPct)
       case 'return-asc':

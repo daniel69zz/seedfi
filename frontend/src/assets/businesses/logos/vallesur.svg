@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="205" viewBox="0 0 700 205" fill="none">
+  <defs>
+    <linearGradient id="building" x1="148" y1="12" x2="174" y2="138" gradientUnits="userSpaceOnUse"><stop stop-color="#4f9f70"/><stop offset="1" stop-color="#23734e"/></linearGradient>
+    <linearGradient id="hill" x1="32" y1="136" x2="240" y2="185" gradientUnits="userSpaceOnUse"><stop stop-color="#167552"/><stop offset=".6" stop-color="#288759"/><stop offset="1" stop-color="#4a9e77"/></linearGradient>
+  </defs>
+  <path d="M104 82V40L132 19V106Z" fill="#102a49"/>
+  <path d="M139 8L177 38V129L139 98Z" fill="url(#building)"/>
+  <path d="M30 149V100L81 64L178 131L166 143L81 85L45 110V143Z" fill="#102a49"/>
+  <path d="M57 137V115L82 97L125 126L115 142Z" fill="#fffdf7"/>
+  <path d="M73 108H90V127H73Z" fill="#102a49"/>
+  <path d="M188 134C177 96 203 65 244 52C250 93 225 121 188 134Z" fill="#298562"/>
+  <path d="M190 132C204 111 219 89 235 68" stroke="#1a7858" stroke-width="2" opacity=".55"/>
+  <path d="M1 181C46 148 76 130 116 129C161 127 196 151 263 181C209 188 168 182 129 173C79 162 40 172 1 181Z" fill="url(#hill)"/>
+  <text x="272" y="132" fill="#102a49" font-family="Arial, sans-serif" font-size="94" font-weight="750" letter-spacing="-5">ValleSur</text>
+  <text x="288" y="175" fill="#102a49" font-family="Arial, sans-serif" font-size="29" font-weight="600" letter-spacing="4.6">Desarrollos SRL</text>
+</svg>

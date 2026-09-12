@@ -3,8 +3,8 @@ import type { Opportunity } from '../../entities/opportunity/model/opportunity.t
 
 type OpportunitySeed = Omit<
   Opportunity,
-  'fundedPercentage' | 'fundUse' | 'milestones' | 'guarantees' | 'documents' | 'riskFactors' | 'vault'
-> & Partial<Pick<Opportunity, 'fundUse' | 'milestones' | 'guarantees' | 'documents' | 'riskFactors' | 'vault'>>
+  'fundedPercentage' | 'totalReturnPct' | 'assessedBy' | 'fundUse' | 'milestones' | 'guarantees' | 'documents' | 'riskFactors' | 'vault'
+> & Partial<Pick<Opportunity, 'totalReturnPct' | 'assessedBy' | 'fundUse' | 'milestones' | 'guarantees' | 'documents' | 'riskFactors' | 'vault'>>
 
 function createOpportunity(seed: OpportunitySeed): Opportunity {
   const fundedPercentage = Math.round((seed.fundedAmount / seed.fundingRequested) * 100)
@@ -12,6 +12,8 @@ function createOpportunity(seed: OpportunitySeed): Opportunity {
   return {
     ...seed,
     fundedPercentage,
+    totalReturnPct: seed.totalReturnPct ?? Math.round(seed.expectedApy * seed.durationMonths / 12 * 100) / 100,
+    assessedBy: seed.assessedBy ?? 'Evaluación demo',
     fundUse: seed.fundUse ?? [
       { label: 'Materiales y equipamiento', percentage: 40 },
       { label: 'Mano de obra especializada', percentage: 30 },
