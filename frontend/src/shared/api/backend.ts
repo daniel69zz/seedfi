@@ -215,6 +215,15 @@ export const api = {
     attest: (id: string, index: number, body: { approved: boolean; verifierKey: string }) =>
       post<{ attestation: StoredAttestation }>(`/api/projects/${id}/milestones/${index}/attest`, body),
     expire: (id: string) => post<{ txHash: string }>(`/api/projects/${id}/expire`),
+
+    // T19 Repayment endpoints
+    repaymentSchedule: (id: string) => get<{ schedule: any; overdue: any[] }>(`/api/projects/${id}/repayment/schedule`),
+    generateRepayment: (id: string, force?: boolean) => post<{ schedule: any }>(`/api/projects/${id}/repayment/schedule`, { force }),
+    payRepayment: (id: string, index: number) => post<{ schedule: any; txHash: string }>(`/api/projects/${id}/repayment/${index}/pay`),
+  },
+
+  evidence: {
+    pin: (id: string) => post<{ ipfsCid: string }>(`/api/evidence/${id}/pin`),
   },
 
   attestations: {

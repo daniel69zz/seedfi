@@ -248,10 +248,16 @@ export function DashboardPage() {
             )}
             <p className="field__hint" style={{ marginTop: '.5rem' }}>
               <code>expireMilestone</code> lo puede llamar cualquiera. Si el verificador desaparece,
-              el capital no queda atrapado.
+              o se pasa de la fecha, un inversionista lo llama y dispara el <code>refundRemaining</code>.
             </p>
           </section>
 
+          {/* ── waterfall repago ───────────────────────────────────────── */}
+          {project && deployment && (
+            <RepaymentSection projectId={project.id} onChainId={project.onChainId} status={chain.status} vaultAddress={deployment.vault} />
+          )}
+
+          {/* ── eventos ────────────────────────────────────────────── */}
           <section className="card">
             <h2>Historial on-chain</h2>
             {chain.events.length === 0 ? (
@@ -282,5 +288,77 @@ export function DashboardPage() {
         </>
       )}
     </div>
+  )
+}
+
+function RepaymentSection({ projectId, onChainId, status, vaultAddress }: { projectId: string; onChainId: number; status: string; vaultAddress: `0x${string}` }) {
+  const [schedule, setSchedule] = useState<any>(null)
+  const [busy, setBusy] = useState<string | null>(null)
+  const { writeContractAsync } = useWriteContract()
+
+  const load = useCallback(async () => {
+    try {
+      const res = await api.projects.repaymentSchedule(projectId)
+      setSchedule(res.schedule)
+    } catch {
+      setSchedule(null)
+    }
+  }, [projectId])
+
+  useEffect(() => { void load() }, [load])
+
+  if (status !== 'COMPLETED' && !schedule) return null
+
+  return (
+    <section className="card">
+      <h2>Calendario de Repagos (Waterfall)</h2>
+      {!schedule ? (
+        <button className="btn" onClick={async () => {
+          setBusy('generate')
+          await api.projects.generateRepayment(projectId)
+          await load()
+          setBusy(null)
+        }}>
+          {busy === 'generate' ? 'Generando...' : 'Generar Calendario de Pagos'}
+        </button>
+      ) : (
+        <div className="table-scroll">
+          <table className="data">
+            <thead>
+              <tr><th>Cuota</th><th>Fecha</th><th>Capital + Interés</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              {schedule.installments.map((cuota: any, idx: number) => (
+                <tr key={idx}>
+                  <td>{idx + 1} de {schedule.installments.length}</td>
+                  <td>{new Date(cuota.dueDate).toLocaleDateString('es-BO')}</td>
+                  <td className="num">{formatAmount(cuota.amount)}</td>
+                  <td>
+                    {cuota.status === 'PAID' ? (
+                      <span className="pill pill--ok">Pagado</span>
+                    ) : (
+                      <button className="btn btn--small" disabled={busy !== null} onClick={async () => {
+                        setBusy(`pay-${idx}`)
+                        try {
+                          await writeContractAsync({
+                            address: vaultAddress, abi: projectVaultAbi, functionName: 'repay',
+                            args: [BigInt(onChainId), BigInt(cuota.amount)]
+                          })
+                          await api.projects.payRepayment(projectId, idx)
+                          await load()
+                        } catch (e) { console.error(e) }
+                        setBusy(null)
+                      }}>
+                        {busy === `pay-${idx}` ? '...' : 'Pagar'}
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   )
 }

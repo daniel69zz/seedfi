@@ -14,8 +14,8 @@
   "dependencies": {
     "@fastify/cors": "^10.0.1",
     "@fastify/multipart": "^9.0.1",
-    "@s2d/shared": "*",
-    "@s2d/zk": "*",
+    "@s2d/shared": "file:../packages/shared",
+    "@s2d/zk": "file:../packages/zk",
     "fastify": "^5.2.0",
     "viem": "^2.21.55"
   },

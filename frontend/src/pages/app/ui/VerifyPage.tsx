@@ -140,13 +140,28 @@ export function VerifyPage() {
             {review.evidence.length > 0 && (
               <div className="table-scroll" style={{ marginTop: '1rem' }}>
                 <table className="data">
-                  <thead><tr><th>Archivo</th><th>Tipo</th><th>sha256</th></tr></thead>
+                  <thead><tr><th>Archivo</th><th>Tipo</th><th>sha256</th><th>IPFS</th></tr></thead>
                   <tbody>
                     {review.evidence.map((e) => (
                       <tr key={e.id}>
                         <td>{e.filename}</td>
                         <td><span className="pill">{e.kind}</span></td>
-                        <td className="mono">{e.sha256.slice(0, 18)}…</td>
+                        <td className="mono" title={e.sha256}>{e.sha256.slice(0, 10)}…</td>
+                        <td>
+                          {e.ipfsCid ? (
+                            <a href={`https://gateway.pinata.cloud/ipfs/${e.ipfsCid}`} target="_blank" rel="noreferrer" className="mono">
+                              {e.ipfsCid.slice(0, 8)}…
+                            </a>
+                          ) : (
+                            <button className="btn btn--small" onClick={() => void run('pin', async () => {
+                              await api.evidence.pin(e.id)
+                              await load()
+                              return 'Evidencia anclada en IPFS.'
+                            })}>
+                              Pin IPFS
+                            </button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

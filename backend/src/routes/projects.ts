@@ -163,11 +163,23 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
     }
 
     // Política de elegibilidad ZK de la ronda.
+    //
+    // La raíz se normaliza en vez de confiar en un `||`: los dossiers nuevos
+    // traen `'0x0'` como marcador de «todavía sin raíz», y `'0x0'` es TRUTHY.
+    // Un `||` lo dejaba pasar tal cual a un parámetro `bytes32`, y la
+    // publicación moría con «Size of bytes "0x0" (bytes1) does not match
+    // expected size (bytes32)» — un error que no dice nada sobre la causa.
+    //
+    // La ronda tiene que abrir contra la raíz VIGENTE del emisor de todos
+    // modos: una raíz vieja rechazaría cualquier prueba con `RaizNoCoincide`.
+    const declaredRoot = project.eligibility.credentialRoot ?? '';
+    const credentialRoot = (/^0x[0-9a-fA-F]{64}$/.test(declaredRoot) ? declaredRoot : issuerRoot()) as Hex;
+
     const policyHash = await client.writeContract({
       address: deployed.eligibility as Address, abi: eligibilityRegistryAbi, functionName: 'setPolicy',
       args: [
         BigInt(project.onChainId),
-        (project.eligibility.credentialRoot || issuerRoot()) as Hex,
+        credentialRoot,
         BigInt(project.eligibility.minNetWorth),
         BigInt(project.eligibility.allowedJurisdiction),
       ],
@@ -175,6 +187,9 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
     });
     await pub.waitForTransactionReceipt({ hash: policyHash });
 
+    // Queda registrado contra qué raíz abrió la ronda: si el emisor la cambia
+    // después, se puede explicar por qué una prueba dejó de validar.
+    setPlatformFields(project.id, { credentialRoot });
     const published = updateProjectChainRefs(project, deployed.vault, deployed.chainId);
     const result = markPublished(published.id);
     await sync();

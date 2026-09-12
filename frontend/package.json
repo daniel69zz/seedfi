@@ -15,8 +15,8 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
-    "@s2d/shared": "*",
-    "@s2d/zk": "*",
+    "@s2d/shared": "file:../packages/shared",
+    "@s2d/zk": "file:../packages/zk",
     "@tanstack/react-query": "^5.62.11",
     "viem": "^2.21.55",
     "wagmi": "^2.14.6"
