@@ -20,7 +20,7 @@ export interface StoredCredential {
   issuedAt: string
 }
 
-const KEY = 'seed2deed.credentials'
+const KEY = 'seedfi.credentials'
 
 type Store = Record<string, StoredCredential>
 
