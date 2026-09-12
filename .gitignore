@@ -76,6 +76,18 @@ tmp/
 # y Avalanche también. Borren esta línea si lo quieren fuera igual.
 !/README.md
 
+# Excepción: la documentación TÉCNICA. La regla de arriba apunta a los
+# documentos de estrategia —modelo de negocio, comisiones, ruta
+# regulatoria, contactos—, y estos no son eso: son el esquema de datos,
+# la superficie de los contratos, el circuito y la API. Sin ellos nadie
+# externo puede usar el sistema, y el "technical integration approach"
+# que pide el reglamento vive justamente acá.
+#
+# Si igual los quieren fuera del repo público, borren estas tres líneas.
+!/docs/*.md
+!/backend/README.md
+!/contracts/README.md
+
 # ── PDFs ─────────────────────────────────────────────────────
 # Ningún PDF se versiona: los reglamentos y bounties del evento son
 # material de referencia ajeno, no del proyecto.
