@@ -1,10 +1,13 @@
 import type { OpportunityCategory } from '../../entities/opportunity/model/opportunity.types'
 
 export const categories: readonly OpportunityCategory[] = [
-  'Energía Limpia',
-  'Agricultura',
   'Bienes Raíces',
+  'Construcción',
+  'Agricultura',
+  'Energía',
+  'Tecnología',
   'Logística',
   'Salud',
-  'Tecnología',
+  'Industria',
+  'Comercio',
 ]

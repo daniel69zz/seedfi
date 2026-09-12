@@ -40,12 +40,30 @@
   overflow-wrap: anywhere;
 }
 
+.opportunity-card__company {
+  margin-bottom: 2px;
+  color: var(--color-primary-dark) !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+}
+
 .opportunity-card__copy p {
   margin-top: 7px;
   color: #315b81;
   font-size: 15px;
   font-weight: 650;
   line-height: 1.34;
+}
+
+.opportunity-card__location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 800;
 }
 
 .opportunity-card > .opportunity-stats {
@@ -79,6 +97,8 @@
   font-size: 14px;
   font-weight: 900;
 }
+
+.opportunity-card__funding > p small { margin-top: 1px; color: var(--color-text-muted); font-size: 9px; }
 
 .opportunity-card__cta {
   width: 100%;

@@ -1,6 +1,18 @@
-import { UserRound } from 'lucide-react'
-import { SectionPlaceholder } from '../../../shared/ui/section-placeholder/SectionPlaceholder'
+import { useState } from 'react'
+import type { FormEvent } from 'react'
+import { Bell, CheckCircle2, LockKeyhole, ShieldCheck, UserRound, Wallet } from 'lucide-react'
+import { useAuth } from '../../../features/auth/model/AuthContext'
+import { useToast } from '../../../features/toast/model/ToastContext'
+import { Button } from '../../../shared/ui/button/Button'
+import { PageHeader, SectionCard, StatusBadge, Tabs } from '../../../shared/ui/platform/PlatformUI'
+import '../../investments/ui/InvestorPages.css'
+
+type ProfileTab = 'personal' | 'kyc' | 'wallet' | 'security' | 'preferences'
 
 export function ProfilePage() {
-  return <SectionPlaceholder eyebrow="PERFIL" title="Tu espacio de inversionista" description="La información personal y las preferencias del perfil se incorporarán en una siguiente etapa del frontend." icon={UserRound} />
+  const { user } = useAuth()
+  const { notify } = useToast()
+  const [tab, setTab] = useState<ProfileTab>('personal')
+  function save(event: FormEvent) { event.preventDefault(); notify('Cambios guardados localmente') }
+  return <main className="app-page app-page--narrow page-shell" id="main-content"><PageHeader eyebrow="CONFIGURACIÓN" title="Perfil de inversionista" description="Administra tu información, verificación y preferencias de la demo." /><SectionCard><Tabs value={tab} onChange={setTab} label="Secciones del perfil" options={[{ value: 'personal', label: 'Información personal' }, { value: 'kyc', label: 'KYC' }, { value: 'wallet', label: 'Wallet' }, { value: 'security', label: 'Seguridad' }, { value: 'preferences', label: 'Preferencias' }]} />{tab === 'personal' && <form onSubmit={save}><div className="profile-heading"><span><UserRound /></span><div><strong>{user?.name}</strong><small>{user?.email}</small></div></div><div className="form-grid"><label className="field"><span>Nombre completo</span><input defaultValue={user?.name} required /></label><label className="field"><span>Correo</span><input defaultValue={user?.email} type="email" required /></label><label className="field"><span>Teléfono</span><input defaultValue="+591 71234567" /></label><label className="field"><span>País</span><select defaultValue="Bolivia"><option>Bolivia</option></select></label></div><div className="form-actions"><Button type="submit">Guardar cambios</Button></div></form>}{tab === 'kyc' && <div className="profile-status"><span><ShieldCheck /></span><div><h2>Verificación de identidad</h2><p>Estado actual de tu proceso KYC mock.</p><StatusBadge status={user?.kycStatus ?? 'NOT_STARTED'} /></div><Button to="/investor/kyc" variant="secondary">Revisar KYC</Button></div>}{tab === 'wallet' && <div className="profile-status"><span><Wallet /></span><div><h2>Wallet de demostración</h2><p>0x7A1c...91F2 · Ethereum Sepolia</p><StatusBadge status="CONNECTED" label="Conectada" /></div><Button onClick={() => notify('Wallet mock desconectada')} variant="secondary">Desconectar</Button></div>}{tab === 'security' && <div className="profile-cards"><article><LockKeyhole /><strong>Contraseña</strong><p>Última actualización: hace 45 días.</p><Button onClick={() => notify('Flujo mock para cambiar contraseña abierto')} variant="secondary">Cambiar</Button></article><article><CheckCircle2 /><strong>Sesiones</strong><p>1 sesión activa en este navegador.</p><Button onClick={() => notify('Las demás sesiones fueron cerradas')} variant="secondary">Cerrar otras</Button></article></div>}{tab === 'preferences' && <form onSubmit={save} className="preference-list"><label><span><strong>Alertas de nuevos proyectos</strong><small>Recibe avisos de oportunidades publicadas.</small></span><input type="checkbox" defaultChecked /></label><label><span><strong>Actualizaciones de proyectos</strong><small>Avances y cambios en tus inversiones.</small></span><input type="checkbox" defaultChecked /></label><label><span><strong>Recordatorios de pagos</strong><small>Fechas estimadas y distribuciones.</small></span><input type="checkbox" defaultChecked /></label><div className="form-actions"><Button type="submit"><Bell size={18} /> Guardar preferencias</Button></div></form>}</SectionCard></main>
 }
