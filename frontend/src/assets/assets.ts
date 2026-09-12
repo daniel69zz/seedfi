@@ -1,4 +1,4 @@
-import seed2DeedLogo from './brand/seed-2-deed-placeholder.svg'
+import truthWorksLogo from './brand/truth-works-placeholder.svg'
 import andesSolarLogo from './businesses/logos/andes-solar-placeholder.svg'
 import altiplanoQuinoaLogo from './businesses/logos/altiplano-quinoa-placeholder.svg'
 import andeSoftLogo from './businesses/logos/andesoft-placeholder.svg'
@@ -11,7 +11,7 @@ import businessFallback from './placeholders/fallback.svg'
 
 export const appAssets = {
   brand: {
-    logo: seed2DeedLogo,
+    logo: truthWorksLogo,
   },
   businesses: {
     andesSolar: andesSolarLogo,

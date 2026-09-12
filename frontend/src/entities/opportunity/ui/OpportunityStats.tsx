@@ -17,12 +17,12 @@ export function OpportunityStats({ opportunity }: OpportunityStatsProps) {
         <dt>Monto solicitado</dt>
       </div>
       <div>
-        <dd>{opportunity.expectedApy}%</dd>
-        <dt>APY estimado</dt>
+        <dd>{opportunity.totalReturnPct}%</dd>
+        <dt>Retorno total propuesto</dt>
       </div>
       <div>
         <dd>{opportunity.durationMonths} meses</dd>
-        <dt>Duración</dt>
+        <dt>Plazo</dt>
       </div>
     </dl>
   )

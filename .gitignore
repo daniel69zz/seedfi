@@ -1,0 +1,82 @@
+# ─────────────────────────────────────────────────────────────
+#  Seed 2 Deed — .gitignore raíz
+#  Los subproyectos tienen el suyo: contracts/, frontend/, backend/
+# ─────────────────────────────────────────────────────────────
+
+# ── SECRETOS ─────────────────────────────────────────────────
+# Nada de esto entra al repo. Vamos a manejar llaves de despliegue
+# en HSK mainnet: una filtración acá no se revierte.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+keystore/
+*.keystore
+
+# ── Sistema operativo ────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+# ── Editores ─────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+*~
+.claude/settings.local.json
+
+# ── Dependencias y builds (por si algo queda fuera de los
+#    .gitignore de cada subproyecto) ───────────────────────────
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ── Foundry (ver también contracts/.gitignore) ───────────────
+cache/
+out/
+broadcast/*/dry-run/
+
+# ── Datos locales ────────────────────────────────────────────
+*.sqlite
+*.sqlite3
+*.db
+tmp/
+.tmp/
+
+# ── Documentación interna ────────────────────────────────────
+# Ningún .md se versiona: los documentos de estrategia (modelo de
+# negocio, comisiones, ruta regulatoria, contactos) quedan fuera del
+# repo público.
+*.md
+
+# Excepción: el README raíz. El reglamento del hackathon lo exige
+# ("GitHub Repository: should include a README file explaining the
+# project's features, installation steps, how to run the project,
+# and the technical integration approach"), y los bounties de Unlock
+# y Avalanche también. Borren esta línea si lo quieren fuera igual.
+!/README.md
+
+# ── PDFs ─────────────────────────────────────────────────────
+# Ningún PDF se versiona: los reglamentos y bounties del evento son
+# material de referencia ajeno, no del proyecto.
+*.pdf

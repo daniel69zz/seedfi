@@ -29,7 +29,7 @@ function ScrollToRoute() {
     const pageName = pathname.startsWith('/opportunities/')
       ? 'Detalle de oportunidad'
       : pageTitles[pathname] ?? 'Oportunidades'
-    document.title = `${pageName} | Seed 2 Deed`
+    document.title = `${pageName} | Truth Works`
   }, [pathname, hash])
 
   return null

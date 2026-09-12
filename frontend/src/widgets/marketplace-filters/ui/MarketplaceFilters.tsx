@@ -37,8 +37,8 @@ const durationOptions: SelectOption<OpportunityFilters['duration']>[] = [
 
 const sortOptions: SelectOption<OpportunitySort>[] = [
   { value: 'recommended', label: 'Ordenar por: Recomendado' },
-  { value: 'apy-desc', label: 'Mayor APY' },
-  { value: 'apy-asc', label: 'Menor APY' },
+  { value: 'return-desc', label: 'Mayor retorno total' },
+  { value: 'return-asc', label: 'Menor retorno total' },
   { value: 'funding-desc', label: 'Mayor financiación' },
   { value: 'duration-asc', label: 'Menor duración' },
   { value: 'funded-desc', label: 'Mayor porcentaje financiado' },

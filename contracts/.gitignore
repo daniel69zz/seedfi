@@ -1,0 +1,13 @@
+# Foundry
+out/
+cache/
+broadcast/*/dry-run/
+
+# forge-std y demás dependencias entran como submódulo git,
+# no vendorizadas: se restauran con `forge install`.
+# (ver .gitmodules en la raíz)
+
+# Secretos
+.env
+.env.*
+!.env.example

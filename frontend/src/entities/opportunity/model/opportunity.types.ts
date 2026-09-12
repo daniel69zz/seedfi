@@ -16,10 +16,13 @@ export interface Opportunity {
   category: OpportunityCategory
   description: string
   fundingRequested: number
-  expectedApy: number
+  /** Retorno TOTAL sobre el plazo, propuesto por la constructora. No es APY. */
+  totalReturnPct: number
   durationMonths: number
   minimumInvestment: number
   fundedPercentage: number
   verified: boolean
   risk: RiskLevel
+  /** Quién emitió la evaluación de riesgo. Truth Works no califica: solo atribuye. */
+  assessedBy: string
 }

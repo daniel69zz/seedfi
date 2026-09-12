@@ -10,7 +10,7 @@ import {
   Truck,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import type { Opportunity, OpportunityCategory } from '../model/opportunity.types'
+import type { Opportunity, OpportunityCategory, RiskLevel } from '../model/opportunity.types'
 import { routes } from '../../../shared/constants/routes'
 import { Badge } from '../../../shared/ui/badge/Badge'
 import { BusinessImage } from '../../../shared/ui/business-image/BusinessImage'
@@ -34,20 +34,23 @@ const categoryPresentation: Record<OpportunityCategory, { icon: LucideIcon; tone
   Tecnología: { icon: Laptop, tone: 'blue' },
 }
 
+// Verificación y riesgo son ejes independientes: la primera es un hecho (pasó KYB),
+// el segundo es una opinión de un tercero. Nunca comparten slot ni se excluyen.
+const riskPresentation: Record<RiskLevel, { label: string; tone: BadgeTone }> = {
+  low: { label: 'Riesgo bajo', tone: 'blue' },
+  medium: { label: 'Riesgo medio', tone: 'peach' },
+  high: { label: 'Riesgo alto', tone: 'pink' },
+}
+
 export function OpportunityBadges({ opportunity }: OpportunityCardProps) {
   const category = categoryPresentation[opportunity.category]
-  const status = opportunity.verified
-    ? { label: 'Verificado', tone: 'emerald' as const, icon: BadgeCheck }
-    : opportunity.risk === 'medium'
-      ? { label: 'Riesgo Medio', tone: 'peach' as const, icon: ShieldCheck }
-      : opportunity.risk === 'high'
-        ? { label: 'Riesgo Alto', tone: 'pink' as const, icon: ShieldCheck }
-        : { label: 'Bajo Riesgo', tone: 'blue' as const, icon: ShieldCheck }
+  const risk = riskPresentation[opportunity.risk]
 
   return (
     <div className="opportunity-card__badges">
       <Badge icon={category.icon} tone={category.tone}>{opportunity.category}</Badge>
-      <Badge icon={status.icon} tone={status.tone}>{status.label}</Badge>
+      {opportunity.verified && <Badge icon={BadgeCheck} tone="emerald">KYB verificado</Badge>}
+      <Badge icon={ShieldCheck} tone={risk.tone}>{risk.label} · {opportunity.assessedBy}</Badge>
     </div>
   )
 }

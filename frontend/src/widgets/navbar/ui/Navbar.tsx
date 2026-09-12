@@ -16,9 +16,9 @@ export function Navbar() {
 
   return (
     <header className="navbar page-shell">
-      <Link className="navbar__brand" to={routes.marketplace} aria-label="Seed 2 Deed — ir a oportunidades">
+      <Link className="navbar__brand" to={routes.marketplace} aria-label="Truth Works — ir a oportunidades">
         <img src={appAssets.brand.logo} width="48" height="48" alt="" />
-        <span>Seed 2 Deed</span>
+        <span>Truth Works</span>
       </Link>
 
       <nav className="navbar__links" aria-label="Navegación principal">
