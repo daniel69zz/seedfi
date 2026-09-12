@@ -20,7 +20,7 @@ interface AuthContextValue {
   updateKycStatus: (status: KycStatus) => void
 }
 
-const STORAGE_KEY = 'seed2deed.demo.session'
+const STORAGE_KEY = 'seedfi.demo.session'
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 function readSession(): DemoUser | null {

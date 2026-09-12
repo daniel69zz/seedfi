@@ -22,8 +22,8 @@ interface DemoContextValue {
   updateProposalStatus: (id: string, status: ProjectStatus) => void
 }
 
-const INVESTMENTS_KEY = 'seed2deed.demo.investments'
-const PROPOSALS_KEY = 'seed2deed.demo.proposals'
+const INVESTMENTS_KEY = 'seedfi.demo.investments'
+const PROPOSALS_KEY = 'seedfi.demo.proposals'
 const DemoContext = createContext<DemoContextValue | null>(null)
 
 function readStored<T>(key: string, fallback: T): T {

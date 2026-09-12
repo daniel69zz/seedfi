@@ -64,7 +64,7 @@ export function LandingPage() {
       </section>
 
       <section className="landing-section page-shell" id="how">
-        <div className="landing-section__heading"><p className="landing-eyebrow">UN PROCESO COMPRENSIBLE</p><h2>Cómo funciona Seed 2 Deed</h2><p>La tecnología acompaña el proceso; las decisiones siguen basadas en información, condiciones y riesgo.</p></div>
+        <div className="landing-section__heading"><p className="landing-eyebrow">UN PROCESO COMPRENSIBLE</p><h2>Cómo funciona SeedFi</h2><p>La tecnología acompaña el proceso; las decisiones siguen basadas en información, condiciones y riesgo.</p></div>
         <div className="process-grid">
           {processSteps.map((step, index) => <article key={step.title}><span className="process-grid__number">0{index + 1}</span><span className="process-grid__icon"><step.icon size={24} /></span><h3>{step.title}</h3><p>{step.text}</p></article>)}
         </div>
@@ -114,7 +114,7 @@ const infoContent = {
     { title: 'Riesgos sin ocultar', text: 'Se presentan factores financieros, legales, de ejecución, mercado y retraso para evitar falsas promesas.' },
     { title: 'Vault y blockchain', text: 'El vault mock muestra fondos protegidos, red, contrato y transacciones sin exigir conocimientos técnicos.' },
   ] },
-  about: { eyebrow: 'LA PLATAFORMA', title: 'Capital para construir progreso real', description: 'Seed 2 Deed conecta empresas que buscan financiamiento con inversionistas que valoran información clara.', sections: [
+  about: { eyebrow: 'LA PLATAFORMA', title: 'Capital para construir progreso real', description: 'SeedFi conecta empresas que buscan financiamiento con inversionistas que valoran información clara.', sections: [
     { title: 'Propósito', text: 'Facilitar que proyectos empresariales sólidos, inicialmente de vivienda y construcción, presenten su caso de forma comparable.' },
     { title: 'Para inversionistas', text: 'Ofrecer contexto suficiente para evaluar oportunidades, retornos estimados, plazos, garantías y riesgos.' },
     { title: 'Para empresas', text: 'Guiar la creación de propuestas completas y transparentes, con seguimiento posterior a la financiación.' },
@@ -129,7 +129,7 @@ export function InfoPage({ page }: { page: keyof typeof infoContent }) {
 
 export function FaqPage() {
   const questions = [
-    ['¿Qué es Seed 2 Deed?', 'Una plataforma frontend de demostración que conecta inversionistas con empresas que buscan financiamiento.'],
+    ['¿Qué es SeedFi?', 'Una plataforma frontend de demostración que conecta inversionistas con empresas que buscan financiamiento.'],
     ['¿El retorno mostrado está garantizado?', 'No. Se trata de un retorno estimado y toda inversión implica riesgo.'],
     ['¿Qué significa empresa verificada?', 'Que la demo muestra completada una revisión documental y empresarial dentro del flujo simulado.'],
     ['¿Cómo se usan los fondos?', 'Cada oportunidad detalla una distribución porcentual, cronograma y avances reportados.'],

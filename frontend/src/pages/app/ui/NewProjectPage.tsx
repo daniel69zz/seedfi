@@ -297,8 +297,8 @@ export function NewProjectPage() {
 
               <button type="button" className="btn" disabled={busy !== null || created.status !== 'SUBMITTED'}
                 onClick={() => void run('review', async () => {
-                  await api.projects.review(created.id, { decision: 'UNDER_REVIEW', note: 'En revisión desde el panel.', author: 'comite@seed2deed.bo' })
-                  const { project } = await api.projects.review(created.id, { decision: 'APPROVED', note: 'Aprobado desde el panel de demo.', author: 'comite@seed2deed.bo' })
+                  await api.projects.review(created.id, { decision: 'UNDER_REVIEW', note: 'En revisión desde el panel.', author: 'comite@seedfi.bo' })
+                  const { project } = await api.projects.review(created.id, { decision: 'APPROVED', note: 'Aprobado desde el panel de demo.', author: 'comite@seedfi.bo' })
                   setCreated(project)
                   return 'Due diligence completada: APPROVED.'
                 })}>

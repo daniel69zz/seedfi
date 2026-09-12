@@ -9,7 +9,7 @@ export function DocumentationCard({ investment }: { investment: InvestmentDetail
   function downloadReceipt() {
     if (!document) return
     const text = [
-      'SEED 2 DEED · COMPROBANTE DE DEMOSTRACIÓN',
+      'SEEDFI · COMPROBANTE DE DEMOSTRACIÓN',
       document.name,
       `Inversión: ${investment.id}`,
       `Proyecto: ${investment.projectName}`,

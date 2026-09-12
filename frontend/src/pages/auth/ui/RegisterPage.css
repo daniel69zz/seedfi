@@ -1,0 +1,183 @@
+.register-page {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  padding: 28px;
+  background:
+    radial-gradient(circle at 12% 18%, rgb(132 217 185 / 24%) 0 82px, transparent 83px),
+    radial-gradient(circle at 88% 82%, rgb(248 215 183 / 36%) 0 118px, transparent 119px),
+    var(--color-background);
+}
+
+.register-page::before {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--color-dot) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  content: '';
+  opacity: .32;
+  pointer-events: none;
+}
+
+.register-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 720px);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: clamp(25px, 4vw, 38px) clamp(20px, 5vw, 48px) 28px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.register-back {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 5px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.register-back:hover { color: var(--color-primary-dark); }
+.register-back svg { width: 16px; height: 16px; }
+
+.register-brand {
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-inline: auto;
+  color: var(--color-heading);
+}
+
+.register-brand img { width: 50px; height: 50px; }
+.register-brand strong { font-size: 22px; font-weight: 950; letter-spacing: -.6px; }
+
+.register-heading { margin-top: 16px; text-align: center; }
+.register-heading h1, .register-card--success h1 { color: var(--color-heading); font-size: clamp(30px, 5vw, 40px); font-weight: 950; letter-spacing: -1.3px; line-height: 1.05; }
+.register-heading p { margin-top: 7px; color: var(--color-text-muted); font-size: 13px; }
+
+.register-progress {
+  display: grid;
+  max-width: 500px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 24px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.register-progress li { position: relative; display: grid; justify-items: center; gap: 6px; color: #7a8390; }
+.register-progress li:not(:last-child)::after { position: absolute; z-index: 0; top: 14px; left: calc(50% + 18px); width: calc(100% - 36px); height: 2px; background: #d8d3c9; content: ''; }
+.register-progress li.is-complete:not(:last-child)::after { background: var(--color-primary); }
+.register-progress li > span { position: relative; z-index: 1; display: grid; width: 30px; height: 30px; place-items: center; border: 2px solid #c3beb4; border-radius: 50%; background: var(--color-surface); font-size: 11px; font-weight: 950; }
+.register-progress li > span svg { width: 15px; height: 15px; stroke-width: 3; }
+.register-progress li small { font-size: 10px; font-weight: 850; }
+.register-progress li.is-current, .register-progress li.is-complete { color: var(--color-primary-dark); }
+.register-progress li.is-current > span { border-color: var(--color-border); background: var(--color-primary-soft); box-shadow: 0 2px 0 rgb(24 21 18 / 12%); }
+.register-progress li.is-complete > span { border-color: var(--color-primary-dark); background: var(--color-primary); color: #fff; }
+
+.registration-form { display: grid; gap: 18px; margin-top: 25px; }
+
+.account-choice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.account-choice__card { position: relative; display: grid; min-height: 142px; grid-template-columns: auto 1fr; align-content: center; align-items: center; gap: 14px; border: 2px solid #bdb8ae; border-radius: 19px; padding: 20px 18px; background: #fffefa; text-align: left; transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background 160ms ease; }
+.account-choice__card:hover { border-color: var(--color-border); box-shadow: 0 4px 0 rgb(24 21 18 / 9%); transform: translateY(-2px); }
+.account-choice__card.is-selected { border-color: var(--color-border); background: var(--color-primary-soft); box-shadow: 0 4px 0 rgb(24 21 18 / 13%); }
+.account-choice__icon { display: grid; width: 48px; height: 48px; place-items: center; border: 2px solid var(--color-border); border-radius: 15px; background: var(--color-mint); color: var(--color-primary-dark); box-shadow: 0 3px 0 rgb(24 21 18 / 10%); }
+.account-choice__icon svg { width: 23px; height: 23px; stroke-width: 2.4; }
+.account-choice__card:nth-child(2) .account-choice__icon { background: var(--color-peach); color: #87501e; }
+.account-choice__card > span:nth-child(2) { display: grid; gap: 4px; }
+.account-choice__card strong { color: var(--color-heading); font-size: 16px; font-weight: 950; }
+.account-choice__card small { color: var(--color-text-muted); font-size: 11px; line-height: 1.35; }
+.account-choice__card i { position: absolute; top: 13px; right: 13px; display: grid; width: 23px; height: 23px; place-items: center; border: 2px solid #bdb8ae; border-radius: 50%; background: #fff; color: #fff; }
+.account-choice__card.is-selected i { border-color: var(--color-primary-dark); background: var(--color-primary); }
+.account-choice__card i svg { width: 13px; height: 13px; stroke-width: 3; }
+
+.registration-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.registration-fields .field--full, .registration-section-heading { grid-column: 1 / -1; }
+.registration-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; border-top: 1px solid #ded9cf; padding-top: 16px; }
+.registration-section-heading:first-child { border-top: 0; padding-top: 0; }
+.registration-section-heading span { color: var(--color-heading); font-size: 14px; font-weight: 950; }
+.registration-section-heading p { color: var(--color-text-muted); font-size: 11px; text-align: right; }
+.register-card .field { display: grid; gap: 6px; }
+.register-card .field > span:first-child { color: #30394a; font-size: 12px; font-weight: 850; }
+.register-card .field input, .register-card .field select { width: 100%; min-height: 46px; border: 2px solid #bdb8ae; border-radius: 13px; padding: 10px 12px; background: #fffefa; color: var(--color-text); outline: none; }
+.register-card .field input:focus, .register-card .field select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgb(35 139 104 / 14%); }
+.register-card .password-field { position: relative; display: block; }
+.register-card .password-field input { padding-right: 45px; }
+.register-card .password-field button { position: absolute; top: 50%; right: 7px; display: grid; width: 33px; height: 33px; place-items: center; border: 0; border-radius: 10px; background: transparent; transform: translateY(-50%); }
+.register-card .password-field button:hover { background: var(--color-primary-soft); }
+.register-card .password-field svg { width: 18px; height: 18px; }
+
+.registration-review { display: grid; gap: 12px; }
+.registration-summary, .verification-card, .wallet-card { display: flex; align-items: center; gap: 13px; border: 2px solid #c7c1b6; border-radius: 17px; padding: 14px; background: #fffefa; }
+.registration-summary > div, .verification-card > div, .wallet-card > div { display: grid; min-width: 0; flex: 1; gap: 2px; }
+.registration-summary small { color: var(--color-primary-dark); font-size: 9px; font-weight: 950; letter-spacing: .55px; }
+.registration-summary strong, .verification-card strong, .wallet-card strong { overflow: hidden; color: var(--color-heading); font-size: 13px; font-weight: 950; text-overflow: ellipsis; }
+.registration-summary p, .verification-card p, .wallet-card p { overflow: hidden; color: var(--color-text-muted); font-size: 11px; text-overflow: ellipsis; }
+.verification-card { border-color: #afd8c8; background: #effaf4; }
+.wallet-card { background: #f6f3ec; }
+.verification-card > span, .wallet-card > span { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border-radius: 12px; background: var(--color-primary-soft); color: var(--color-primary-dark); }
+.wallet-card > span { background: var(--color-blue); color: #356596; }
+.verification-card svg, .wallet-card svg { width: 20px; height: 20px; }
+.verification-card b, .wallet-card b { flex: 0 0 auto; border-radius: var(--radius-pill); padding: 6px 9px; background: #fff; color: var(--color-primary-dark); font-size: 9px; font-weight: 950; }
+.wallet-card b { color: #536377; }
+
+.registration-terms { display: flex; align-items: flex-start; gap: 10px; margin-top: 4px; color: var(--color-text-muted); font-size: 12px; line-height: 1.45; }
+.registration-terms input { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 1px; accent-color: var(--color-primary); }
+.registration-terms span { font-weight: 750; }
+
+.registration-error { border: 1px solid #dc9b8c; border-radius: 11px; padding: 9px 11px; background: #fff0ec; color: #973b2b; font-size: 12px; }
+.registration-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.registration-actions .button--primary { min-width: 190px; }
+.registration-actions .button--ghost { padding-inline: 14px; }
+.register-login { margin-top: 18px; color: var(--color-text-muted); font-size: 12px; text-align: center; }
+.register-login a { color: var(--color-primary-dark); font-weight: 950; }
+
+.register-card--success { display: grid; max-width: 540px; min-height: 480px; align-content: center; justify-items: center; text-align: center; }
+.register-card--success .register-brand { margin-bottom: 30px; }
+.register-success__icon { display: grid; width: 74px; height: 74px; place-items: center; margin-bottom: 18px; border: 3px solid var(--color-border); border-radius: 50%; background: var(--color-primary-soft); color: var(--color-primary-dark); box-shadow: 0 5px 0 rgb(24 21 18 / 10%); }
+.register-success__icon svg { width: 38px; height: 38px; }
+.register-card--success > p { max-width: 360px; margin-top: 9px; color: var(--color-text-muted); font-size: 13px; line-height: 1.5; }
+.register-success__status { display: inline-flex; align-items: center; gap: 8px; margin-top: 23px; color: var(--color-primary-dark); font-size: 11px; font-weight: 900; }
+.register-spin { animation: register-spin 850ms linear infinite; }
+
+@keyframes register-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .register-spin { animation: none; }
+  .account-choice__card { transition: none; }
+}
+
+@media (max-width: 620px) {
+  .register-page { align-items: start; padding: 14px; }
+  .register-card { margin-block: 10px; padding: 24px 18px 22px; }
+  .register-back { position: static; margin: -5px 0 12px -5px; }
+  .register-brand img { width: 46px; height: 46px; }
+  .register-heading { margin-top: 13px; }
+  .register-progress { margin-top: 20px; }
+  .account-choice, .registration-fields { grid-template-columns: 1fr; }
+  .account-choice__card { min-height: 106px; }
+  .registration-fields .field--full, .registration-section-heading { grid-column: auto; }
+  .registration-section-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .registration-section-heading p { text-align: left; }
+  .verification-card, .wallet-card { align-items: flex-start; flex-wrap: wrap; }
+  .verification-card b, .wallet-card b { margin-left: 51px; }
+  .registration-actions { display: grid; grid-template-columns: auto 1fr; }
+  .registration-actions .button--primary { min-width: 0; }
+}
+
+@media (max-width: 400px) {
+  .register-progress li small { max-width: 74px; text-align: center; }
+  .registration-summary { align-items: flex-start; }
+  .registration-summary .account-choice__icon { width: 42px; height: 42px; }
+}
