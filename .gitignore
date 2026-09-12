@@ -86,6 +86,7 @@ tmp/
 # Si igual los quieren fuera del repo público, borren estas tres líneas.
 !/docs/*.md
 !/backend/README.md
+!/frontend/README.md
 !/contracts/README.md
 
 # ── PDFs ─────────────────────────────────────────────────────

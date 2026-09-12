@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Autoprueba del prover ZK</title>
+  <style>
+    body { font: 14px/1.6 system-ui; padding: 2rem; max-width: 70ch; }
+    pre { background: #f4f2ec; padding: 1rem; border-radius: 8px; overflow: auto; white-space: pre-wrap; }
+    .ok { color: #14603f; font-weight: 700; }
+    .bad { color: #9b2c2c; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Autoprueba del prover ZK</h1>
+  <p>
+    Ejercita <strong>el mismo worker que usa la aplicación</strong> para comprobar que
+    barretenberg y Noir arrancan dentro del navegador, y que la prueba que sale de acá
+    es la que el contrato acepta.
+  </p>
+  <pre id="out">iniciando…</pre>
+  <script type="module" src="/src/zk-selftest.ts"></script>
+</body>
+</html>

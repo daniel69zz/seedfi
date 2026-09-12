@@ -14,7 +14,12 @@
     "lucide-react": "^1.45.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.3"
+    "react-router-dom": "^7.18.3",
+    "@s2d/shared": "*",
+    "@s2d/zk": "*",
+    "@tanstack/react-query": "^5.62.11",
+    "viem": "^2.21.55",
+    "wagmi": "^2.14.6"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

@@ -29,7 +29,7 @@ import { config, REPO_ROOT } from './config.ts';
 import { db } from './db.ts';
 import { DEMO } from './demo-accounts.ts';
 import { deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi, readProject, statusName } from './chain.ts';
-import { getProject, createProject, transition, setPlatformFields, addEvidence, listProjects } from './store/projects.ts';
+import { getProject, createProject, transition, markPublished, setPlatformFields, addEvidence, listProjects } from './store/projects.ts';
 import { createAttestation } from './store/attestations.ts';
 import { merklePathFor, issuerRoot, issuerTree, upsertInvestor, issueCredential, setKycStatus } from './store/investors.ts';
 import { credentialLeaf } from '@s2d/zk';
@@ -396,7 +396,7 @@ async function escenarioFreno() {
     args: [BigInt(dossier.onChainId), issuerRoot() as Hex, 100_000n, 68n],
   });
   setPlatformFields(dossier.id, { vaultAddress: deployed.vault, chainId: deployed.chainId });
-  transition(dossier.id, 'PUBLISHED');
+  markPublished(dossier.id);
   ok(`Proyecto ${dossier.onChainId} publicado: meta ${fmt(BigInt(dossier.terms.target))} USDT`);
 
   // Nuevas credenciales: las del escenario A ya quemaron su nullifier, pero acá

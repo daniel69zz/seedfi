@@ -36,6 +36,7 @@ tiene.
 
 ```text
    Construir la UI            →  api.md  ·  esquemas.md §1  ·  zk.md §6
+   Tocar la app /app          →  ../frontend/README.md
    Tocar los contratos        →  contratos.md  ·  arquitectura.md §5
    Tocar el circuito          →  zk.md  ·  contratos.md § EligibilityRegistry
    Entender el producto       →  arquitectura.md  ·  ../README.md

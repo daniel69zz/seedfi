@@ -3,7 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "description": "Seed 2 Deed — infraestructura de financiamiento programable para proyectos inmobiliarios",
-  "workspaces": ["packages/*", "backend", "frontend"],
+  "workspaces": [
+    "packages/*",
+    "backend",
+    "frontend"
+  ],
   "scripts": {
     "build": "npm run build -w @s2d/shared && npm run build -w @s2d/zk && npm run build -w @s2d/backend && npm run build -w frontend",
     "dev": "npm run dev -w @s2d/backend & npm run dev -w frontend",
@@ -15,9 +19,11 @@
     "contracts:deploy:local": "bash scripts/deploy-local.sh",
     "circuit:test": "cd circuits/eligibility && nargo test",
     "circuit:build": "bash scripts/build-circuit.sh",
-    "seed": "npm run seed -w @s2d/backend",
-    "e2e": "npm run e2e -w @s2d/backend",
+    "seed": "npm run seed -w @s2d/backend --",
+    "e2e": "npm run e2e -w @s2d/backend --",
     "test": "npm run test -w @s2d/zk && npm run test -w @s2d/backend"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

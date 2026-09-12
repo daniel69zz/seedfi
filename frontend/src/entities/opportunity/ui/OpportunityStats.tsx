@@ -1,3 +1,4 @@
+import { totalReturnPct } from '../model/opportunity.types'
 import type { Opportunity } from '../model/opportunity.types'
 import './OpportunityStats.css'
 
@@ -17,7 +18,7 @@ export function OpportunityStats({ opportunity }: OpportunityStatsProps) {
         <dt>Monto solicitado</dt>
       </div>
       <div>
-        <dd>{opportunity.totalReturnPct}%</dd>
+        <dd>{totalReturnPct(opportunity)}%</dd>
         <dt>Retorno total propuesto</dt>
       </div>
       <div>

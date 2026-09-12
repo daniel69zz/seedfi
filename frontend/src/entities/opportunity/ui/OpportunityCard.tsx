@@ -57,7 +57,7 @@ export function OpportunityBadges({ opportunity }: OpportunityCardProps) {
     <div className="opportunity-card__badges">
       <Badge icon={category.icon} tone={category.tone}>{opportunity.category}</Badge>
       {opportunity.verified && <Badge icon={BadgeCheck} tone="emerald">KYB verificado</Badge>}
-      <Badge icon={ShieldCheck} tone={risk.tone}>{risk.label} · {opportunity.assessedBy}</Badge>
+      <Badge icon={ShieldCheck} tone={risk.tone}>{risk.label}{opportunity.assessedBy ? ` · ${opportunity.assessedBy}` : ''}</Badge>
     </div>
   )
 }

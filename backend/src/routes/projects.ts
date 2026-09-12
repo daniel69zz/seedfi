@@ -5,9 +5,10 @@ import type { FastifyInstance } from 'fastify';
 import type { Address, Hex } from 'viem';
 import { validateDossier, computeRiskTotal, riskGradeFor, type ProjectDossier, type RiskDimension } from '@s2d/shared';
 import {
-  listProjects, getProject, createProject, updateProject, setPlatformFields, transition,
+  listProjects, getProject, createProject, updateProject, setPlatformFields, transition, markPublished,
   addReviewNote, reviewNotes, listEvidence, addEvidence, evidenceBundleHash, DomainError,
 } from '../store/projects.ts';
+import { pinAndUpdate, isConfigured as ipfsConfigured, gatewayUrl } from '../store/ipfs.ts';
 import { eventsFor, sync } from '../store/indexer.ts';
 import {
   deployment, operatorClient, publicClient, readProject, readMilestones,
@@ -175,7 +176,7 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
     await pub.waitForTransactionReceipt({ hash: policyHash });
 
     const published = updateProjectChainRefs(project, deployed.vault, deployed.chainId);
-    const result = transition(published.id, 'PUBLISHED');
+    const result = markPublished(published.id);
     await sync();
 
     return { project: getProject(result.id), transactions: { createProject: createHash, grantVerifiers: verifierTxs, setPolicy: policyHash } };
@@ -252,7 +253,31 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
       content: body.contentBase64 ? Buffer.from(body.contentBase64, 'base64') : undefined,
     });
 
-    return reply.code(201).send({ evidence });
+    // Pin a IPFS en background — fire and forget. Si falla, el registro queda
+    // con ipfsCid = null y se puede reintentar con POST /api/evidence/:id/pin.
+    if (body.contentBase64 && ipfsConfigured()) {
+      const buf = Buffer.from(body.contentBase64, 'base64');
+      void pinAndUpdate(evidence.id, buf, body.filename, project.id).catch((err) => {
+        console.warn(`[ipfs] falló el pin de ${evidence.id}:`, err);
+      });
+    }
+
+    return reply.code(201).send({ evidence, ipfs: ipfsConfigured() ? 'pinning' : 'not_configured' });
+  });
+
+  /** Reintenta el pin de una evidencia que no llegó a IPFS. */
+  app.post('/api/evidence/:id/pin', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    // Buscamos la evidencia en todas las del proyecto — no tenemos el projectId
+    // en esta ruta, así que buscamos directo en la base.
+    const row = (await import('../db.ts')).db()
+      .prepare('SELECT * FROM evidence WHERE id = ?').get(id) as { project_id: string; filename: string; ipfs_cid: string | null } | undefined;
+    if (!row) return reply.code(404).send({ error: 'Evidencia inexistente' });
+    if (row.ipfs_cid) return { cid: row.ipfs_cid, url: gatewayUrl(row.ipfs_cid) };
+    if (!ipfsConfigured()) return reply.code(503).send({ error: 'IPFS no configurado. Seteá PINATA_JWT.' });
+    // No tenemos el contenido en la base (se guarda en memoria durante el upload).
+    // Para reintentar habría que resubirlo.
+    return reply.code(409).send({ error: 'El contenido no está disponible para re-pin. Subí la evidencia de nuevo.' });
   });
 
   app.get('/api/projects/:id/evidence/:milestoneIndex/bundle', async (request, reply) => {

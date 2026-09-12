@@ -131,6 +131,19 @@ CREATE TABLE IF NOT EXISTS sync_cursor (
   id           INTEGER PRIMARY KEY CHECK (id = 1),
   last_block   INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS repayment_schedules (
+  project_id   TEXT PRIMARY KEY REFERENCES projects(id) ON DELETE CASCADE,
+  on_chain_id  INTEGER NOT NULL,
+  total_due    TEXT NOT NULL,
+  installment  TEXT NOT NULL,
+  periods      INTEGER NOT NULL,
+  interval_ms  INTEGER NOT NULL,
+  start_date   TEXT NOT NULL,
+  -- Las cuotas van como JSON: son un arreglo que se lee entero o no se lee.
+  data         TEXT NOT NULL,
+  updated_at   TEXT NOT NULL
+);
 `;
 
 let database: DatabaseSync | null = null;
@@ -151,7 +164,7 @@ export function db(): DatabaseSync {
 export function resetDb(): void {
   const d = db();
   for (const table of [
-    'chain_events', 'sync_cursor', 'credentials', 'issuer_state',
+    'repayment_schedules', 'chain_events', 'sync_cursor', 'credentials', 'issuer_state',
     'attestations', 'evidence', 'review_notes', 'investors', 'projects',
   ]) {
     d.exec(`DELETE FROM ${table}`);

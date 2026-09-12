@@ -8,9 +8,11 @@ import { db } from './db.ts';
 import { projectRoutes } from './routes/projects.ts';
 import { investorRoutes } from './routes/investors.ts';
 import { verificationRoutes } from './routes/verification.ts';
+import { repaymentRoutes } from './routes/repayment.ts';
 import { startSyncLoop, sync } from './store/indexer.ts';
 import { DomainError } from './store/projects.ts';
 import { ChainUnavailableError } from './chain.ts';
+import { isConfigured as ipfsConfigured } from './store/ipfs.ts';
 import { initPoseidon } from '@s2d/zk';
 
 export async function buildServer() {
@@ -62,6 +64,7 @@ export async function buildServer() {
       // Lo que no funciona sin cadena está marcado ruta por ruta con un 503.
       deployed: deployment !== null,
       contracts: deployment,
+      ipfs: ipfsConfigured(),
     };
   });
 
@@ -70,6 +73,7 @@ export async function buildServer() {
   await app.register(projectRoutes);
   await app.register(investorRoutes);
   await app.register(verificationRoutes);
+  await app.register(repaymentRoutes);
 
   return app;
 }

@@ -19,9 +19,9 @@ import { join } from 'node:path';
 import { db, resetDb } from './db.ts';
 import { REPO_ROOT } from './config.ts';
 import { DEMO } from './demo-accounts.ts';
-import { createProject, transition, getProject, addReviewNote, addEvidence, setPlatformFields } from './store/projects.ts';
+import { createProject, transition, markPublished, getProject, addReviewNote, addEvidence, setPlatformFields, reassignOnChainId } from './store/projects.ts';
 import { upsertInvestor, issueCredential, issuerRoot, setKycStatus } from './store/investors.ts';
-import { deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi } from './chain.ts';
+import { deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi, confirm, nextFreeOnChainId } from './chain.ts';
 import { sync } from './store/indexer.ts';
 
 const DIA = 24 * 60 * 60 * 1000;
@@ -172,7 +172,25 @@ function dossierAurora(): Omit<ProjectDossier, 'id' | 'onChainId' | 'createdAt' 
 
 async function main() {
   const reset = process.argv.includes('--reset');
+  const keep = process.argv.includes('--keep');
   db();
+
+  // Sembrar sobre una base que ya tiene proyectos los ACUMULA, y los viejos
+  // suelen apuntar a un vault de un despliegue anterior: el panel los lista,
+  // `/chain` falla contra una dirección muerta y nadie entiende por qué.
+  //
+  // Antes esto pasaba en silencio. Ahora hay que decir qué se quiere.
+  const existing = (db().prepare('SELECT COUNT(*) AS c FROM projects').get() as { c: number }).c;
+  if (existing > 0 && !reset && !keep) {
+    console.error(
+      `La base ya tiene ${existing} proyecto(s). Sembrar encima los acumula, y los anteriores\n`
+      + 'pueden apuntar a un vault de otro despliegue.\n\n'
+      + '  npm run seed -- --reset    empezar de cero (lo habitual)\n'
+      + '  npm run seed -- --keep     agregar otro proyecto a lo que ya hay',
+    );
+    process.exit(1);
+  }
+
   if (reset) {
     console.log('Base limpiada.');
     resetDb();
@@ -242,7 +260,7 @@ async function main() {
       address: deployed.vault as Address, abi: projectVaultAbi, functionName: 'setKyc',
       args: [perfil.cuenta.address as Address, true], chain: null, account: operator,
     });
-    await pub.waitForTransactionReceipt({ hash });
+    await confirm(hash, 'transacción del sembrado');
     setKycStatus(investor.address, 'APPROVED', new Date().toISOString());
 
     // Fondos de prueba.
@@ -250,7 +268,7 @@ async function main() {
       address: deployed.usdt as Address, abi: mockUsdtAbi, functionName: 'mint',
       args: [perfil.cuenta.address as Address, parseUnits('500000')], chain: null, account: operator,
     });
-    await pub.waitForTransactionReceipt({ hash: mint });
+    await confirm(mint, 'mint de USDT');
 
     console.log(`  Inversionista ${perfil.nombre}: KYC aprobado, credencial emitida, 500.000 USDT`);
   }
@@ -260,6 +278,13 @@ async function main() {
 
   // ------------------------------------------------ 4. publicación en cadena
   setPlatformFields(project.id, { credentialRoot: root });
+  // La base se limpió con --reset, pero la cadena no: hay que buscar un id que
+  // el vault todavía no tenga ocupado.
+  const freeId = await nextFreeOnChainId(project.onChainId);
+  if (freeId !== project.onChainId) {
+    console.log(`  onChainId ${project.onChainId} ya ocupado en el vault; se usa ${freeId}`);
+    reassignOnChainId(project.id, freeId);
+  }
   const listo = getProject(project.id)!;
 
   const milestones = [...listo.milestones].sort((a, b) => a.index - b.index).map((m) => ({
@@ -276,7 +301,7 @@ async function main() {
     ],
     chain: null, account: operator,
   });
-  await pub.waitForTransactionReceipt({ hash: createHash });
+  await confirm(createHash, 'createProject');
 
   for (const verifier of listo.verifiers) {
     const hash = await client.writeContract({
@@ -284,7 +309,7 @@ async function main() {
       args: [BigInt(listo.onChainId), verifier.address as Address, ROLE_ID[verifier.role]],
       chain: null, account: operator,
     });
-    await pub.waitForTransactionReceipt({ hash });
+    await confirm(hash, 'transacción del sembrado');
   }
 
   const policyHash = await client.writeContract({
@@ -292,10 +317,10 @@ async function main() {
     args: [BigInt(listo.onChainId), root as `0x${string}`, BigInt(listo.eligibility.minNetWorth), BigInt(listo.eligibility.allowedJurisdiction)],
     chain: null, account: operator,
   });
-  await pub.waitForTransactionReceipt({ hash: policyHash });
+  await confirm(policyHash, 'setPolicy');
 
   setPlatformFields(listo.id, { vaultAddress: deployed.vault, chainId: deployed.chainId });
-  transition(listo.id, 'PUBLISHED');
+  markPublished(listo.id);
   await sync();
   console.log(`Publicado en cadena. Vault ${deployed.vault}, tx ${createHash}`);
 

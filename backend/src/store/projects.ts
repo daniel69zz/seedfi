@@ -198,6 +198,52 @@ export function transition(id: string, to: ProjectStatus, options?: { force?: bo
   return next;
 }
 
+/**
+ * Estados cuyo dueño es la cadena. Una vez que el vault llegó a cualquiera de
+ * ellos, lo que diga la base sobre estados anteriores es historia.
+ */
+const CHAIN_OWNED: ProjectStatus[] = ['FUNDING', 'ACTIVE', 'COMPLETED', 'ROUND_FAILED', 'MILESTONE_FAILED'];
+
+/**
+ * Marca el dossier como PUBLISHED después de crearlo en cadena.
+ *
+ * Existe en vez de un `transition(id, 'PUBLISHED')` pelado por una carrera real:
+ * el indexador corre cada 4 s, y entre que `createProject` se confirma y el
+ * llamador vuelve, puede haber visto ya el evento, leído `projects()` en el
+ * vault y movido el estado a FUNDING.
+ *
+ * Cuando eso pasa, PUBLISHED es un estado que la cadena YA superó, y forzarlo
+ * sería retroceder. Se acepta que ganó la cadena — es la regla de toda la capa
+ * de indexado— en vez de reventar con un 409 que además dejaría el dossier sin
+ * su dirección de vault.
+ */
+export function markPublished(id: string): ProjectDossier {
+  const current = getProject(id);
+  if (!current) throw new DomainError('Proyecto inexistente', 404);
+  if (CHAIN_OWNED.includes(current.status)) return current;
+  return transition(id, 'PUBLISHED');
+}
+
+/**
+ * Reasigna el id on-chain de un proyecto que TODAVÍA no se publicó.
+ *
+ * Hace falta porque la base y la cadena tienen espacios de ids independientes:
+ * `--reset` limpia la primera y no puede limpiar la segunda. Después de
+ * publicar sería impensable — el id ya está grabado en el vault—, y por eso se
+ * rechaza.
+ */
+export function reassignOnChainId(id: string, onChainId: number): ProjectDossier {
+  const current = getProject(id);
+  if (!current) throw new DomainError('Proyecto inexistente', 404);
+  if (current.vaultAddress) {
+    throw new DomainError('El proyecto ya está en cadena: su id no se puede cambiar.', 409);
+  }
+  const next = { ...current, onChainId, updatedAt: now() };
+  db().prepare('UPDATE projects SET on_chain_id=?, dossier=?, updated_at=? WHERE id=?')
+    .run(onChainId, JSON.stringify(next), next.updatedAt, current.id);
+  return next;
+}
+
 export function addReviewNote(projectId: string, author: string, decision: string, body: string) {
   const id = randomUUID();
   db().prepare('INSERT INTO review_notes (id, project_id, author, decision, body, created_at) VALUES (?,?,?,?,?,?)')

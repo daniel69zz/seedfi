@@ -199,3 +199,38 @@ export async function fetchEvents(fromBlock: bigint, toBlock: bigint): Promise<I
   }
   return out;
 }
+
+// ---------------------------------------------------------------- escritura
+
+/**
+ * Espera el recibo Y COMPROBA QUE NO REVIRTIÓ.
+ *
+ * `writeContract` de viem no simula: una transacción que revierte igual se mina,
+ * y `waitForTransactionReceipt` devuelve el recibo sin lanzar. Quien solo
+ * espera el recibo cree que funcionó.
+ *
+ * Esto no es teórico: el seed daba "DEMO LISTA" con el `createProject`
+ * revertido, y el proyecto quedaba en la base apuntando a un vault donde nunca
+ * existió.
+ */
+export async function confirm(hash: Hex, what: string): Promise<Hex> {
+  const receipt = await publicClient().waitForTransactionReceipt({ hash });
+  if (receipt.status !== 'success') {
+    throw new Error(`La transacción de «${what}» revirtió en cadena (tx ${hash}).`);
+  }
+  return hash;
+}
+
+/**
+ * Primer id de proyecto libre EN EL VAULT, desde `startAt`.
+ *
+ * La base y la cadena tienen espacios de ids independientes: `--reset` limpia
+ * la primera y no puede limpiar la segunda. Sin esto, el primer sembrado
+ * después de un reset choca contra un id que la cadena ya tiene ocupado.
+ */
+export async function nextFreeOnChainId(startAt: number): Promise<number> {
+  for (let id = startAt; id < startAt + 1000; id++) {
+    if (await readProject(id) === null) return id;
+  }
+  throw new Error('No se encontró un id de proyecto libre en el vault.');
+}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { totalReturnPct } from '../../../entities/opportunity/model/opportunity.types'
 import type { Opportunity } from '../../../entities/opportunity/model/opportunity.types'
 
 export type OpportunitySort =
@@ -17,9 +18,9 @@ export function useOpportunitySort(opportunities: readonly Opportunity[]) {
 
     switch (sort) {
       case 'return-desc':
-        return sorted.sort((first, second) => second.totalReturnPct - first.totalReturnPct)
+        return sorted.sort((first, second) => totalReturnPct(second) - totalReturnPct(first))
       case 'return-asc':
-        return sorted.sort((first, second) => first.totalReturnPct - second.totalReturnPct)
+        return sorted.sort((first, second) => totalReturnPct(first) - totalReturnPct(second))
       case 'funding-desc':
         return sorted.sort((first, second) => second.fundedAmount - first.fundedAmount)
       case 'duration-asc':

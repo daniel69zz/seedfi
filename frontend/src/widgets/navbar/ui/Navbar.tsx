@@ -7,6 +7,7 @@ import './Navbar.css'
 
 const guestNavigation = [
   ['Oportunidades', '/opportunities'],
+  ['Aplicación', '/app'],
   ['Cómo funciona', '/how-it-works'],
   ['Seguridad', '/security'],
   ['Acerca de', '/about'],
@@ -14,6 +15,7 @@ const guestNavigation = [
 
 const investorNavigation = [
   ['Oportunidades', '/opportunities'],
+  ['Aplicación', '/app'],
   ['Resumen', '/investor/dashboard'],
   ['Mis inversiones', '/investor/investments'],
   ['Portafolio', '/investor/portfolio'],
@@ -21,6 +23,7 @@ const investorNavigation = [
 ] as const
 
 const companyNavigation = [
+  ['Aplicación', '/app'],
   ['Dashboard', '/company/dashboard'],
   ['Mis proyectos', '/company/projects'],
   ['Nueva propuesta', '/company/projects/new'],

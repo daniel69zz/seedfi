@@ -215,19 +215,34 @@ Más casos en [`docs/operacion.md`](docs/operacion.md#8-troubleshooting).
 
 ---
 
-## Estado conocido
+## La aplicación
 
-> ⚠️ **`npm run build` falla en el frontend.** Hay 8 errores de tipos
-> preexistentes en `OpportunityCard.tsx`, `OpportunityStats.tsx`,
-> `useOpportunitySort.ts` y `MarketplaceFilters.tsx`: referencian
-> `assessedBy`, `totalReturnPct` y los sorts `apy-desc`/`apy-asc`, que no existen
-> en el tipo `Opportunity`.
->
-> **No afecta a nada de lo de arriba**: `npm run dev:frontend` y `vite build`
-> funcionan, porque Vite no corre el typecheck. Backend, contratos y circuito
-> compilan limpio.
+El marketplace público (`/opportunities`) sirve el catálogo de demostración.
+Todo lo que hay bajo **`/app`** habla con el backend y con los contratos
+desplegados:
 
----
+| Ruta | Qué hace |
+|------|----------|
+| `/app` | Panel: saldos, hitos e historial, todo leído **de la cadena** |
+| `/app/identity` | Registro, KYC y emisión de la credencial verificable |
+| `/app/invest` | Prueba ZK → aprobar USDT → invertir |
+| `/app/developer/new` | Crear el dossier, validarlo, publicarlo en cadena |
+| `/app/verify` | Subir evidencia, firmar la attestation, transmitirla |
+
+### Autoprueba del prover
+
+```
+http://localhost:5173/zk-selftest.html
+```
+
+Ejercita **el mismo worker que usa la aplicación** y reporta si barretenberg
+arranca en el navegador. Medido: **~20 s** por prueba en el navegador contra
+~4 s en Node — el WASM multihilo del navegador es bastante más lento, y por eso
+la prueba corre en un worker y no en el hilo de UI.
+
+> La prueba necesita `SharedArrayBuffer`, que solo existe con aislamiento de
+> origen cruzado. Lo habilitan las cabeceras COOP/COEP de `vite.config.ts`;
+> al desplegar el frontend hay que servirlas también.
 
 ## Qué lo diferencia
 
@@ -294,16 +309,19 @@ seed2deed/
 | T4 | Circuito Noir de elegibilidad | ✅ |
 | T5 | ZK Verifier on-chain | ✅ |
 | T6 | API backend | ✅ |
+| T7 | Vista Developer: crear proyecto | ✅ |
+| T8 | Vista Investor: wallet + depositar | ✅ |
+| T9 | UI de generación de prueba ZK | ✅ |
+| T10 | Vista Verifier: acreditar hito | ✅ |
 | T11 | Deploy a testnet | ✅ |
+| T12 | Integración frontend ↔ contratos | ✅ |
+| T13 | Integración frontend ↔ backend | ✅ |
+| T14 | Dashboard de estado | ✅ |
 | T15 | Datos semilla | ✅ |
 | T16 | E2E del flujo completo | ✅ |
-| T7 · T8 · T9 · T10 | Vistas del frontend | ⬜ |
-| T12 · T13 | Integración frontend ↔ contratos / backend | ⬜ |
-| T14 | Dashboard de estado | ⬜ |
 | T17 | Guion de pitch | ⬜ |
-| T18 · T19 | IPFS · waterfall automático *(stretch)* | ⬜ |
-
----
+| T18 | IPFS + hash on-chain *(stretch)* | ⬜ |
+| T19 | Waterfall automático *(stretch)* | ⬜ |
 
 ## Despliegue a testnet
 

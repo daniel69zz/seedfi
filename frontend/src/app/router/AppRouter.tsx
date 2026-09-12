@@ -1,6 +1,12 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { ProtectedRoute } from '../../features/auth/ui/ProtectedRoute'
+import { AppLayout } from '../../pages/app/ui/AppLayout'
+import { DashboardPage } from '../../pages/app/ui/DashboardPage'
+import { IdentityPage } from '../../pages/app/ui/IdentityPage'
+import { InvestPage } from '../../pages/app/ui/InvestPage'
+import { NewProjectPage as OnChainNewProjectPage } from '../../pages/app/ui/NewProjectPage'
+import { VerifyPage } from '../../pages/app/ui/VerifyPage'
 import { AdminLayout } from '../../pages/admin/ui/AdminLayout'
 import { AdminCompaniesPage, AdminCompanyDetailPage, AdminDashboardPage, AdminProjectReviewPage, AdminProjectsPage, AdminRegistryPage } from '../../pages/admin/ui/AdminPages'
 import { ForgotPasswordPage, LoginPage, RegisterPage, VerifyEmailPage } from '../../pages/auth/ui/AuthPages'
@@ -47,6 +53,11 @@ const pageTitles: Record<string, string> = {
   '/admin/investments': 'Registro de inversiones',
   '/admin/payments': 'Administrar pagos',
   '/admin/defaults': 'Incumplimientos',
+  '/app': 'Panel on-chain',
+  '/app/identity': 'Identidad verificable',
+  '/app/invest': 'Invertir',
+  '/app/developer/new': 'Nuevo proyecto',
+  '/app/verify': 'Verificar hitos',
   '/notifications': 'Notificaciones',
   '/unauthorized': 'Acceso restringido',
 }
@@ -132,6 +143,16 @@ function AppChrome() {
           <Route path="investments" element={<AdminRegistryPage kind="investments" />} />
           <Route path="payments" element={<AdminRegistryPage kind="payments" />} />
           <Route path="defaults" element={<AdminRegistryPage kind="defaults" />} />
+        </Route>
+
+        {/* Aplicación con cadena real: backend + contratos desplegados.
+            El marketplace de arriba sigue sirviendo el catálogo de demostración. */}
+        <Route path="/app" element={<AppLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="identity" element={<IdentityPage />} />
+          <Route path="invest" element={<InvestPage />} />
+          <Route path="developer/new" element={<OnChainNewProjectPage />} />
+          <Route path="verify" element={<VerifyPage />} />
         </Route>
 
         <Route path="/notifications" element={<ProtectedRoute roles={['INVESTOR', 'COMPANY', 'ADMIN']}><NotificationsPage /></ProtectedRoute>} />

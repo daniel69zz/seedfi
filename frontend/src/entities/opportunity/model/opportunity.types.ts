@@ -92,4 +92,19 @@ export interface Opportunity {
   documents: ProjectDocument[]
   riskFactors: RiskFactor[]
   vault: ProjectVault
+  /**
+   * Quién evaluó el riesgo. Opcional: un proyecto recién publicado todavía no
+   * pasó por el comité, y mostrar un evaluador vacío es peor que no mostrarlo.
+   */
+  assessedBy?: string
+}
+
+/**
+ * Retorno total sobre el plazo completo, derivado del APY.
+ *
+ * No es un campo del dato: `expectedApy` es anual y el plazo varía, así que
+ * guardar los dos por separado invita a que se desincronicen. Se deriva.
+ */
+export function totalReturnPct(opportunity: Pick<Opportunity, 'expectedApy' | 'durationMonths'>): number {
+  return Math.round(opportunity.expectedApy * opportunity.durationMonths / 12 * 10) / 10
 }
