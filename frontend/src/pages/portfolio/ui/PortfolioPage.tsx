@@ -1,6 +1,13 @@
-import { ChartPie } from 'lucide-react'
-import { SectionPlaceholder } from '../../../shared/ui/section-placeholder/SectionPlaceholder'
+import { BriefcaseBusiness, CircleDollarSign, PieChart, TrendingUp } from 'lucide-react'
+import { useDemo } from '../../../features/demo/model/DemoContext'
+import { formatPercent, formatUsd } from '../../../shared/lib/format'
+import { MetricCard, PageHeader, ProgressMeter, SectionCard } from '../../../shared/ui/platform/PlatformUI'
+import '../../investments/ui/InvestorPages.css'
 
 export function PortfolioPage() {
-  return <SectionPlaceholder eyebrow="PORTAFOLIO" title="Una mirada clara a tu portafolio" description="Aquí podrás visualizar la distribución y el desempeño de tus oportunidades seleccionadas." icon={ChartPie} />
+  const { investments } = useDemo()
+  const capital = investments.reduce((sum, item) => sum + item.amount, 0)
+  const earnings = investments.reduce((sum, item) => sum + item.earningsReceived, 0)
+  const averageReturn = investments.length ? investments.reduce((sum, item) => sum + item.expectedApy, 0) / investments.length : 0
+  return <main className="app-page page-shell" id="main-content"><PageHeader eyebrow="DIVERSIFICACIÓN" title="Portafolio" description="Una vista consolidada de capital, distribución y proyección estimada." /><div className="metrics-grid"><MetricCard label="Valor total" value={formatUsd(capital + earnings, true)} icon={PieChart} /><MetricCard label="Capital invertido" value={formatUsd(capital, true)} icon={BriefcaseBusiness} tone="blue" /><MetricCard label="Ganancias recibidas" value={formatUsd(earnings, true)} icon={CircleDollarSign} tone="peach" /><MetricCard label="Retorno promedio" value={formatPercent(averageReturn)} detail="Estimado" icon={TrendingUp} tone="lavender" /></div><div className="dashboard-grid"><SectionCard title="Distribución por categoría" description="Capital asignado"><div className="portfolio-chart"><div className="portfolio-donut"><span><strong>{investments.length}</strong>proyectos</span></div><div className="portfolio-legend"><p><span className="legend-dot legend-dot--one" />Bienes raíces <strong>54%</strong></p><p><span className="legend-dot legend-dot--two" />Energía <strong>31%</strong></p><p><span className="legend-dot legend-dot--three" />Agricultura <strong>15%</strong></p></div></div></SectionCard><SectionCard title="Distribución por riesgo" description="Exposición aproximada"><div className="risk-distribution"><ProgressMeter value={62} label="Riesgo bajo · 62%" /><ProgressMeter value={38} label="Riesgo medio · 38%" /><ProgressMeter value={0} label="Riesgo alto · 0%" /></div></SectionCard></div><div className="two-column portfolio-bottom"><SectionCard title="Proyección a 12 meses"><div className="projection-bars">{[42, 52, 48, 61, 69, 76, 73, 84, 91, 88, 96, 100].map((height, index) => <span key={index} style={{ height: `${height}%` }} title={`Mes ${index + 1}`} />)}</div><p className="page-note">Proyección ilustrativa basada en retornos estimados.</p></SectionCard><SectionCard title="Pagos recibidos"><div className="activity-list"><p><TrendingUp /><span><strong>248 USDT</strong><small>Andes Solar · mayo 2026</small></span></p><p><TrendingUp /><span><strong>111 USDT</strong><small>Altiplano Quinoa · agosto 2026</small></span></p></div></SectionCard></div></main>
 }

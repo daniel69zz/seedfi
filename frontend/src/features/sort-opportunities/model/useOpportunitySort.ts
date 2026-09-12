@@ -21,7 +21,7 @@ export function useOpportunitySort(opportunities: readonly Opportunity[]) {
       case 'apy-asc':
         return sorted.sort((first, second) => first.expectedApy - second.expectedApy)
       case 'funding-desc':
-        return sorted.sort((first, second) => second.fundingRequested - first.fundingRequested)
+        return sorted.sort((first, second) => second.fundedAmount - first.fundedAmount)
       case 'duration-asc':
         return sorted.sort((first, second) => first.durationMonths - second.durationMonths)
       case 'funded-desc':

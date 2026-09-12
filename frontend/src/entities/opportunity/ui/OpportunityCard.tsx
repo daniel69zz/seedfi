@@ -1,13 +1,17 @@
 import {
   ArrowRight,
   BadgeCheck,
+  Factory,
+  HardHat,
   Heart,
   House,
   Laptop,
-  Leaf,
+  MapPin,
   ShieldCheck,
   Sprout,
+  Store,
   Truck,
+  Zap,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { Opportunity, OpportunityCategory } from '../model/opportunity.types'
@@ -26,12 +30,15 @@ interface OpportunityCardProps {
 type BadgeTone = 'mint' | 'peach' | 'lavender' | 'blue' | 'pink'
 
 const categoryPresentation: Record<OpportunityCategory, { icon: LucideIcon; tone: BadgeTone }> = {
-  'Energía Limpia': { icon: Leaf, tone: 'mint' },
-  Agricultura: { icon: Sprout, tone: 'peach' },
   'Bienes Raíces': { icon: House, tone: 'lavender' },
+  Construcción: { icon: HardHat, tone: 'peach' },
+  Agricultura: { icon: Sprout, tone: 'peach' },
+  Energía: { icon: Zap, tone: 'mint' },
+  Tecnología: { icon: Laptop, tone: 'blue' },
   Logística: { icon: Truck, tone: 'blue' },
   Salud: { icon: Heart, tone: 'pink' },
-  Tecnología: { icon: Laptop, tone: 'blue' },
+  Industria: { icon: Factory, tone: 'lavender' },
+  Comercio: { icon: Store, tone: 'mint' },
 }
 
 export function OpportunityBadges({ opportunity }: OpportunityCardProps) {
@@ -60,15 +67,17 @@ export function OpportunityCard({ opportunity }: OpportunityCardProps) {
       <div className="opportunity-card__identity">
         <BusinessImage business={opportunity.business} />
         <div className="opportunity-card__copy">
-          <h2>{opportunity.business.name}</h2>
+          <p className="opportunity-card__company">{opportunity.business.name}</p>
+          <h2>{opportunity.projectName}</h2>
           <p>{opportunity.description}</p>
+          <span className="opportunity-card__location"><MapPin size={13} aria-hidden="true" />{opportunity.location}</span>
         </div>
       </div>
 
       <OpportunityStats opportunity={opportunity} />
 
       <div className="opportunity-card__funding">
-        <p><span>Inversión mínima</span><strong>{opportunity.minimumInvestment.toLocaleString('en-US')} USDT</strong></p>
+        <p><span>Recaudado</span><strong>{opportunity.fundedAmount.toLocaleString('en-US')} USDT</strong><small>Mínimo {opportunity.minimumInvestment.toLocaleString('en-US')} USDT</small></p>
         <FundingProgress percentage={opportunity.fundedPercentage} />
       </div>
 

@@ -7,20 +7,31 @@
   border: 2px solid var(--color-border);
   border-radius: var(--radius-pill);
   padding: 8px 22px;
-  background: linear-gradient(180deg, #24a57c, #078766);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 28%), 0 3px 0 rgb(24 21 18 / 10%);
-  color: #fff;
+  background: transparent;
   font-weight: 900;
   line-height: 1;
   text-decoration: none;
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
-.button:hover {
+.button--primary {
+  background: linear-gradient(180deg, #24a57c, #078766);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 28%), 0 3px 0 rgb(24 21 18 / 10%);
+  color: #fff;
+}
+
+.button--primary:hover {
   background: linear-gradient(180deg, #1f9873, var(--color-primary-dark));
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 24%), 0 5px 0 rgb(24 21 18 / 10%);
   transform: translateY(-2px);
 }
+
+.button--secondary { background: var(--color-surface); color: var(--color-text); }
+.button--secondary:hover { background: var(--color-primary-soft); transform: translateY(-2px); }
+.button--ghost { border-color: transparent; background: transparent; color: var(--color-primary-dark); box-shadow: none; }
+.button--ghost:hover { background: var(--color-primary-soft); transform: none; }
+.button--danger { background: #fff0ec; color: #a23d2b; border-color: #b45a48; }
+.button--danger:hover { background: #f8d9d0; transform: translateY(-2px); }
 
 .button:hover svg { transform: translateX(4px); }
 .button svg { transition: transform 160ms ease; }

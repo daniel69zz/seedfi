@@ -6,21 +6,23 @@ import './Button.css'
 type CommonProps = PropsWithChildren<{
   className?: string
   to?: string
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
 }>
 
 type ButtonProps = CommonProps & ButtonHTMLAttributes<HTMLButtonElement> & AnchorHTMLAttributes<HTMLAnchorElement>
 
-export function Button({ className, to, children, ...props }: ButtonProps) {
+export function Button({ className, to, variant = 'primary', children, ...props }: ButtonProps) {
+  const buttonClassName = cn('button', `button--${variant}`, className)
   if (to) {
     return (
-      <Link className={cn('button', className)} to={to} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
+      <Link className={buttonClassName} to={to} {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}>
         {children}
       </Link>
     )
   }
 
   return (
-    <button className={cn('button', className)} type="button" {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
+    <button className={buttonClassName} type="button" {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}>
       {children}
     </button>
   )
