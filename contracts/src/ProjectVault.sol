@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
+/// @notice Puerta de elegibilidad. La implementa `EligibilityRegistry`, que solo
+///         la abre contra una prueba de conocimiento cero válida.
+interface IEligibilityGate {
+    function isEligible(uint256 projectId, address investor) external view returns (bool);
+}
+
 /// @title  ProjectVault — Truth Works
 /// @notice Bóveda de financiamiento para una obra de construcción.
 ///         Custodia USDT, lo libera POR HITOS contra attestations firmadas por
@@ -48,6 +54,7 @@ contract ProjectVault {
     error PlazoNoVencido();
     error TransferenciaFallida();
     error KycRequerido();
+    error ElegibilidadRequerida();
     error ComisionExcesiva();
     error VerificadorNoPuedeSerElOperador();
 
@@ -120,7 +127,19 @@ contract ProjectVault {
     mapping(bytes32 => bool) public revoked;
 
     /// @notice Como intermediario, la plataforma responde por quién invierte.
+    ///         Esto es lo que el operador AFIRMA: que la wallet pasó su tamizaje
+    ///         AML. Es una obligación suya y por eso la marca él.
     mapping(address => bool) public kycApproved;
+
+    /// @notice Lo que el inversionista PRUEBA: jurisdicción admitida, patrimonio
+    ///         suficiente y credencial KYC vigente, sin revelar ninguno de los
+    ///         tres. Son dos cosas distintas y por eso son dos condiciones:
+    ///         la primera la pone el operador y podría mentir; la segunda no la
+    ///         puede fabricar nadie, ni él.
+    ///
+    ///         En cero la puerta queda abierta, para que un despliegue sin
+    ///         circuito ZK siga funcionando con el tamizaje del operador solo.
+    address public eligibilityGate;
 
     // ---------------------------------------------------------------- eventos
     event ProjectCreated(uint256 indexed projectId, address indexed builder, uint256 target, uint64 endDate);
@@ -136,6 +155,7 @@ contract ProjectVault {
     event AttestationRevoked(bytes32 indexed digest, address indexed verifier);
     event KycSet(address indexed investor, bool approved);
     event FeeCharged(uint256 indexed projectId, string kind, uint256 amount);
+    event EligibilityGateSet(address indexed gate);
 
     // ------------------------------------------------------------------ EIP712
     bytes32 private constant _DOMAIN_TYPEHASH =
@@ -212,6 +232,15 @@ contract ProjectVault {
         feeRecipient = r;
     }
 
+    /// @notice Conecta el registro de elegibilidad ZK.
+    /// @dev    Es una potestad del operador, pero solo puede ENDURECER la
+    ///         entrada: el gate agrega una condición, nunca saltea el KYC.
+    ///         Ponerlo en cero afloja, y por eso queda en el log.
+    function setEligibilityGate(address gate) external onlyOperator {
+        eligibilityGate = gate;
+        emit EligibilityGateSet(gate);
+    }
+
     /// @notice KYC del inversionista. Obligación de la plataforma como intermediario.
     function setKyc(address investor, bool approved) external onlyOperator {
         kycApproved[investor] = approved;
@@ -225,6 +254,9 @@ contract ProjectVault {
     function invest(uint256 projectId, uint256 amount) external {
         Project storage p = projects[projectId];
         if (!kycApproved[msg.sender]) revert KycRequerido();
+        if (eligibilityGate != address(0) && !IEligibilityGate(eligibilityGate).isEligible(projectId, msg.sender)) {
+            revert ElegibilidadRequerida();
+        }
         if (p.status != Status.FUNDING) revert EstadoInvalido();
         if (block.timestamp > p.endDate) revert RondaCerrada();
         if (amount == 0) revert MontoCero();

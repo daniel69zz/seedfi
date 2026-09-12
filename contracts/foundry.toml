@@ -3,6 +3,16 @@ src = "src"
 test = "test"
 out = "out"
 libs = ["lib"]
-solc = "0.8.24"
+# Sin `solc` fijo a propósito: `ProjectVault.sol` está clavado en 0.8.24 —lo que
+# se auditó es ese bytecode, no "lo que compile hoy"— pero el verificador que
+# genera barretenberg exige ^0.8.27. Foundry resuelve una versión por archivo.
+auto_detect_solc = true
 optimizer = true
 optimizer_runs = 200
+# El verificador UltraHonk usa `mcopy`, que es de Cancun. Tanto Anvil como
+# Avalanche C-Chain y Base lo soportan; una red anterior no podría desplegarlo.
+evm_version = "cancun"
+fs_permissions = [{ access = "read-write", path = "./deployments" }, { access = "read", path = "./out" }]
+
+[fmt]
+line_length = 110

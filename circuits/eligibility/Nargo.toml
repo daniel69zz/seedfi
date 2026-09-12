@@ -1,0 +1,8 @@
+[package]
+name = "eligibility"
+type = "bin"
+authors = ["Seed 2 Deed"]
+
+[dependencies]
+# Poseidon2 salió de la stdlib de Noir en la 1.0: vive acá, fijado por tag.
+poseidon = { tag = "v0.3.0", git = "https://github.com/noir-lang/poseidon" }

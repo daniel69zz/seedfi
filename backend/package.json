@@ -1,0 +1,26 @@
+{
+  "name": "@s2d/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "node --watch --experimental-strip-types src/index.ts",
+    "start": "node dist/index.js",
+    "seed": "node --experimental-strip-types src/seed.ts",
+    "e2e": "node --experimental-strip-types src/e2e.ts",
+    "test": "node --experimental-strip-types --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@fastify/multipart": "^9.0.1",
+    "@s2d/shared": "*",
+    "@s2d/zk": "*",
+    "fastify": "^5.2.0",
+    "viem": "^2.21.55"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "~5.9.2"
+  }
+}

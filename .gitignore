@@ -80,3 +80,4 @@ tmp/
 # Ningún PDF se versiona: los reglamentos y bounties del evento son
 # material de referencia ajeno, no del proyecto.
 *.pdf
+backend/data/
