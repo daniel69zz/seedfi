@@ -1,0 +1,23 @@
+.project-growth {
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.project-growth > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  transform-origin: 50% 90%;
+  animation: project-soil-arrive 850ms 120ms ease-out both;
+}
+
+@keyframes project-soil-arrive {
+  from { opacity: 0; transform: translateY(5px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-growth > svg { animation: none; }
+}

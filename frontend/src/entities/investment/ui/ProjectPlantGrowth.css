@@ -1,0 +1,29 @@
+.project-plant-growth {
+  position: relative;
+  /* Same reserved space as the previous 640 × 280 soil illustration. */
+  aspect-ratio: 640 / 280;
+  overflow: hidden;
+}
+
+.project-plant-growth__viewport {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 209 / 264;
+  transform: translateX(-50%);
+  overflow: hidden;
+  /* The original sheet is opaque cream; blend it into the existing page. */
+  mix-blend-mode: multiply;
+}
+
+.project-plant-growth__frame {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-repeat: no-repeat;
+  filter: brightness(1.035);
+  /* Switch crops instantly: interpolating their positions exposes neighbors. */
+}
+
+.project-plant-growth > svg { animation: none; }

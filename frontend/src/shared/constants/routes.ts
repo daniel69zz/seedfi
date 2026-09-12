@@ -12,6 +12,6 @@ export const routes = {
   companyProjects: '/company/projects',
   adminDashboard: '/admin',
   opportunity: (id: string) => `/opportunities/${encodeURIComponent(id)}`,
-  investment: (id: string) => `/investor/investments/${encodeURIComponent(id)}`,
+  investment: (id: string) => `/mis-inversiones/${encodeURIComponent(id)}`,
   companyProject: (id: string) => `/company/projects/${encodeURIComponent(id)}`,
 } as const

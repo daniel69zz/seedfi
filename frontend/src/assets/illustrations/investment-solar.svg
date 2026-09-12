@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="216" viewBox="0 0 240 216" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="120" y1="0" x2="120" y2="174" gradientUnits="userSpaceOnUse"><stop stop-color="#b4e1e4"/><stop offset="1" stop-color="#e7f0db"/></linearGradient>
+    <linearGradient id="hill" x1="17" y1="74" x2="228" y2="139" gradientUnits="userSpaceOnUse"><stop stop-color="#b1c677"/><stop offset="1" stop-color="#6d9b5a"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="38" y2="65" gradientUnits="userSpaceOnUse"><stop stop-color="#75b3c1"/><stop offset="1" stop-color="#327996"/></linearGradient>
+    <linearGradient id="tree" x1="-10" y1="0" x2="11" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#6c9f56"/><stop offset="1" stop-color="#42794e"/></linearGradient>
+    <clipPath id="round"><rect width="240" height="216" rx="16"/></clipPath>
+    <g id="cypress"><path d="M0 0C-8 1-12 25-12 45C-12 64-4 71 1 69C10 68 14 57 12 41C10 18 7-1 0 0Z" fill="url(#tree)"/><path d="M1 29V80" stroke="#567840" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="sprig"><path d="M0 0C-17-6-20-21-14-26C-3-28 1-12 0 0Z" fill="#649548"/><path d="M0 2C-2-13 5-29 12-29C24-28 15-8 0 2Z" fill="#719e4c"/><path d="M0 5V-10" stroke="#638a40" stroke-width="2"/></g>
+    <g id="solar">
+      <path d="M15 51V68M67 51V66" stroke="#657566" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-1 3H63L94 57H30Z" fill="#688a85" opacity=".24" transform="translate(4 7)"/>
+      <path d="M-1 0H63L94 57H30Z" fill="url(#panel)" stroke="#f8f5d5" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M15 0L46 57M31 0L62 57M47 0L78 57M7 14H71M14 28H79M22 42H86" stroke="#d8ede3" stroke-width="1.4"/>
+    </g>
+  </defs>
+  <g clip-path="url(#round)">
+    <path fill="url(#sky)" d="M0 0H240V216H0Z"/>
+    <g fill="#fffbed"><path d="M156 40C155 34 163 29 169 32C169 20 181 16 188 23C194 23 199 28 199 34C207 31 216 34 218 41Z"/><path d="M0 53C4 40 18 37 26 47C32 43 42 46 44 53Z"/><path d="M95 76C96 69 104 67 110 71C110 58 121 53 128 62C137 60 143 66 143 73Z"/></g>
+    <circle cx="62" cy="37" r="19" fill="#ffdf79"/>
+    <g stroke="#ffe591" stroke-width="1.7" stroke-linecap="round"><path d="M62 11V6M62 68V63M36 37H31M93 37H88M43 18L39 14M82 18L86 14M43 56L39 61M82 56L86 61"/></g>
+    <path d="M-18 111C12 53 41 58 68 80C92 102 103 106 133 80C167 46 203 48 250 88V216H-18Z" fill="#bed090"/>
+    <path d="M-8 138C41 122 74 97 103 77C139 49 164 46 194 58C220 68 235 97 250 123V216H-8Z" fill="url(#hill)"/>
+    <path d="M-6 158C29 113 61 113 90 129C115 144 141 125 167 113C198 97 222 118 246 141V216H-6Z" fill="#8caf67"/>
+    <g><use href="#cypress" transform="translate(24 93) scale(.65)"/><use href="#cypress" transform="translate(153 86) scale(.51)"/><use href="#cypress" transform="translate(184 75) scale(.7)"/><use href="#cypress" transform="translate(210 86) scale(.9)"/><use href="#cypress" transform="translate(232 91) scale(.64)"/></g>
+    <path d="M-5 161C43 146 89 167 139 160C179 153 211 161 246 178V216H-5Z" fill="#b5c66d"/>
+    <path d="M-4 188C53 183 71 192 122 187C166 182 204 191 245 199V216H-4Z" fill="#a6bb59"/>
+    <use href="#solar" transform="translate(18 111)"/>
+    <use href="#solar" transform="translate(115 111) scale(.88)"/>
+    <g><use href="#sprig" transform="translate(14 164) scale(.46)"/><use href="#sprig" transform="translate(29 217) scale(.79)"/><use href="#sprig" transform="translate(69 205) scale(.56)"/><use href="#sprig" transform="translate(102 220) scale(.94)"/><use href="#sprig" transform="translate(150 213) scale(.64)"/><use href="#sprig" transform="translate(195 220) scale(.95)"/><use href="#sprig" transform="translate(230 209) scale(.6)"/></g>
+    <g fill="#e0dc89"><ellipse cx="55" cy="193" rx="3" ry="1.5"/><ellipse cx="166" cy="186" rx="3" ry="1.5"/><ellipse cx="210" cy="178" rx="4" ry="1.5"/></g>
+  </g>
+</svg>

@@ -7,13 +7,17 @@ import { IdentityPage } from '../../pages/app/ui/IdentityPage'
 import { InvestPage } from '../../pages/app/ui/InvestPage'
 import { NewProjectPage as OnChainNewProjectPage } from '../../pages/app/ui/NewProjectPage'
 import { VerifyPage } from '../../pages/app/ui/VerifyPage'
+import { SimulatedPageLoad } from '../../features/demo/ui/SimulatedPageLoad'
+import { LOADING_MESSAGES } from '../../shared/config/loadingAnimation'
+import { brand } from '../../shared/config/brand'
 import { AdminLayout } from '../../pages/admin/ui/AdminLayout'
 import { AdminCompaniesPage, AdminCompanyDetailPage, AdminDashboardPage, AdminProjectReviewPage, AdminProjectsPage, AdminRegistryPage } from '../../pages/admin/ui/AdminPages'
 import { ForgotPasswordPage, LoginPage, RegisterPage, VerifyEmailPage } from '../../pages/auth/ui/AuthPages'
 import { CompanyDashboardPage, CompanyPaymentsPage, CompanyProfilePage, CompanyProjectDetailPage, CompanyProjectsPage, NewProjectPage } from '../../pages/company/ui/CompanyPages'
 import { NotFoundPage, UnauthorizedPage } from '../../pages/errors/ui/ErrorPages'
 import { InvestmentsPage } from '../../pages/investments/ui/InvestmentsPage'
-import { InvestmentDetailPage, InvestorDashboardPage, InvestorKycPage, InvestorWalletPage, NotificationsPage } from '../../pages/investor/ui/InvestorPages'
+import { InvestmentDetailPage } from '../../pages/investment-detail/ui/InvestmentDetailPage'
+import { InvestorDashboardPage, InvestorKycPage, InvestorWalletPage, NotificationsPage } from '../../pages/investor/ui/InvestorPages'
 import { MarketplacePage } from '../../pages/marketplace/ui/MarketplacePage'
 import { OpportunityDetailPage } from '../../pages/opportunity-detail/ui/OpportunityDetailPage'
 import { PortfolioPage } from '../../pages/portfolio/ui/PortfolioPage'
@@ -35,6 +39,7 @@ const pageTitles: Record<string, string> = {
   '/auth/verify-email': 'Verificar correo',
   '/investor/dashboard': 'Resumen del inversionista',
   '/investor/investments': 'Mis inversiones',
+  '/mis-inversiones': 'Mis inversiones',
   '/investor/portfolio': 'Portafolio',
   '/investor/wallet': 'Wallet y movimientos',
   '/investor/profile': 'Perfil',
@@ -79,7 +84,7 @@ function ScrollToRoute() {
 
     const pageName = pathname.startsWith('/opportunities/')
       ? 'Detalle de oportunidad'
-      : pathname.startsWith('/investor/investments/')
+      : (pathname.startsWith('/investor/investments/') || pathname.startsWith('/mis-inversiones/'))
         ? 'Detalle de inversión'
         : pathname.startsWith('/company/projects/') && pathname !== '/company/projects/new'
           ? 'Gestión del proyecto'
@@ -88,7 +93,7 @@ function ScrollToRoute() {
             : pathname.startsWith('/admin/projects/')
               ? 'Revisión de proyecto'
               : pageTitles[pathname] ?? 'Página no encontrada'
-    document.title = `${pageName} | Seed 2 Deed`
+    document.title = `${pageName} | ${brand.name}`
   }, [pathname, hash])
   return null
 }
@@ -103,7 +108,7 @@ function AppChrome() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/opportunities" element={<MarketplacePage />} />
+        <Route path="/opportunities" element={<SimulatedPageLoad key={pathname} message={LOADING_MESSAGES.opportunities}><MarketplacePage /></SimulatedPageLoad>} />
         <Route path="/opportunities/:id" element={<OpportunityDetailPage />} />
         <Route path="/how-it-works" element={<InfoPage page="how-it-works" />} />
         <Route path="/security" element={<InfoPage page="security" />} />
@@ -116,9 +121,11 @@ function AppChrome() {
         <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
 
         <Route path="/investor/dashboard" element={<ProtectedRoute roles={['INVESTOR']}><InvestorDashboardPage /></ProtectedRoute>} />
-        <Route path="/investor/investments" element={<ProtectedRoute roles={['INVESTOR']}><InvestmentsPage /></ProtectedRoute>} />
+        <Route path="/investor/investments" element={<ProtectedRoute roles={['INVESTOR']}><SimulatedPageLoad key={pathname} message={LOADING_MESSAGES.investments}><InvestmentsPage /></SimulatedPageLoad></ProtectedRoute>} />
         <Route path="/investor/investments/:id" element={<ProtectedRoute roles={['INVESTOR']}><InvestmentDetailPage /></ProtectedRoute>} />
-        <Route path="/investor/portfolio" element={<ProtectedRoute roles={['INVESTOR']}><PortfolioPage /></ProtectedRoute>} />
+        <Route path="/mis-inversiones" element={<ProtectedRoute roles={['INVESTOR']}><SimulatedPageLoad key={pathname} message={LOADING_MESSAGES.investments}><InvestmentsPage /></SimulatedPageLoad></ProtectedRoute>} />
+        <Route path="/mis-inversiones/:investmentId" element={<ProtectedRoute roles={['INVESTOR']}><InvestmentDetailPage /></ProtectedRoute>} />
+        <Route path="/investor/portfolio" element={<ProtectedRoute roles={['INVESTOR']}><SimulatedPageLoad key={pathname} message={LOADING_MESSAGES.portfolio}><PortfolioPage /></SimulatedPageLoad></ProtectedRoute>} />
         <Route path="/investor/wallet" element={<ProtectedRoute roles={['INVESTOR']}><InvestorWalletPage /></ProtectedRoute>} />
         <Route path="/investor/profile" element={<ProtectedRoute roles={['INVESTOR']}><ProfilePage /></ProtectedRoute>} />
         <Route path="/investor/kyc" element={<ProtectedRoute roles={['INVESTOR']}><InvestorKycPage /></ProtectedRoute>} />

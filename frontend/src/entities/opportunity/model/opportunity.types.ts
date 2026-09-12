@@ -75,6 +75,7 @@ export interface Opportunity {
   fundingRequested: number
   fundedAmount: number
   expectedApy: number
+  totalReturnPct: number
   durationMonths: number
   minimumInvestment: number
   maximumInvestment?: number
@@ -82,6 +83,7 @@ export interface Opportunity {
   investorCount: number
   verified: boolean
   risk: RiskLevel
+  assessedBy: string
   riskRationale: string
   status: OpportunityStatus
   startDate: string

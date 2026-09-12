@@ -58,7 +58,7 @@ export function Navbar() {
 
       <nav className="navbar__links" aria-label="Navegación principal">
         {navigation.map(([label, to]) => (
-          <NavLink key={to} to={to} end={to.endsWith('dashboard')} className={({ isActive }) => isActive || (to === '/opportunities' && pathname.startsWith('/opportunities/')) ? 'navbar__link navbar__link--active' : 'navbar__link'}>{label}</NavLink>
+          <NavLink key={to} to={to} end={to.endsWith('dashboard')} className={({ isActive }) => isActive || (to === '/investor/investments' && (pathname === '/mis-inversiones' || pathname.startsWith('/mis-inversiones/'))) || (to === '/opportunities' && pathname.startsWith('/opportunities/')) ? 'navbar__link navbar__link--active' : 'navbar__link'}>{label}</NavLink>
         ))}
       </nav>
 

@@ -1,0 +1,97 @@
+.investment-detail { padding-top: 32px; }
+.investment-detail .breadcrumbs { margin-bottom: 18px; }
+.investment-detail__heading { text-align: center; animation: investment-detail-enter 450ms ease both; }
+.investment-detail__heading h1 { color: #11132b; font-size: clamp(30px, 3.7vw, 54px); font-weight: 950; letter-spacing: -1.8px; line-height: 1.12; }
+.investment-detail__heading p { margin-top: 8px; color: var(--color-text-muted); font-size: clamp(16px, 1.6vw, 22px); font-weight: 800; }
+.investment-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 40px; min-height: 420px; padding: 85px 30px 35px; }
+.investment-hero > .company-logo { align-self: end; width: 100%; margin-bottom: 36px; animation: investment-detail-enter 650ms 70ms ease both; }
+.investment-hero > .project-growth { width: 100%; }
+.investment-detail__metrics { gap: 16px; margin-bottom: 18px; }
+.animated-metric { min-width: 0; }
+.animated-metric > div, .animated-metric .metric-card { height: 100%; }
+.investment-detail .metric-card { min-height: 111px; padding: 21px; }
+.investment-detail .metric-card > p { font-size: 14px; }
+.investment-detail .metric-card > strong { font-size: clamp(23px, 2.2vw, 32px); font-variant-numeric: tabular-nums; }
+.investment-detail .metric-card__icon { top: 17px; right: 17px; width: 43px; height: 43px; border-radius: 15px; }
+.investment-detail__progress-row { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); align-items: start; gap: 18px; margin-bottom: 18px; }
+.investment-detail__information-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 18px; }
+.investment-detail .investment-progress { min-height: 124px; padding: 20px 24px; }
+.investment-progress .section-card__header { margin-bottom: 14px; }
+.investment-progress__row { display: flex; align-items: center; gap: 24px; }
+.investment-progress__row .progress-meter { flex: 1; }
+.investment-progress .progress-meter__track { height: 12px; }
+.investment-progress__row > strong { min-width: 43px; color: var(--color-primary); font-size: 21px; font-weight: 900; font-variant-numeric: tabular-nums; text-align: right; }
+.investment-disclosure { min-width: 0; border: 2px solid var(--color-border); border-radius: 22px; background: var(--color-surface); box-shadow: 0 4px 0 rgb(24 21 18 / 8%); }
+.investment-disclosure > summary { display: flex; align-items: center; gap: 18px; min-height: 120px; border-radius: 20px; padding: 19px 22px; list-style: none; cursor: pointer; }
+.investment-disclosure > summary::-webkit-details-marker { display: none; }
+.investment-disclosure__icon { display: grid; flex: 0 0 auto; width: 49px; height: 49px; place-items: center; border-radius: 17px; color: var(--color-primary); background: var(--color-primary-soft); }
+.investment-disclosure__copy { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: start; }
+.investment-disclosure h2 { margin-bottom: 10px; color: #11132b; font-size: clamp(16px, 1.5vw, 21px); font-weight: 950; letter-spacing: -.4px; }
+.investment-disclosure__copy > span { color: var(--color-text-muted); font-size: 15px; font-weight: 800; }
+.investment-disclosure__status { display: inline-flex; align-items: center; gap: 5px; margin-top: 3px; color: var(--color-primary-dark); font-size: 11px; font-weight: 800; }
+.investment-disclosure__action { flex: 0 0 auto; align-self: end; border: 2px solid var(--color-border); border-radius: var(--radius-pill); padding: 8px 22px; color: #11132b; font-size: 12px; font-weight: 900; line-height: 1.1; transition: background 160ms ease; }
+.investment-disclosure > summary:hover .investment-disclosure__action { background: var(--color-primary-soft); }
+.investment-blockchain > summary { gap: 14px; }
+.investment-blockchain .investment-disclosure__action { padding-inline: 16px; }
+.investment-disclosure__chevron { flex: 0 0 auto; color: var(--color-primary); transition: transform 200ms ease; }
+.investment-disclosure[open] .investment-disclosure__chevron { transform: rotate(90deg); }
+.investment-payments__amount { flex: 0 0 auto; align-self: end; padding-bottom: 2px; color: #11132b; font-size: 17px; font-weight: 900; }
+.investment-disclosure__body { margin: 0 22px; border-top: 1px solid #dedacf; padding-block: 18px 22px; }
+.investment-disclosure__note { margin-top: 14px; color: var(--color-text-muted); font-size: 12px; }
+.investment-facts { display: grid; gap: 13px; }
+.investment-facts dt { color: var(--color-text-muted); font-size: 12px; }
+.investment-facts dd { margin-top: 3px; color: #11132b; font-size: 14px; font-weight: 800; overflow-wrap: anywhere; }
+.investment-facts code { font-size: 12px; }
+.investment-payment-list { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.investment-payment-list li { display: flex; align-items: start; justify-content: space-between; gap: 14px; }
+.investment-payment-list li > div { display: grid; gap: 3px; }
+.investment-payment-list li > div:last-child { text-align: right; }
+.investment-payment-list strong { color: #11132b; font-size: 14px; }
+.investment-payment-list span { color: var(--color-text-muted); font-size: 12px; }
+.investment-download { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--color-primary-dark); border-radius: 999px; margin-top: 20px; padding: 9px 16px; color: var(--color-primary-dark); background: var(--color-primary-soft); font-size: 12px; font-weight: 900; }
+.investment-guarantee { display: grid; gap: 5px; border-top: 1px solid #dedacf; margin-top: 17px; padding-top: 16px; color: var(--color-text-muted); font-size: 13px; }
+.investment-guarantee strong { color: #11132b; }
+@keyframes investment-detail-enter { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 1150px) {
+  .investment-hero { min-height: 355px; gap: 20px; padding-inline: 10px; }
+  .investment-detail__progress-row { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+  .investment-blockchain > summary { flex-wrap: wrap; gap: 10px 14px; }
+  .investment-blockchain .investment-disclosure__action { margin-left: 63px; }
+  .investment-detail .investment-progress { min-height: 166px; display: flex; flex-direction: column; justify-content: center; }
+  .investment-disclosure > summary { column-gap: 13px; padding-inline: 18px; }
+  .investment-disclosure__icon { width: 43px; height: 43px; border-radius: 15px; }
+  .investment-disclosure__copy > span { font-size: 13px; }
+}
+@media (max-width: 900px) {
+  .investment-detail__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .investment-detail__progress-row, .investment-detail__information-row { grid-template-columns: 1fr; }
+  .investment-detail .investment-progress { min-height: 124px; }
+  .investment-blockchain > summary { flex-wrap: nowrap; }
+  .investment-blockchain .investment-disclosure__action { margin-left: 0; }
+  .investment-disclosure h2 { font-size: 20px; }
+  .investment-disclosure__copy > span { font-size: 15px; }
+}
+@media (max-width: 620px) {
+  .investment-detail { padding-top: 23px; }
+  .investment-detail .breadcrumbs { font-size: 11px; }
+  .investment-detail .breadcrumbs > span { min-width: 0; }
+  .investment-detail__heading h1 { font-size: clamp(28px, 7vw, 38px); letter-spacing: -1px; }
+  .investment-hero { grid-template-columns: 1fr; justify-items: center; min-height: auto; gap: 16px; padding: 52px 10px 24px; }
+  .investment-hero > .company-logo { max-width: 390px; margin-bottom: 0; }
+  .investment-hero > .project-growth { max-width: 420px; }
+  .investment-detail__metrics { gap: 12px; }
+  .investment-detail .metric-card { padding: 17px; }
+  .investment-detail .metric-card__icon { width: 34px; height: 34px; top: 14px; right: 12px; border-radius: 12px; }
+  .investment-detail .metric-card > p { font-size: 12px; }
+  .investment-detail .metric-card > strong { font-size: 24px; }
+  .investment-disclosure > summary { flex-wrap: wrap; gap: 12px; padding: 18px; }
+  .investment-disclosure h2 { font-size: 18px; }
+  .investment-disclosure__copy { flex-basis: calc(100% - 60px); }
+  .investment-disclosure__action, .investment-blockchain .investment-disclosure__action { margin-left: 55px; }
+  .investment-payments__amount { margin-left: 55px; }
+  .investment-disclosure__body { margin-inline: 18px; }
+}
+@media (max-width: 420px) {
+  .investment-detail__metrics { grid-template-columns: 1fr; }
+  .investment-detail .metric-card { min-height: 100px; }
+}
