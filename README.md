@@ -50,6 +50,55 @@ npm run dev:frontend   # UI  en :5173
 
 ---
 
+## Con Docker
+
+Una sola orden levanta el sistema entero —cadena, contratos desplegados, demo
+sembrada, API y UI— sin instalar Node ni Foundry:
+
+```bash
+docker compose up --build
+```
+
+| | |
+|---|---|
+| UI | http://localhost:8080/app |
+| API | http://localhost:4000/api/health |
+| Cadena (Anvil) | http://localhost:8545 · chainId 31337 |
+
+El orden de arranque lo maneja el compose y no es cosmético: `deploy` espera a
+que Anvil conteste, `seed` espera al despliegue y el backend espera al seed,
+porque lee las direcciones **una sola vez** al arrancar. Cada `up` redespliega
+y vuelve a sembrar: Anvil no tiene memoria entre corridas, así que una base que
+sobreviviera apuntaría a contratos que ya no existen.
+
+Verificar que todo el flujo funciona, igual que `npm run e2e`:
+
+```bash
+docker compose run --rm --no-deps backend node backend/dist/e2e.js
+```
+
+Los puertos y la red se cambian con un `.env` en la raíz (plantilla en
+`.env.example`). Para apuntar a HashKey Chain Testnet, donde los contratos ya
+están desplegados, se fijan `CHAIN_ID`/`RPC_URL`/`VITE_*` ahí y se levantan solo
+las dos aplicaciones:
+
+```bash
+docker compose up --build backend frontend
+```
+
+Tres detalles que explican el armado:
+
+- **Las `VITE_*` son argumentos de build**, no de runtime: Vite las congela en
+  el bundle. Cambiar de red es reconstruir la imagen del frontend.
+- **`VITE_RPC_URL` apunta a `localhost`, no a `anvil`**: quien tiene que
+  resolver ese nombre es la billetera del navegador, que no está en la red de
+  Docker.
+- **nginx manda COOP/COEP y hace de proxy a `/api`**: sin esas cabeceras no hay
+  `SharedArrayBuffer` y bb.js no arranca; y con ellas, un backend en otro origen
+  quedaría bloqueado por falta de CORP.
+
+---
+
 ## Requisitos
 
 | Herramienta | Versión | ¿Obligatoria? |

@@ -1,0 +1,164 @@
+# ---------------------------------------------------------------------------
+#  SeedFi — el sistema entero
+# ---------------------------------------------------------------------------
+#  `docker compose up --build` levanta, en este orden y esperando a que cada
+#  uno termine lo suyo:
+#
+#    anvil    cadena local, chainId 31337          → localhost:8545
+#    deploy   despliega los 4 contratos y se va    (corre una vez)
+#    seed     limpia la base y siembra la demo     (corre una vez)
+#    backend  API Fastify                          → localhost:4000
+#    frontend build de Vite detrás de nginx        → localhost:8080
+#
+#  El orden no es cosmético: el backend lee las direcciones del despliegue UNA
+#  vez al arrancar y las memoiza. Si arranca antes que `deploy`, contesta 503 en
+#  todo lo que toca la cadena hasta que se lo reinicie.
+#
+#  Las direcciones viajan por un volumen, no por el filesystem del host: nadie
+#  las copia a mano y el repo no queda sucio después de una demo.
+#
+#  Para apuntar a una red pública (HashKey 133, Avalanche Fuji 43113), poner las
+#  variables en un `.env` en esta carpeta —ver `.env.example`— y levantar solo
+#  las dos aplicaciones:
+#
+#    docker compose up --build backend frontend
+#
+#  Ahí `anvil`, `deploy` y `seed` no se activan (son `required: false`), y los
+#  contratos se asumen ya desplegados en esa red.
+
+name: seedfi
+
+services:
+  # ───────────────────────────────────────────────────────────────────────
+  #  Cadena local
+  # ───────────────────────────────────────────────────────────────────────
+  #  El puerto se publica porque quien habla con la cadena no es el backend
+  #  solamente: es también la billetera del navegador, que está fuera de esta
+  #  red de Docker y solo sabe llegar a localhost.
+  anvil:
+    image: ghcr.io/foundry-rs/foundry:${FOUNDRY_VERSION:-latest}
+    entrypoint: ["anvil"]
+    command: ["--host", "0.0.0.0", "--port", "8545", "--chain-id", "31337", "--block-time", "2"]
+    ports:
+      - "${ANVIL_PORT:-8545}:8545"
+    healthcheck:
+      test: ["CMD", "cast", "block-number", "--rpc-url", "http://127.0.0.1:8545"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────────────
+  #  Despliegue de contratos (corre una vez y termina)
+  # ───────────────────────────────────────────────────────────────────────
+  deploy:
+    build:
+      context: .
+      target: contracts
+    depends_on:
+      anvil:
+        condition: service_healthy
+    environment:
+      - RPC_URL=http://anvil:8545
+      # Cuenta 0 de Anvil: pública y conocida. Sirve para esto y solo para esto.
+      - PRIVATE_KEY=${DEPLOYER_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+    volumes:
+      - chain-deployments:/repo/contracts/deployments
+    restart: "no"
+
+  # ───────────────────────────────────────────────────────────────────────
+  #  Datos de la demo (corre una vez y termina)
+  # ───────────────────────────────────────────────────────────────────────
+  #  Va con `--reset`: cada `up` levanta un Anvil sin memoria, así que una base
+  #  que sobreviviera al despliegue anterior estaría llena de proyectos que
+  #  apuntan a contratos que ya no existen.
+  seed:
+    image: seedfi-backend:${TAG:-dev}
+    build:
+      context: .
+      target: backend
+    command: ["node", "backend/dist/seed.js", "--reset"]
+    depends_on:
+      deploy:
+        condition: service_completed_successfully
+        required: false
+    environment:
+      - CHAIN_ID=${CHAIN_ID:-31337}
+      - RPC_URL=${RPC_URL:-http://anvil:8545}
+      - OPERATOR_PRIVATE_KEY=${OPERATOR_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+      # Solo existen en una red pública; en Anvil las llaves son las de Foundry.
+      - DEMO_DEVELOPER_KEY
+      - DEMO_LEGAL_KEY
+      - DEMO_SUPERVISOR_KEY
+      - DEMO_INVESTOR_A_KEY
+      - DEMO_INVESTOR_B_KEY
+      - DEMO_INVESTOR_C_KEY
+      - DEMO_INVESTOR_D_KEY
+    volumes:
+      - backend-data:/app/backend/data
+      - chain-deployments:/app/contracts/deployments
+    restart: "no"
+
+  # ───────────────────────────────────────────────────────────────────────
+  #  API
+  # ───────────────────────────────────────────────────────────────────────
+  backend:
+    image: seedfi-backend:${TAG:-dev}
+    build:
+      context: .
+      target: backend
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+        required: false
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    environment:
+      - CHAIN_ID=${CHAIN_ID:-31337}
+      - RPC_URL=${RPC_URL:-http://anvil:8545}
+      - OPERATOR_PRIVATE_KEY=${OPERATOR_PRIVATE_KEY:-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80}
+      # nginx sirve la UI en el mismo origen que /api, así que CORS es para
+      # quien pegue directo a :4000 (el vite dev server, curl, un test).
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080,http://localhost:5173,http://127.0.0.1:5173}
+      - LOG_LEVEL
+      - PINATA_JWT
+    volumes:
+      - backend-data:/app/backend/data
+      # Sin `:ro` a propósito: el backend no escribe acá, pero un volumen
+      # montado de solo lectura es un caso borde menos en el primer arranque.
+      - chain-deployments:/app/contracts/deployments
+    restart: unless-stopped
+
+  # ───────────────────────────────────────────────────────────────────────
+  #  UI
+  # ───────────────────────────────────────────────────────────────────────
+  #  Las VITE_* son argumentos de BUILD: quedan congeladas en el bundle. Cambiar
+  #  de red es reconstruir esta imagen, no reiniciar el contenedor.
+  #
+  #  VITE_RPC_URL apunta a localhost y no a `anvil`: el que resuelve ese nombre
+  #  tendría que ser el navegador, que no está en esta red.
+  frontend:
+    build:
+      context: .
+      target: frontend
+      args:
+        VITE_CHAIN_ID: ${VITE_CHAIN_ID:-31337}
+        VITE_RPC_URL: ${VITE_RPC_URL:-http://127.0.0.1:8545}
+    depends_on:
+      backend:
+        condition: service_healthy
+        required: false
+    ports:
+      - "${FRONTEND_PORT:-8080}:8080"
+    volumes:
+      # Solo por `demo-credentials.json`, que escribe el seed y lee la página
+      # /zk-selftest.html.
+      - backend-data:/srv/seed:ro
+    restart: unless-stopped
+
+volumes:
+  # La base SQLite y las credenciales de la demo.
+  backend-data:
+  # `deployments/<chainId>.json`: lo escribe `deploy`, lo leen `seed` y la API.
+  chain-deployments:

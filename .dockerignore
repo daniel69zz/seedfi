@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────
+#  SeedFi — contexto de build
+# ─────────────────────────────────────────────────────────────
+#  Todo lo que entra acá se sube al daemon en cada build y, peor, invalida la
+#  caché de capas cuando cambia. Lo único que las imágenes necesitan es código
+#  fuente, manifiestos, el circuito compilado y las direcciones de despliegue.
+
+# ── Dependencias y builds: se reconstruyen dentro de la imagen ───
+**/node_modules
+**/dist
+**/build
+**/*.tsbuildinfo
+
+# ── Foundry: `forge build` los regenera ──────────────────────
+contracts/out
+contracts/cache
+contracts/broadcast
+
+# ── Datos locales: la base viaja en un volumen, no en la imagen ─
+backend/data
+**/*.sqlite
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# ── Secretos ─────────────────────────────────────────────────
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+secrets/
+keystore/
+
+# ── Git, editores, sistema operativo ─────────────────────────
+.git
+.gitignore
+.gitmodules
+.github
+.vscode
+.idea
+.claude
+**/.DS_Store
+**/*.swp
+
+# ── Documentación y material de la hackathon ─────────────────
+*.pdf
+docs/
+plan_real/
+plan_p.md
+documento_general*.md
+**/README.md
+
+# ── Lo que genera este mismo setup ───────────────────────────
+docker-compose*.yml
+.dockerignore
