@@ -1,14 +1,22 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { Activity, FilePlus2, IdCard, ShieldCheck, Wallet2, AlertTriangle } from 'lucide-react'
+import {
+  Activity, AlertTriangle, ArrowLeftRight, Banknote, FilePlus2, FolderKanban, IdCard, PieChart, ShieldCheck, Store, Wallet2,
+} from 'lucide-react'
 import { WalletButton } from '../../../features/wallet/ui/WalletButton'
 import { useDeployment } from '../../../shared/web3/contracts'
 import './AppShell.css'
+import './OnchainPages.css'
 
 const tabs = [
   ['/app', 'Panel', Activity],
-  ['/app/identity', 'Identidad', IdCard],
+  ['/app/opportunities', 'Oportunidades', Store],
   ['/app/invest', 'Invertir', Wallet2],
+  ['/app/portfolio', 'Portafolio', PieChart],
+  ['/app/wallet', 'Movimientos', ArrowLeftRight],
+  ['/app/identity', 'Identidad', IdCard],
+  ['/app/projects', 'Mis proyectos', FolderKanban],
   ['/app/developer/new', 'Nuevo proyecto', FilePlus2],
+  ['/app/repayments', 'Pagos', Banknote],
   ['/app/verify', 'Verificar hitos', ShieldCheck],
 ] as const
 

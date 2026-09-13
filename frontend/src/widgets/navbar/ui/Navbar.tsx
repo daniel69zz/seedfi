@@ -1,8 +1,11 @@
 import { Bell, ChevronDown, LogOut, UserRound, Wallet } from 'lucide-react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useAccount, useReadContract } from 'wagmi'
+import { formatAmount } from '@s2d/shared'
 import { useAuth } from '../../../features/auth/model/AuthContext'
 import { notifications } from '../../../shared/data/platform.mock'
 import { brand } from '../../../shared/config/brand'
+import { mockUsdtAbi, useDeployment } from '../../../shared/web3/contracts'
 import './Navbar.css'
 
 const guestNavigation = [
@@ -30,6 +33,41 @@ const companyNavigation = [
   ['Pagos', '/company/payments'],
 ] as const
 
+/**
+ * Dentro de /app todo enlace apunta a pantallas conectadas al backend y a la
+ * cadena. Mezclar ahí enlaces de la maqueta hacía saltar al usuario de datos
+ * reales a datos inventados sin ningún aviso.
+ */
+const appNavigation = [
+  ['Panel', '/app'],
+  ['Oportunidades', '/app/opportunities'],
+  ['Portafolio', '/app/portfolio'],
+  ['Movimientos', '/app/wallet'],
+  ['Mis proyectos', '/app/projects'],
+  ['Pagos', '/app/repayments'],
+] as const
+
+/** Saldo USDT real de la wallet conectada, leído del contrato. */
+function OnchainBalance() {
+  const { address } = useAccount()
+  const { deployment } = useDeployment()
+  const { data } = useReadContract({
+    address: deployment?.usdt,
+    abi: mockUsdtAbi,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: { enabled: Boolean(address && deployment), refetchInterval: 15_000 },
+  })
+
+  if (!address || !deployment) return null
+  const label = data === undefined ? '… USDT' : `${formatAmount((data as bigint).toString())} USDT`
+  return (
+    <Link className="navbar__balance" to="/app/wallet" aria-label={`Saldo en cadena: ${label}`}>
+      <span className="navbar__balance-icon"><Wallet size={18} aria-hidden="true" /></span><strong>{label}</strong>
+    </Link>
+  )
+}
+
 export function Navbar() {
   const { user, logout } = useAuth()
   const { pathname } = useLocation()
@@ -37,11 +75,14 @@ export function Navbar() {
 
   if (pathname.startsWith('/auth/') || pathname.startsWith('/admin')) return null
 
-  const navigation = user?.role === 'INVESTOR'
-    ? investorNavigation
-    : user?.role === 'COMPANY'
-      ? companyNavigation
-      : guestNavigation
+  const inApp = pathname === '/app' || pathname.startsWith('/app/')
+  const navigation = inApp
+    ? appNavigation
+    : user?.role === 'INVESTOR'
+      ? investorNavigation
+      : user?.role === 'COMPANY'
+        ? companyNavigation
+        : guestNavigation
   const roleNotifications = user ? notifications.filter((item) => item.audience === user.role) : []
 
   function signOut() {
@@ -58,12 +99,12 @@ export function Navbar() {
 
       <nav className="navbar__links" aria-label="Navegación principal">
         {navigation.map(([label, to]) => (
-          <NavLink key={to} to={to} end={to.endsWith('dashboard')} className={({ isActive }) => isActive || (to === '/investor/investments' && (pathname === '/mis-inversiones' || pathname.startsWith('/mis-inversiones/'))) || (to === '/opportunities' && pathname.startsWith('/opportunities/')) ? 'navbar__link navbar__link--active' : 'navbar__link'}>{label}</NavLink>
+          <NavLink key={to} to={to} end={to.endsWith('dashboard') || to === '/app'} className={({ isActive }) => isActive || (inApp && to !== '/app' && pathname.startsWith(`${to}/`)) || (to === '/investor/investments' && (pathname === '/mis-inversiones' || pathname.startsWith('/mis-inversiones/'))) || (to === '/opportunities' && pathname.startsWith('/opportunities/')) ? 'navbar__link navbar__link--active' : 'navbar__link'}>{label}</NavLink>
         ))}
       </nav>
 
       <div className="navbar__actions">
-        {user?.role === 'INVESTOR' && (
+        {inApp ? <OnchainBalance /> : user?.role === 'INVESTOR' && (
           <Link className="navbar__balance" to="/investor/wallet" aria-label="Saldo disponible: 12,500 USDT">
             <span className="navbar__balance-icon"><Wallet size={18} aria-hidden="true" /></span><strong>12,500 USDT</strong>
           </Link>
@@ -71,24 +112,29 @@ export function Navbar() {
 
         {user ? (
           <>
-            <details className="navbar-menu navbar-menu--notifications">
-              <summary aria-label={`${roleNotifications.filter((item) => !item.read).length} notificaciones sin leer`}><Bell size={19} /><span>{roleNotifications.filter((item) => !item.read).length}</span></summary>
-              <div className="navbar-menu__panel">
-                <header><strong>Notificaciones</strong><Link to="/notifications">Ver todas</Link></header>
-                {roleNotifications.slice(0, 3).map((item) => <Link key={item.id} to="/notifications"><span className={item.read ? '' : 'is-unread'} /><div><strong>{item.title}</strong><p>{item.description}</p><small>{item.createdAt}</small></div></Link>)}
-              </div>
-            </details>
+            {/* Las notificaciones son de la maqueta: dentro de /app no se muestran. */}
+            {!inApp && (
+              <details className="navbar-menu navbar-menu--notifications">
+                <summary aria-label={`${roleNotifications.filter((item) => !item.read).length} notificaciones sin leer`}><Bell size={19} /><span>{roleNotifications.filter((item) => !item.read).length}</span></summary>
+                <div className="navbar-menu__panel">
+                  <header><strong>Notificaciones</strong><Link to="/notifications">Ver todas</Link></header>
+                  {roleNotifications.slice(0, 3).map((item) => <Link key={item.id} to="/notifications"><span className={item.read ? '' : 'is-unread'} /><div><strong>{item.title}</strong><p>{item.description}</p><small>{item.createdAt}</small></div></Link>)}
+                </div>
+              </details>
+            )}
             <details className="navbar-menu navbar-menu--profile">
               <summary><span className="navbar-avatar"><UserRound size={18} /></span><span className="navbar-user"><strong>{user.name.split(' ')[0]}</strong><small>{user.role === 'INVESTOR' ? 'Inversionista' : 'Empresa'}</small></span><ChevronDown size={16} /></summary>
               <div className="navbar-menu__panel navbar-menu__panel--profile">
                 <p><strong>{user.name}</strong><span>{user.email}</span></p>
-                <Link to={user.role === 'INVESTOR' ? '/investor/profile' : '/company/profile'}>Ver perfil</Link>
+                {inApp
+                  ? <Link to="/app/identity">Identidad on-chain</Link>
+                  : <Link to={user.role === 'INVESTOR' ? '/investor/profile' : '/company/profile'}>Ver perfil</Link>}
                 <button type="button" onClick={signOut}><LogOut size={16} /> Cerrar sesión</button>
               </div>
             </details>
           </>
         ) : (
-          <div className="navbar__guest-actions"><Link to="/auth/login">Ingresar</Link><Link to="/auth/register">Crear cuenta</Link></div>
+          !inApp && <div className="navbar__guest-actions"><Link to="/auth/login">Ingresar</Link><Link to="/auth/register">Crear cuenta</Link></div>
         )}
       </div>
     </header>

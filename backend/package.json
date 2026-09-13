@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "node --watch --experimental-strip-types src/index.ts",
-    "start": "node dist/index.js",
-    "seed": "node --experimental-strip-types src/seed.ts",
-    "e2e": "node --experimental-strip-types src/e2e.ts",
+    "dev": "node --env-file-if-exists=.env --watch --experimental-strip-types src/index.ts",
+    "start": "node --env-file-if-exists=.env dist/index.js",
+    "seed": "node --env-file-if-exists=.env --experimental-strip-types src/seed.ts",
+    "e2e": "node --env-file-if-exists=.env --experimental-strip-types src/e2e.ts",
+    "fund": "node --env-file-if-exists=.env --experimental-strip-types src/fund-demo.ts",
     "test": "node --experimental-strip-types --test src/**/*.test.ts"
   },
   "dependencies": {

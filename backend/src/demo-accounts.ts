@@ -1,13 +1,21 @@
 // ---------------------------------------------------------------------------
 //  Cuentas de la demo
 // ---------------------------------------------------------------------------
-//  Las diez cuentas determinísticas de Anvil. Su mnemónico es público y está en
-//  la documentación de Foundry: cualquiera en el mundo tiene estas llaves.
+//  En Anvil (31337) son las diez cuentas determinísticas de Foundry. Su
+//  mnemónico es público: cualquiera en el mundo tiene estas llaves.
 //
-//  Están acá, en claro y a propósito, para que la demo se pueda levantar sin
-//  configurar nada. Por la misma razón, `.gitignore` bloquea `.env*` y este
-//  archivo no debe crecer nunca con una llave que controle valor real.
-export const DEMO = {
+//  En una red pública (HashKey Chain, etc.) esas llaves NO sirven: los bots
+//  vacían en segundos cualquier gas que se les mande. Ahí cada rol lee su llave
+//  de `backend/.env` (DEMO_<ROL>_KEY), y el operador es SIEMPRE la llave del
+//  backend (OPERATOR_PRIVATE_KEY): la que desplegó los contratos y la única que
+//  puede crear proyectos en el vault.
+import { privateKeyToAccount } from 'viem/accounts';
+import type { Hex } from 'viem';
+import { config } from './config.ts';
+
+export interface DemoAccount { address: string; key: string }
+
+const ANVIL = {
   operator:   { address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', key: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80' },
   developer:  { address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', key: '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d' },
   legal:      { address: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', key: '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a' },
@@ -19,3 +27,35 @@ export const DEMO = {
   // rechazo ocurre, y que ocurre SIN que nadie vea su patrimonio.
   investorD:  { address: '0x14dC79964da2C08b23698B3D3cc7Ca32193d9955', key: '0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356' },
 } as const;
+
+export type DemoRole = keyof typeof ANVIL;
+
+const ENV_KEYS: Record<Exclude<DemoRole, 'operator'>, string> = {
+  developer: 'DEMO_DEVELOPER_KEY',
+  legal: 'DEMO_LEGAL_KEY',
+  supervisor: 'DEMO_SUPERVISOR_KEY',
+  investorA: 'DEMO_INVESTOR_A_KEY',
+  investorB: 'DEMO_INVESTOR_B_KEY',
+  investorC: 'DEMO_INVESTOR_C_KEY',
+  investorD: 'DEMO_INVESTOR_D_KEY',
+};
+
+function account(key: string): DemoAccount {
+  return { address: privateKeyToAccount(key as Hex).address, key };
+}
+
+function fromEnv(): Record<DemoRole, DemoAccount> {
+  const out = { operator: account(config.operatorKey) } as Record<DemoRole, DemoAccount>;
+  const missing: string[] = [];
+  for (const [role, envName] of Object.entries(ENV_KEYS) as [Exclude<DemoRole, 'operator'>, string][]) {
+    const key = process.env[envName];
+    if (!key) missing.push(envName);
+    out[role] = key ? account(key) : ANVIL[role];
+  }
+  if (missing.length > 0) {
+    console.warn(`[demo] Red ${config.chainId}: faltan ${missing.join(', ')} en backend/.env; se usan llaves públicas de Anvil.`);
+  }
+  return out;
+}
+
+export const DEMO: Record<DemoRole, DemoAccount> = config.chainId === 31337 ? ANVIL : fromEnv();

@@ -22,37 +22,33 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { createWalletClient, createPublicClient, http, type Address, type Hex } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
 import { parseAmount, type ProjectDossier } from '@s2d/shared';
 import { initPoseidon, generateEligibilityProof, checkEligibilityLocally, type Credential } from '@s2d/zk';
 import { config, REPO_ROOT } from './config.ts';
 import { db } from './db.ts';
 import { DEMO } from './demo-accounts.ts';
-import { deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi, readProject, statusName } from './chain.ts';
-import { getProject, createProject, transition, markPublished, setPlatformFields, addEvidence, listProjects } from './store/projects.ts';
+import { chain, CONFIRMATIONS, signer, deployment, nextFreeOnChainId, publicClient, projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi, readProject, statusName } from './chain.ts';
+import { getProject, createProject, transition, markPublished, setPlatformFields, addEvidence, reassignOnChainId } from './store/projects.ts';
 import { createAttestation } from './store/attestations.ts';
 import { merklePathFor, issuerRoot, issuerTree, upsertInvestor, issueCredential, setKycStatus } from './store/investors.ts';
 import { credentialLeaf } from '@s2d/zk';
 import { sync } from './store/indexer.ts';
 
-const chain = {
-  id: config.chainId, name: `chain-${config.chainId}`,
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  rpcUrls: { default: { http: [config.rpcUrl] } },
-} as const;
-
 const pub = publicClient();
 let deployed: ReturnType<typeof deployment>;
 
 function wallet(key: string) {
-  const account = privateKeyToAccount(key as Hex);
+  const account = signer(key);
   return { client: createWalletClient({ account, chain, transport: http(config.rpcUrl) }), address: account.address };
 }
 
 async function send(key: string, params: Record<string, unknown>): Promise<Hex> {
-  const { client, address } = wallet(key);
-  const hash = await client.writeContract({ ...params, chain: null, account: address } as never);
-  const receipt = await pub.waitForTransactionReceipt({ hash });
+  // `account` tiene que ser la cuenta LOCAL, no la dirección: con un string viem
+  // manda `eth_sendTransaction` sin firmar y un nodo público responde
+  // "unknown account" (Anvil lo acepta porque sus cuentas están desbloqueadas).
+  const { client } = wallet(key);
+  const hash = await client.writeContract({ ...params, chain: null, account: client.account } as never);
+  const receipt = await pub.waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
   assert.equal(receipt.status, 'success', `la transaccion revirtio: ${hash}`);
   return hash;
 }
@@ -328,12 +324,10 @@ async function escenarioFeliz(project: ProjectDossier, creds: DemoCreds) {
 async function escenarioFreno() {
   titulo('EL FRENO: un hito rechazado devuelve el capital no liberado');
 
-  const { client, address: operator } = operatorClient();
-  const onChainId = Math.max(...listProjects().map((p) => p.onChainId)) + 1;
   const DIA = 24 * 60 * 60 * 1000;
   const iso = (d: number) => new Date(Date.now() + d * DIA).toISOString();
 
-  const dossier = createProject({
+  let dossier = createProject({
     name: 'Condominio Sacaba (escenario de fracaso)',
     city: 'Cochabamba', type: 'RESIDENCIAL',
     summary: 'Proyecto de prueba para demostrar qué pasa cuando la obra no avanza.',
@@ -372,6 +366,11 @@ async function escenarioFreno() {
   transition(dossier.id, 'SUBMITTED');
   transition(dossier.id, 'UNDER_REVIEW');
   transition(dossier.id, 'APPROVED');
+
+  // En una testnet la cadena persiste entre corridas: el id tiene que estar
+  // libre EN EL VAULT, no solo en la base local.
+  const freeId = await nextFreeOnChainId(dossier.onChainId);
+  if (freeId !== dossier.onChainId) dossier = reassignOnChainId(dossier.id, freeId);
 
   const ROLE_ID = { LEGAL: 1, SUPERVISOR: 2 } as const;
   await send(DEMO.operator.key, {

@@ -8,7 +8,7 @@ import {
   upsertInvestor, getInvestorByAddress, listInvestors, setKycStatus,
   issueCredential, revokeCredential, listCredentials, issuerRoot, merklePathFor,
 } from '../store/investors.ts';
-import { deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi } from '../chain.ts';
+import { CONFIRMATIONS, deployment, operatorClient, publicClient, projectVaultAbi, eligibilityRegistryAbi } from '../chain.ts';
 import { config } from '../config.ts';
 
 export async function investorRoutes(app: FastifyInstance): Promise<void> {
@@ -41,13 +41,13 @@ export async function investorRoutes(app: FastifyInstance): Promise<void> {
     const investor = getInvestorByAddress(address);
     if (!investor) return reply.code(404).send({ error: 'Inversionista no registrado' });
 
-    const { client, address: operator } = operatorClient();
+    const { client } = operatorClient();
     const hash = await client.writeContract({
       address: deployment().vault as Address, abi: projectVaultAbi, functionName: 'setKyc',
       args: [investor.address as Address, approved],
-      chain: null, account: operator,
+      chain: null, account: client.account!,
     });
-    await publicClient().waitForTransactionReceipt({ hash });
+    await publicClient().waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
 
     return {
       investor: setKycStatus(investor.address, approved ? 'APPROVED' : 'REJECTED', new Date().toISOString()),
@@ -111,13 +111,13 @@ export async function investorRoutes(app: FastifyInstance): Promise<void> {
     const { onChainId } = request.params as { onChainId: string };
     const { minNetWorth, jurisdiction } = request.body as { minNetWorth: string; jurisdiction: number };
 
-    const { client, address: operator } = operatorClient();
+    const { client } = operatorClient();
     const hash = await client.writeContract({
       address: deployment().eligibility as Address, abi: eligibilityRegistryAbi, functionName: 'setPolicy',
       args: [BigInt(onChainId), issuerRoot() as `0x${string}`, BigInt(minNetWorth), BigInt(jurisdiction)],
-      chain: null, account: operator,
+      chain: null, account: client.account!,
     });
-    await publicClient().waitForTransactionReceipt({ hash });
+    await publicClient().waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
     return { txHash: hash, root: issuerRoot() };
   });
 

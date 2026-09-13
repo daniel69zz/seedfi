@@ -7,6 +7,12 @@ import { IdentityPage } from '../../pages/app/ui/IdentityPage'
 import { InvestPage } from '../../pages/app/ui/InvestPage'
 import { NewProjectPage as OnChainNewProjectPage } from '../../pages/app/ui/NewProjectPage'
 import { VerifyPage } from '../../pages/app/ui/VerifyPage'
+import { OnchainOpportunitiesPage } from '../../pages/app/ui/OpportunitiesPage'
+import { OnchainOpportunityPage } from '../../pages/app/ui/OpportunityPage'
+import { OnchainPortfolioPage } from '../../pages/app/ui/PortfolioPage'
+import { OnchainWalletPage } from '../../pages/app/ui/WalletPage'
+import { OnchainProjectsPage } from '../../pages/app/ui/ProjectsPage'
+import { OnchainRepaymentsPage } from '../../pages/app/ui/RepaymentsPage'
 import { SimulatedPageLoad } from '../../features/demo/ui/SimulatedPageLoad'
 import { LOADING_MESSAGES } from '../../shared/config/loadingAnimation'
 import { brand } from '../../shared/config/brand'
@@ -64,6 +70,11 @@ const pageTitles: Record<string, string> = {
   '/app/invest': 'Invertir',
   '/app/developer/new': 'Nuevo proyecto',
   '/app/verify': 'Verificar hitos',
+  '/app/opportunities': 'Oportunidades on-chain',
+  '/app/portfolio': 'Portafolio on-chain',
+  '/app/wallet': 'Wallet y movimientos on-chain',
+  '/app/projects': 'Mis proyectos on-chain',
+  '/app/repayments': 'Pagos on-chain',
   '/notifications': 'Notificaciones',
   '/unauthorized': 'Acceso restringido',
 }
@@ -83,7 +94,9 @@ function ScrollToRoute() {
       window.scrollTo({ top: 0 })
     }
 
-    const pageName = pathname.startsWith('/opportunities/')
+    const pageName = pathname.startsWith('/app/opportunities/')
+      ? 'Oportunidad on-chain'
+      : pathname.startsWith('/opportunities/')
       ? 'Detalle de oportunidad'
       : (pathname.startsWith('/investor/investments/') || pathname.startsWith('/mis-inversiones/'))
         ? 'Detalle de inversión'
@@ -161,6 +174,12 @@ function AppChrome() {
           <Route path="invest" element={<InvestPage />} />
           <Route path="developer/new" element={<OnChainNewProjectPage />} />
           <Route path="verify" element={<VerifyPage />} />
+          <Route path="opportunities" element={<OnchainOpportunitiesPage />} />
+          <Route path="opportunities/:id" element={<OnchainOpportunityPage />} />
+          <Route path="portfolio" element={<OnchainPortfolioPage />} />
+          <Route path="wallet" element={<OnchainWalletPage />} />
+          <Route path="projects" element={<OnchainProjectsPage />} />
+          <Route path="repayments" element={<OnchainRepaymentsPage />} />
         </Route>
 
         <Route path="/notifications" element={<ProtectedRoute roles={['INVESTOR', 'COMPANY', 'ADMIN']}><NotificationsPage /></ProtectedRoute>} />

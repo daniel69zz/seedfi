@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useAccount, usePublicClient, useWriteContract } from 'wagmi'
 import { RefreshCw, Download, TimerOff } from 'lucide-react'
 import type { ProjectDossier } from '@s2d/shared'
 import { formatAmount } from '@s2d/shared'
-import { api, type ChainState } from '../../../shared/api/backend'
+import { api, type ChainState, type RepaymentSchedule } from '../../../shared/api/backend'
 import { projectVaultAbi, useDeployment } from '../../../shared/web3/contracts'
 
 const EVENT_LABELS: Record<string, string> = {
@@ -36,6 +37,7 @@ export function DashboardPage() {
   const { deployment, problem } = useDeployment()
   const publicClient = usePublicClient()
   const { writeContractAsync } = useWriteContract()
+  const [searchParams] = useSearchParams()
 
   const [projects, setProjects] = useState<ProjectDossier[]>([])
   const [selectedId, setSelectedId] = useState('')
@@ -50,10 +52,11 @@ export function DashboardPage() {
       .then(({ projects: found }) => {
         const onChain = found.filter((p) => p.vaultAddress !== null)
         setProjects(onChain)
-        if (onChain[0]) setSelectedId(onChain[0].id)
+        const wanted = onChain.find((p) => p.id === searchParams.get('project')) ?? onChain[0]
+        if (wanted) setSelectedId(wanted.id)
       })
       .catch((caught) => setError(caught instanceof Error ? caught.message : 'No se pudieron cargar los proyectos.'))
-  }, [])
+  }, [searchParams])
 
   const project = projects.find((p) => p.id === selectedId) ?? null
 
@@ -253,9 +256,7 @@ export function DashboardPage() {
           </section>
 
           {/* ── waterfall repago ───────────────────────────────────────── */}
-          {project && deployment && (
-            <RepaymentSection projectId={project.id} onChainId={project.onChainId} status={chain.status} vaultAddress={deployment.vault} />
-          )}
+          {project && <RepaymentSection projectId={project.id} status={chain.status} />}
 
           {/* ── eventos ────────────────────────────────────────────── */}
           <section className="card">
@@ -291,74 +292,33 @@ export function DashboardPage() {
   )
 }
 
-function RepaymentSection({ projectId, onChainId, status, vaultAddress }: { projectId: string; onChainId: number; status: string; vaultAddress: `0x${string}` }) {
-  const [schedule, setSchedule] = useState<any>(null)
-  const [busy, setBusy] = useState<string | null>(null)
-  const { writeContractAsync } = useWriteContract()
+/**
+ * Resumen del repago. El pago en sí vive en /app/repayments: acá antes se
+ * mandaba `repay` desde la wallet y además `/pay`, que repagaba OTRA VEZ con la
+ * llave del operador.
+ */
+function RepaymentSection({ projectId, status }: { projectId: string; status: string }) {
+  const [schedule, setSchedule] = useState<RepaymentSchedule | null>(null)
 
-  const load = useCallback(async () => {
-    try {
-      const res = await api.projects.repaymentSchedule(projectId)
-      setSchedule(res.schedule)
-    } catch {
-      setSchedule(null)
-    }
+  useEffect(() => {
+    void api.projects.repaymentSchedule(projectId)
+      .then((res) => setSchedule(res.schedule as RepaymentSchedule))
+      .catch(() => setSchedule(null))
   }, [projectId])
-
-  useEffect(() => { void load() }, [load])
 
   if (status !== 'COMPLETED' && !schedule) return null
 
+  const paid = schedule?.installments.filter((i) => i.status === 'PAID').length ?? 0
+
   return (
     <section className="card">
-      <h2>Calendario de Repagos (Waterfall)</h2>
-      {!schedule ? (
-        <button className="btn" onClick={async () => {
-          setBusy('generate')
-          await api.projects.generateRepayment(projectId)
-          await load()
-          setBusy(null)
-        }}>
-          {busy === 'generate' ? 'Generando...' : 'Generar Calendario de Pagos'}
-        </button>
-      ) : (
-        <div className="table-scroll">
-          <table className="data">
-            <thead>
-              <tr><th>Cuota</th><th>Fecha</th><th>Capital + Interés</th><th>Estado</th></tr>
-            </thead>
-            <tbody>
-              {schedule.installments.map((cuota: any, idx: number) => (
-                <tr key={idx}>
-                  <td>{idx + 1} de {schedule.installments.length}</td>
-                  <td>{new Date(cuota.dueDate).toLocaleDateString('es-BO')}</td>
-                  <td className="num">{formatAmount(cuota.amount)}</td>
-                  <td>
-                    {cuota.status === 'PAID' ? (
-                      <span className="pill pill--ok">Pagado</span>
-                    ) : (
-                      <button className="btn btn--small" disabled={busy !== null} onClick={async () => {
-                        setBusy(`pay-${idx}`)
-                        try {
-                          await writeContractAsync({
-                            address: vaultAddress, abi: projectVaultAbi, functionName: 'repay',
-                            args: [BigInt(onChainId), BigInt(cuota.amount)]
-                          })
-                          await api.projects.payRepayment(projectId, idx)
-                          await load()
-                        } catch (e) { console.error(e) }
-                        setBusy(null)
-                      }}>
-                        {busy === `pay-${idx}` ? '...' : 'Pagar'}
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <h2>Calendario de repagos</h2>
+      <p className="card__lead">
+        {schedule
+          ? `${paid} de ${schedule.installments.length} cuotas pagadas · total ${formatAmount(schedule.totalDue)} USDT`
+          : 'Todavía no hay calendario generado para este proyecto.'}
+      </p>
+      <Link className="btn btn--primary" to={`/app/repayments?project=${projectId}`}>Gestionar pagos</Link>
     </section>
   )
 }

@@ -7,7 +7,7 @@
 // Vite (el mismo origen y camino que usa el navegador), y valida la FORMA de
 // los datos que los componentes consumen.
 import { createPublicClient, http } from 'viem'
-const R = '/Users/luisdanielrojascaceres/Downloads/programacion_etc/build_trust'
+const R = new URL('../..', import.meta.url).pathname.replace(/\/$/, '')
 const { projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi } = await import(`${R}/packages/shared/dist/index.js`)
 const B = 'http://localhost:5173'
 
@@ -17,10 +17,10 @@ const fail = (m) => { console.log(`   FALLA ${m}`); bad++ }
 const check = (cond, m) => cond ? pass(m) : fail(m)
 const get = async (p) => { const r = await fetch(B + p); if (!r.ok) throw new Error(`${p} -> ${r.status}`); return r.json() }
 
-const chain = { id: 31337, name: 'anvil', nativeCurrency:{name:'E',symbol:'E',decimals:18}, rpcUrls:{default:{http:['http://127.0.0.1:8545']}} }
-const pub = createPublicClient({ chain, transport: http() })
-
+// La red la dicta el backend: Anvil en local, HashKey Chain en testnet.
 const health = await get('/api/health')
+const chain = { id: health.chainId, name: `chain-${health.chainId}`, nativeCurrency:{name:'N',symbol:'N',decimals:18}, rpcUrls:{default:{http:[health.rpcUrl]}} }
+const pub = createPublicClient({ chain, transport: http() })
 const d = health.contracts
 const INV = Object.keys(JSON.parse(await (await import('node:fs/promises')).readFile(`${R}/backend/data/demo-credentials.json`,'utf8')).credentials)[0]
 

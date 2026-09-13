@@ -1,0 +1,57 @@
+/* ── pantallas on-chain agregadas a /app ────────────────────────────── */
+
+.card-toolbar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 1rem; flex-wrap: wrap;
+}
+.card-toolbar h2 { margin: 0; }
+.card-toolbar .card__lead { margin: .25rem 0 0; }
+
+.onchain-grid {
+  display: grid; gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+.onchain-card {
+  display: flex; flex-direction: column; gap: .6rem;
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+}
+.onchain-card h3 { margin: 0; font-size: 1.2rem; }
+.onchain-card__summary {
+  margin: 0; color: var(--color-text-muted); font-size: .9rem;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.onchain-card__actions { margin-top: auto; padding-top: .25rem; }
+
+.onchain-facts {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem .75rem; margin: 0;
+}
+.onchain-facts dt { font-size: .75rem; color: var(--color-text-muted); }
+.onchain-facts dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.dl-list {
+  display: grid; gap: .75rem 1.25rem; margin: 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+.dl-list dt { font-size: .8rem; color: var(--color-text-muted); }
+.dl-list dd { margin: .1rem 0 0; font-weight: 700; overflow-wrap: anywhere; }
+
+.progress-block { display: flex; flex-direction: column; gap: .3rem; }
+.progress-block .field__hint { margin: 0; }
+.progress {
+  height: .75rem; overflow: hidden;
+  border: 2px solid var(--color-border); border-radius: var(--radius-pill);
+  background: var(--color-surface);
+}
+.progress__bar { display: block; height: 100%; background: var(--color-primary); }
+
+.btn--small { padding: .35rem .8rem; font-size: .85rem; }
+
+.check-inline { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; font-size: .9rem; }
+
+.amount-in { color: #1f7a4d; }
+.amount-out { color: #a33a3a; }

@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useAccount } from 'wagmi'
 import { Plus, Trash2, Send, Rocket } from 'lucide-react'
 import { parseAmount, type ProjectDossier, type ValidationIssue } from '@s2d/shared'
 import { api, ApiError } from '../../../shared/api/backend'
@@ -37,13 +38,17 @@ const DEFAULT_MILESTONES: MilestoneDraft[] = [
  * necesita ver moverse mientras edita.
  */
 export function NewProjectPage() {
+  const { address } = useAccount()
   const [form, setForm] = useState({
     name: 'Edificio Aurora II',
     city: 'Cochabamba',
     type: 'RESIDENCIAL' as ProjectDossier['type'],
     summary: 'Edificio residencial de 6 plantas. El terreno está pagado y escriturado al SPV.',
     developerName: 'Vallesur Desarrollos S.R.L.',
-    developerAddress: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    // Antes venían fijas las cuentas 1-3 de Anvil, sin campo para cambiarlas.
+    // En una red pública esas llaves las tiene cualquiera: la constructora sale
+    // de la wallet conectada y los verificadores se escriben a mano.
+    developerAddress: '',
     spvName: 'Aurora II S.R.L.',
     cadastralId: '3.01.4.02.0099887',
     target: '600000',
@@ -58,9 +63,13 @@ export function NewProjectPage() {
     fundingDeadline: fecha(iso(21)),
     minNetWorth: '100000',
     allowedJurisdiction: 68,
-    legalVerifier: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-    supervisorVerifier: '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
+    legalVerifier: '',
+    supervisorVerifier: '',
   })
+
+  useEffect(() => {
+    if (address) setForm((current) => current.developerAddress ? current : { ...current, developerAddress: address })
+  }, [address])
   const [milestones, setMilestones] = useState<MilestoneDraft[]>(DEFAULT_MILESTONES)
   const [created, setCreated] = useState<ProjectDossier | null>(null)
   const [issues, setIssues] = useState<ValidationIssue[]>([])
@@ -168,6 +177,18 @@ export function NewProjectPage() {
             <p className="field__hint">Patrimonio separado: si la constructora quiebra por otra obra, este proyecto no se va con ella.</p></div>
           <div className="field"><label htmlFor="cadastral">Matrícula de Derechos Reales</label>
             <input id="cadastral" value={form.cadastralId} onChange={(e) => setForm({ ...form, cadastralId: e.target.value })} /></div>
+          <div className="field"><label htmlFor="devAddress">Wallet de la constructora</label>
+            <input id="devAddress" className="mono" placeholder="0x…" value={form.developerAddress}
+              onChange={(e) => setForm({ ...form, developerAddress: e.target.value.trim() })} />
+            <p className="field__hint">Recibe los tramos liberados. Por defecto, la wallet conectada.</p></div>
+          <div className="field"><label htmlFor="legalVerifier">Wallet del verificador legal</label>
+            <input id="legalVerifier" className="mono" placeholder="0x…" value={form.legalVerifier}
+              onChange={(e) => setForm({ ...form, legalVerifier: e.target.value.trim() })} />
+            <p className="field__hint">Firma los hitos LEGAL. No puede ser la del operador.</p></div>
+          <div className="field"><label htmlFor="supervisorVerifier">Wallet del supervisor de obra</label>
+            <input id="supervisorVerifier" className="mono" placeholder="0x…" value={form.supervisorVerifier}
+              onChange={(e) => setForm({ ...form, supervisorVerifier: e.target.value.trim() })} />
+            <p className="field__hint">Firma los hitos SUPERVISOR. No puede ser la del operador.</p></div>
         </div>
         <div className="field" style={{ marginTop: '.75rem' }}>
           <label htmlFor="summary">Resumen</label>

@@ -2,10 +2,10 @@
 //  API de repayment waterfall  (backlog T19 — stretch)
 // ---------------------------------------------------------------------------
 import type { FastifyInstance } from 'fastify';
-import type { Address } from 'viem';
+import { parseEventLogs, type Address, type Hex } from 'viem';
 import { getProject } from '../store/projects.ts';
 import { computeSchedule, saveSchedule, getSchedule, markPaid, overdueInstallments } from '../store/waterfall.ts';
-import { deployment, operatorClient, publicClient, projectVaultAbi } from '../chain.ts';
+import { CONFIRMATIONS, deployment, operatorClient, publicClient, projectVaultAbi } from '../chain.ts';
 
 export async function repaymentRoutes(app: FastifyInstance): Promise<void> {
   /**
@@ -68,7 +68,7 @@ export async function repaymentRoutes(app: FastifyInstance): Promise<void> {
 
     const deployed = deployment();
     const pub = publicClient();
-    const { client, address } = operatorClient();
+    const { client } = operatorClient();
 
     // En la demo, el operador ejecuta con su propia llave.
     // En producción, el builder aprueba y envía desde su wallet.
@@ -77,9 +77,9 @@ export async function repaymentRoutes(app: FastifyInstance): Promise<void> {
     const hash = await client.writeContract({
       address: deployed.vault as Address, abi: projectVaultAbi, functionName: 'repay',
       args: [BigInt(project.onChainId), amount],
-      chain: null, account: address,
+      chain: null, account: client.account!,
     });
-    const receipt = await pub.waitForTransactionReceipt({ hash });
+    const receipt = await pub.waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
 
     if (receipt.status !== 'success') {
       return reply.code(400).send({ error: `La transacción de repago revirtió: ${hash}` });
@@ -87,6 +87,52 @@ export async function repaymentRoutes(app: FastifyInstance): Promise<void> {
 
     const updated = markPaid(project.id, Number(index), amount.toString(), hash);
     return { schedule: serialize(updated), txHash: hash };
+  });
+
+  /**
+   * Registra una cuota que la constructora YA pagó desde su wallet.
+   *
+   * No firma nada: lee el recibo y solo marca la cuota si la cadena lo
+   * respalda — tx exitosa, dirigida al vault, con un `Repaid` de ESTE proyecto
+   * por al menos el monto de la cuota. Sin esa verificación, cualquiera podría
+   * marcar cuotas como pagadas mandando un hash cualquiera.
+   *
+   * Existe porque `/pay` manda su propio `repay` con la llave del operador: si
+   * la UI ya pagó desde la wallet y además llama a `/pay`, se paga dos veces.
+   */
+  app.post('/api/projects/:id/repayment/:index/confirm', async (request, reply) => {
+    const { id, index } = request.params as { id: string; index: string };
+    const { txHash } = (request.body ?? {}) as { txHash?: string };
+    if (!txHash || !/^0x[0-9a-fA-F]{64}$/.test(txHash)) return reply.code(400).send({ error: 'txHash inválido.' });
+
+    const project = getProject(id);
+    if (!project) return reply.code(404).send({ error: 'Proyecto inexistente' });
+    const schedule = getSchedule(project.id);
+    if (!schedule) return reply.code(404).send({ error: 'No hay schedule de repago.' });
+    const installment = schedule.installments[Number(index)];
+    if (!installment) return reply.code(404).send({ error: `Cuota ${index} inexistente.` });
+    if (installment.status === 'PAID') return reply.code(409).send({ error: 'La cuota ya fue pagada.', txHash: installment.txHash });
+    if (schedule.installments.some((i) => i.txHash?.toLowerCase() === txHash.toLowerCase())) {
+      return reply.code(409).send({ error: 'Esa transacción ya respalda otra cuota.' });
+    }
+
+    const deployed = deployment();
+    const receipt = await publicClient().waitForTransactionReceipt({ hash: txHash as Hex, confirmations: CONFIRMATIONS });
+    if (receipt.status !== 'success') return reply.code(400).send({ error: `La transacción revirtió: ${txHash}` });
+    if (receipt.to?.toLowerCase() !== deployed.vault.toLowerCase()) {
+      return reply.code(400).send({ error: 'La transacción no fue enviada al vault.' });
+    }
+
+    const repaid = parseEventLogs({ abi: projectVaultAbi, logs: receipt.logs, eventName: 'Repaid' })
+      .filter((log) => log.address.toLowerCase() === deployed.vault.toLowerCase())
+      .filter((log) => (log.args as { projectId: bigint }).projectId === BigInt(project.onChainId))
+      .reduce((acc, log) => acc + (log.args as { amount: bigint }).amount, 0n);
+    if (repaid < BigInt(installment.amount)) {
+      return reply.code(400).send({ error: `El repago en cadena (${repaid}) no cubre la cuota (${installment.amount}).` });
+    }
+
+    const updated = markPaid(project.id, Number(index), repaid.toString(), txHash);
+    return { schedule: serialize(updated), txHash };
   });
 
   /**

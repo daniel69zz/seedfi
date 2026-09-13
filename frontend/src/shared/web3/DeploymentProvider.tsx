@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { PropsWithChildren } from 'react'
 import { api, ApiError } from '../api/backend'
 import { DeploymentContext, toDeployment, type Deployment } from './contracts'
+import { appChain } from './config'
 
 /**
  * Resuelve las direcciones desplegadas al arrancar la app.
@@ -14,7 +15,7 @@ import { DeploymentContext, toDeployment, type Deployment } from './contracts'
  */
 export function DeploymentProvider({ children }: PropsWithChildren) {
   const [deployment, setDeployment] = useState<Deployment | null>(null)
-  const [chainId, setChainId] = useState(31337)
+  const [chainId, setChainId] = useState<number>(appChain.id)
   const [loading, setLoading] = useState(true)
   const [problem, setProblem] = useState<string | null>(null)
 
@@ -26,7 +27,9 @@ export function DeploymentProvider({ children }: PropsWithChildren) {
       const resolved = toDeployment(health)
       setDeployment(resolved)
       setProblem(resolved ? null
-        : `No hay contratos desplegados en la red ${health.chainId}. Corré: npm run contracts:deploy:local`)
+        : health.chainId !== appChain.id
+          ? `El backend está en la red ${health.chainId} y el frontend en ${appChain.id}. Alineá CHAIN_ID (backend/.env) con VITE_CHAIN_ID (frontend/.env).`
+          : `No hay contratos desplegados en la red ${health.chainId}. Falta contracts/deployments/${health.chainId}.json`)
     } catch (error) {
       setDeployment(null)
       setProblem(error instanceof ApiError ? error.message : 'No se pudo leer el estado del backend.')

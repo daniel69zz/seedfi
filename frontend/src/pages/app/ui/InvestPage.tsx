@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useAccount, usePublicClient, useWriteContract } from 'wagmi'
 import { formatUnits, parseUnits, type Address } from 'viem'
 import { CheckCircle2, Circle, Loader2, ShieldCheck, Wallet2 } from 'lucide-react'
@@ -29,6 +30,8 @@ export function InvestPage() {
   const publicClient = usePublicClient()
   const { writeContractAsync } = useWriteContract()
   const { state: proverState, prove, credential } = useEligibilityProof(address)
+  // `?project=` llega desde Oportunidades: entra con ese proyecto ya elegido.
+  const [searchParams] = useSearchParams()
 
   const [projects, setProjects] = useState<ProjectDossier[]>([])
   const [selectedId, setSelectedId] = useState<string>('')
@@ -48,10 +51,11 @@ export function InvestPage() {
       .then(({ projects: found }) => {
         const open = found.filter((p) => p.status === 'PUBLISHED' || p.status === 'FUNDING')
         setProjects(open)
-        if (open[0]) setSelectedId(open[0].id)
+        const wanted = open.find((p) => p.id === searchParams.get('project')) ?? open[0]
+        if (wanted) setSelectedId(wanted.id)
       })
       .catch((caught) => setError(caught instanceof Error ? caught.message : 'No se pudieron cargar los proyectos.'))
-  }, [])
+  }, [searchParams])
 
   const refresh = useCallback(async () => {
     if (!project || !deployment || !address || !publicClient) return

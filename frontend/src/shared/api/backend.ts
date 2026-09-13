@@ -165,6 +165,28 @@ export interface Investor {
   createdAt: string
 }
 
+export interface RepaymentInstallment {
+  index: number
+  dueDate: string
+  amount: string
+  capitalPortion: string
+  interestPortion: string
+  status: 'PENDING' | 'PAID' | 'OVERDUE' | 'PARTIAL'
+  paidAmount: string
+  paidAt: string | null
+  txHash: string | null
+}
+
+export interface RepaymentSchedule {
+  projectId: string
+  onChainId: number
+  totalDue: string
+  installment: string
+  periods: number
+  startDate: string
+  installments: RepaymentInstallment[]
+}
+
 export interface IssuedCredentialSecret {
   secret: string
   jurisdiction: number
@@ -220,6 +242,9 @@ export const api = {
     repaymentSchedule: (id: string) => get<{ schedule: any; overdue: any[] }>(`/api/projects/${id}/repayment/schedule`),
     generateRepayment: (id: string, force?: boolean) => post<{ schedule: any }>(`/api/projects/${id}/repayment/schedule`, { force }),
     payRepayment: (id: string, index: number) => post<{ schedule: any; txHash: string }>(`/api/projects/${id}/repayment/${index}/pay`),
+    /** Marca una cuota ya pagada desde la wallet. El backend verifica el recibo; no envía otra tx. */
+    confirmRepayment: (id: string, index: number, txHash: string) =>
+      post<{ schedule: RepaymentSchedule; txHash: string }>(`/api/projects/${id}/repayment/${index}/confirm`, { txHash }),
   },
 
   evidence: {

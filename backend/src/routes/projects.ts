@@ -11,7 +11,7 @@ import {
 import { pinAndUpdate, isConfigured as ipfsConfigured, gatewayUrl } from '../store/ipfs.ts';
 import { eventsFor, sync } from '../store/indexer.ts';
 import {
-  deployment, operatorClient, publicClient, readProject, readMilestones,
+  CONFIRMATIONS, deployment, operatorClient, publicClient, readProject, readMilestones,
   projectVaultAbi, eligibilityRegistryAbi, statusName,
 } from '../chain.ts';
 import { issuerRoot } from '../store/investors.ts';
@@ -127,7 +127,7 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
       return reply.code(422).send({ error: 'El dossier dejó de ser válido desde la aprobación.', details: blocking });
     }
 
-    const { client, address } = operatorClient();
+    const { client } = operatorClient();
     const deployed = deployment();
     const pub = publicClient();
 
@@ -145,9 +145,9 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
         BigInt(project.terms.target), BigInt(Math.floor(Date.parse(project.terms.fundingDeadline) / 1000)),
         milestones, project.terms.originationBps, project.terms.successBps,
       ],
-      chain: null, account: address,
+      chain: null, account: client.account!,
     });
-    await pub.waitForTransactionReceipt({ hash: createHash });
+    await pub.waitForTransactionReceipt({ hash: createHash, confirmations: CONFIRMATIONS });
 
     // Los verificadores se registran DESPUÉS de crear el proyecto: el contrato
     // exige que exista, y además prohíbe que el operador se designe a sí mismo.
@@ -156,9 +156,9 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
       const hash = await client.writeContract({
         address: deployed.vault as Address, abi: projectVaultAbi, functionName: 'grantVerifier',
         args: [BigInt(project.onChainId), verifier.address as Address, ROLE_ID[verifier.role]],
-        chain: null, account: address,
+        chain: null, account: client.account!,
       });
-      await pub.waitForTransactionReceipt({ hash });
+      await pub.waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
       verifierTxs.push(hash);
     }
 
@@ -183,9 +183,9 @@ export async function projectRoutes(app: FastifyInstance): Promise<void> {
         BigInt(project.eligibility.minNetWorth),
         BigInt(project.eligibility.allowedJurisdiction),
       ],
-      chain: null, account: address,
+      chain: null, account: client.account!,
     });
-    await pub.waitForTransactionReceipt({ hash: policyHash });
+    await pub.waitForTransactionReceipt({ hash: policyHash, confirmations: CONFIRMATIONS });
 
     // Queda registrado contra qué raíz abrió la ronda: si el emisor la cambia
     // después, se puede explicar por qué una prueba dejó de validar.

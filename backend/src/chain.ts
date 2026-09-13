@@ -2,21 +2,26 @@
 //  Capa de cadena — clientes viem, EIP-712 e indexado de eventos
 // ---------------------------------------------------------------------------
 import {
-  createPublicClient, createWalletClient, http, parseEventLogs,
+  createPublicClient, createWalletClient, http, nonceManager, parseEventLogs,
   type Address, type Hex, type PublicClient, type WalletClient,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi } from '@s2d/shared';
+import { projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi, CHAINS } from '@s2d/shared';
 import { config, loadDeployment, type Deployment } from './config.ts';
 
 export { projectVaultAbi, eligibilityRegistryAbi, mockUsdtAbi };
 
-const chain = {
+export const chain = {
   id: config.chainId,
-  name: `chain-${config.chainId}`,
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  name: CHAINS[config.chainId]?.name ?? `chain-${config.chainId}`,
+  nativeCurrency: CHAINS[config.chainId]?.nativeCurrency ?? { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: { default: { http: [config.rpcUrl] } },
 } as const;
+
+/** Tramo máximo de bloques por `eth_getLogs`. Los RPC públicos cortan rangos
+ *  grandes, y un backend que estuvo apagado unos días en una red de 2 s por
+ *  bloque acumula cientos de miles. */
+const LOG_RANGE = 50_000n;
 
 let cachedDeployment: Deployment | null | undefined;
 
@@ -36,8 +41,20 @@ export function publicClient(): PublicClient {
   return createPublicClient({ chain, transport: http(config.rpcUrl) }) as PublicClient;
 }
 
+/**
+ * Cuenta con nonce llevado en memoria.
+ *
+ * Los RPC públicos (testnet.hsk.xyz) están detrás de un balanceador: justo
+ * después de minar una tx, otro nodo puede responder un `pending` nonce viejo
+ * y la siguiente tx sale con el mismo nonce → "replacement transaction
+ * underpriced". Contar localmente evita preguntarle al nodo en cada envío.
+ */
+export function signer(key: string) {
+  return privateKeyToAccount(key as Hex, { nonceManager });
+}
+
 export function operatorClient(): { client: WalletClient; address: Address } {
-  const account = privateKeyToAccount(config.operatorKey as Hex);
+  const account = signer(config.operatorKey);
   return {
     client: createWalletClient({ account, chain, transport: http(config.rpcUrl) }),
     address: account.address,
@@ -173,11 +190,15 @@ export interface IndexedEvent {
 }
 
 export async function fetchEvents(fromBlock: bigint, toBlock: bigint): Promise<IndexedEvent[]> {
-  const logs = await publicClient().getLogs({
-    address: deployment().vault as Address,
-    fromBlock,
-    toBlock,
-  });
+  const logs = [];
+  for (let start = fromBlock; start <= toBlock; start += LOG_RANGE) {
+    const end = start + LOG_RANGE - 1n < toBlock ? start + LOG_RANGE - 1n : toBlock;
+    logs.push(...await publicClient().getLogs({
+      address: deployment().vault as Address,
+      fromBlock: start,
+      toBlock: end,
+    }));
+  }
 
   const parsed = parseEventLogs({ abi: projectVaultAbi, logs });
   const out: IndexedEvent[] = [];
@@ -213,8 +234,20 @@ export async function fetchEvents(fromBlock: bigint, toBlock: bigint): Promise<I
  * revertido, y el proyecto quedaba en la base apuntando a un vault donde nunca
  * existió.
  */
+/**
+ * Confirmaciones a esperar tras cada tx.
+ *
+ * En Anvil hay un solo nodo: con el recibo alcanza. Un RPC público está detrás
+ * de un balanceador (testnet.hsk.xyz va por Cloudflare a varios nodos): el
+ * recibo puede venir de uno y la estimación de la tx siguiente de otro que
+ * todavía no vio ese bloque. Pasó de verdad: `approve` confirmado y el
+ * `invest` inmediato revertía con `TransferenciaFallida` porque ese nodo aún
+ * veía allowance 0. Un bloque extra (~2 s) les da tiempo a ponerse al día.
+ */
+export const CONFIRMATIONS = config.chainId === 31337 ? 1 : 2;
+
 export async function confirm(hash: Hex, what: string): Promise<Hex> {
-  const receipt = await publicClient().waitForTransactionReceipt({ hash });
+  const receipt = await publicClient().waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
   if (receipt.status !== 'success') {
     throw new Error(`La transacción de «${what}» revirtió en cadena (tx ${hash}).`);
   }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FileCheck2, FileX2, Send, Upload, AlertTriangle } from 'lucide-react'
 import type { ProjectDossier } from '@s2d/shared'
 import { formatAmount } from '@s2d/shared'
@@ -28,6 +29,7 @@ export function VerifyPage() {
   const [flash, setFlash] = useState<string | null>(null)
   const [verifierKey, setVerifierKey] = useState('')
   const [evidence, setEvidence] = useState({ kind: 'INFORME', filename: '', notes: '' })
+  const [searchParams] = useSearchParams()
 
   const project = useMemo(() => projects.find((p) => p.id === selectedId) ?? null, [projects, selectedId])
 
@@ -35,10 +37,11 @@ export function VerifyPage() {
     void api.projects.list(['PUBLISHED', 'FUNDING', 'ACTIVE'])
       .then(({ projects: found }) => {
         setProjects(found)
-        if (found[0]) setSelectedId(found[0].id)
+        const wanted = found.find((p) => p.id === searchParams.get('project')) ?? found[0]
+        if (wanted) setSelectedId(wanted.id)
       })
       .catch((caught) => setError(caught instanceof Error ? caught.message : 'No se pudieron cargar los proyectos.'))
-  }, [])
+  }, [searchParams])
 
   const load = useCallback(async () => {
     if (!project) return

@@ -1,12 +1,13 @@
 // Alta de inversionista de punta a punta: registro -> KYC on-chain ->
 // credencial ZK -> camino de Merkle. Por el proxy de Vite, igual que el navegador.
 import { createPublicClient, http } from 'viem'
-const R='/Users/luisdanielrojascaceres/Downloads/programacion_etc/build_trust'
+const R = new URL('../..', import.meta.url).pathname.replace(/\/$/, '')
 const { projectVaultAbi } = await import(`${R}/packages/shared/dist/index.js`)
 const B='http://localhost:5173'
 const j = async (m,p,b) => { const r=await fetch(B+p,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined}); const d=await r.json(); if(!r.ok) throw new Error(`${p} -> ${r.status} ${d.error}`); return d }
-const pub = createPublicClient({ chain:{id:31337,name:'a',nativeCurrency:{name:'E',symbol:'E',decimals:18},rpcUrls:{default:{http:['http://127.0.0.1:8545']}}}, transport: http() })
-const { contracts } = await j('GET','/api/health')
+const health = await j('GET','/api/health')
+const { contracts } = health
+const pub = createPublicClient({ chain:{id:health.chainId,name:'a',nativeCurrency:{name:'N',symbol:'N',decimals:18},rpcUrls:{default:{http:[health.rpcUrl]}}}, transport: http() })
 
 // Wallet nueva: nunca vista por la plataforma.
 const wallet = '0x' + Array.from({length:40},()=>'0123456789abcdef'[Math.floor(Math.random()*16)]).join('')

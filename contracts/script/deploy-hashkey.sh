@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 # deploy-hashkey.sh — Despliega y verifica SeedFi en HashKey Chain (HSK)
 # Uso:

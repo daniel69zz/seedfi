@@ -1,7 +1,7 @@
 import { Wallet, LogOut, AlertTriangle } from 'lucide-react'
 import { useAccount, useConnect, useDisconnect, useChainId, useSwitchChain } from 'wagmi'
 import { shortAddress } from '@s2d/shared'
-import { anvil } from '../../../shared/web3/config'
+import { appChain } from '../../../shared/web3/config'
 import './WalletButton.css'
 
 /**
@@ -18,7 +18,7 @@ export function WalletButton() {
   const chainId = useChainId()
   const { switchChain } = useSwitchChain()
 
-  const wrongNetwork = isConnected && chainId !== anvil.id
+  const wrongNetwork = isConnected && chainId !== appChain.id
 
   if (!isConnected) {
     const injectedConnector = connectors[0]
@@ -46,9 +46,9 @@ export function WalletButton() {
   return (
     <div className="wallet">
       {wrongNetwork && (
-        <button type="button" className="wallet__switch" onClick={() => switchChain({ chainId: anvil.id })}>
+        <button type="button" className="wallet__switch" onClick={() => switchChain({ chainId: appChain.id })}>
           <AlertTriangle size={16} aria-hidden />
-          Cambiar a {anvil.name}
+          Cambiar a {appChain.name}
         </button>
       )}
       <span className="wallet__address" title={address}>

@@ -5,7 +5,7 @@ import type { FastifyInstance } from 'fastify';
 import type { Address, Hex } from 'viem';
 import { createAttestation, listAttestations, getAttestation, markSubmitted } from '../store/attestations.ts';
 import { getProject, listEvidence, evidenceBundleHash } from '../store/projects.ts';
-import { deployment, operatorClient, publicClient, projectVaultAbi } from '../chain.ts';
+import { CONFIRMATIONS, deployment, operatorClient, publicClient, projectVaultAbi } from '../chain.ts';
 import { sync } from '../store/indexer.ts';
 
 export async function verificationRoutes(app: FastifyInstance): Promise<void> {
@@ -90,15 +90,15 @@ export async function verificationRoutes(app: FastifyInstance): Promise<void> {
       expiresAt: BigInt(stored.expiresAt),
     };
 
-    const { client, address } = operatorClient();
+    const { client } = operatorClient();
     const hash = await client.writeContract({
       address: deployment().vault as Address,
       abi: projectVaultAbi,
       functionName: stored.approved ? 'releaseMilestone' : 'failMilestone',
       args: [message, stored.signature as Hex],
-      chain: null, account: address,
+      chain: null, account: client.account!,
     });
-    const receipt = await publicClient().waitForTransactionReceipt({ hash });
+    const receipt = await publicClient().waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
     markSubmitted(digest, hash);
     await sync();
 
@@ -118,12 +118,12 @@ export async function verificationRoutes(app: FastifyInstance): Promise<void> {
     const project = getProject(id);
     if (!project) return reply.code(404).send({ error: 'Proyecto inexistente' });
 
-    const { client, address } = operatorClient();
+    const { client } = operatorClient();
     const hash = await client.writeContract({
       address: deployment().vault as Address, abi: projectVaultAbi, functionName: 'expireMilestone',
-      args: [BigInt(project.onChainId)], chain: null, account: address,
+      args: [BigInt(project.onChainId)], chain: null, account: client.account!,
     });
-    await publicClient().waitForTransactionReceipt({ hash });
+    await publicClient().waitForTransactionReceipt({ hash, confirmations: CONFIRMATIONS });
     await sync();
     return { txHash: hash };
   });

@@ -19,6 +19,21 @@ export const CHAINS: Record<number, ChainConfig> = {
     explorer: null,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
+  133: {
+    id: 133,
+    name: 'HashKey Chain Testnet',
+    rpcUrl: 'https://testnet.hsk.xyz',
+    explorer: 'https://testnet-explorer.hsk.xyz',
+    nativeCurrency: { name: 'HashKey EcoPoints', symbol: 'HSK', decimals: 18 },
+  },
+  177: {
+    id: 177,
+    name: 'HashKey Chain',
+    rpcUrl: 'https://mainnet.hsk.xyz',
+    explorer: 'https://hashkey.blockscout.com',
+    nativeCurrency: { name: 'HashKey EcoPoints', symbol: 'HSK', decimals: 18 },
+  },
+  // Despliegue anterior (legacy): ver contracts/script/legacy/deploy-fuji.sh
   43113: {
     id: 43113,
     name: 'Avalanche Fuji',

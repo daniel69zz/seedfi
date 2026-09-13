@@ -198,7 +198,7 @@ async function main() {
   await initPoseidon();
 
   const deployed = deployment();
-  const { client, address: operator } = operatorClient();
+  const { client } = operatorClient();
   const pub = publicClient();
 
   // ------------------------------------------------------------- 1. dossier
@@ -258,7 +258,7 @@ async function main() {
     // Tamizaje AML del operador, escrito en el vault.
     const hash = await client.writeContract({
       address: deployed.vault as Address, abi: projectVaultAbi, functionName: 'setKyc',
-      args: [perfil.cuenta.address as Address, true], chain: null, account: operator,
+      args: [perfil.cuenta.address as Address, true], chain: null, account: client.account!,
     });
     await confirm(hash, 'transacción del sembrado');
     setKycStatus(investor.address, 'APPROVED', new Date().toISOString());
@@ -266,7 +266,7 @@ async function main() {
     // Fondos de prueba.
     const mint = await client.writeContract({
       address: deployed.usdt as Address, abi: mockUsdtAbi, functionName: 'mint',
-      args: [perfil.cuenta.address as Address, parseUnits('500000')], chain: null, account: operator,
+      args: [perfil.cuenta.address as Address, parseUnits('500000')], chain: null, account: client.account!,
     });
     await confirm(mint, 'mint de USDT');
 
@@ -299,7 +299,7 @@ async function main() {
       BigInt(listo.terms.target), BigInt(Math.floor(Date.parse(listo.terms.fundingDeadline) / 1000)),
       milestones, listo.terms.originationBps, listo.terms.successBps,
     ],
-    chain: null, account: operator,
+    chain: null, account: client.account!,
   });
   await confirm(createHash, 'createProject');
 
@@ -307,7 +307,7 @@ async function main() {
     const hash = await client.writeContract({
       address: deployed.vault as Address, abi: projectVaultAbi, functionName: 'grantVerifier',
       args: [BigInt(listo.onChainId), verifier.address as Address, ROLE_ID[verifier.role]],
-      chain: null, account: operator,
+      chain: null, account: client.account!,
     });
     await confirm(hash, 'transacción del sembrado');
   }
@@ -315,7 +315,7 @@ async function main() {
   const policyHash = await client.writeContract({
     address: deployed.eligibility as Address, abi: eligibilityRegistryAbi, functionName: 'setPolicy',
     args: [BigInt(listo.onChainId), root as `0x${string}`, BigInt(listo.eligibility.minNetWorth), BigInt(listo.eligibility.allowedJurisdiction)],
-    chain: null, account: operator,
+    chain: null, account: client.account!,
   });
   await confirm(policyHash, 'setPolicy');
 
