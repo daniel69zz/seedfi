@@ -31,22 +31,29 @@ Nuestro sistema ofrece tres garantías inmutables escritas en la blockchain:
 
 Antes de proyectar la pantalla, asegúrate de tener:
 
+**HashKey Chain Testnet (133), lo habitual.** Los contratos están desplegados y la base sembrada; solo hay que levantar las aplicaciones:
+
 ```bash
-# Terminal 1: Iniciar la blockchain local
-npm run chain
-
-# Terminal 2: Desplegar contratos y sembrar datos iniciales
-npm run contracts:deploy:local
-npm run seed -- --reset
-
-# Terminal 3: Levantar aplicaciones
 npm run dev:backend    # :4000
 npm run dev:frontend   # :5173
+npm run check:conn     # opcional: 27/27 esperado
 ```
 
-- [ ] MetaMask (u otra wallet) instalada con la red Localhost (`31337`, `http://127.0.0.1:8545`).
-- [ ] Importar las cuentas de demostración en la wallet (ver sección 8 al final del documento).
-- [ ] Asegurarse de tener seleccionada la cuenta del **Inversionista A** para empezar.
+**Anvil local, alternativa sin conexión.** Requiere `CHAIN_ID=31337` en `backend/.env` y `VITE_CHAIN_ID=31337` en `frontend/.env`:
+
+```bash
+npm run chain                    # terminal 1
+npm run contracts:deploy:local   # terminal 2
+npm run seed -- --reset
+npm run dev:backend              # terminal 3
+npm run dev:frontend
+```
+
+- [ ] MetaMask (u otra wallet) en **HashKey Chain Testnet**: chainId `133`, RPC `https://testnet.hsk.xyz`, moneda `HSK`, explorador `https://testnet-explorer.hskchain.net`. El botón de wallet de `/app` ofrece cambiar de red.
+- [ ] La wallet tiene **HSK de testnet** para gas (la prueba ZK es la transacción más cara). Los USDT salen del botón Faucet.
+- [ ] El operador del backend tiene HSK: publicar proyectos y aprobar KYC lo paga él.
+- [ ] Credencial emitida en `/app/identity` **antes** de publicar la ronda donde vas a invertir; si no, la prueba revierte con `RaizNoCoincide`. Detalle en [`guia-presentacion.md` §7](guia-presentacion.md#7-preparar-la-demo).
+- [ ] Mismo navegador durante toda la demo: la credencial vive en `localStorage`.
 
 ---
 
@@ -84,7 +91,7 @@ El inspector independiente revisa y **firma el hash de la evidencia**, no un tex
 ### Paso 7: LA DEMO CLAVE - El Escenario de Fracaso
 «Cualquier sistema funciona cuando las cosas van bien. Seed 2 Deed brilla cuando las cosas van mal.
 Supongamos que el inspector va a la obra para el siguiente hito y descubre que la obra está paralizada.»
-*(En `/app/verify`, simula el rechazo de un hito o explica que un hito fue rechazado).*
+*(En `/app/verify`, simula el rechazo de un hito o explica que un hito fue rechazado. En testnet ya existe **Condominio Sacaba** en `MILESTONE_FAILED`: selecciónalo en el Panel).*
 «El hito es **RECHAZADO**. El estado del contrato cambia automáticamente a `MILESTONE_FAILED`.
 En este momento, cualquier inversionista puede ir a su panel y ejecutar `refundRemaining`.
 *(Muestra el botón de recuperar capital en el Dashboard)*
@@ -124,17 +131,36 @@ A: Las bases de datos son hackeables. Al no guardar el patrimonio de los usuario
 
 ---
 
-## 8. Cuentas de Demostración (Anvil)
+## 8. Cuentas de Demostración
 
-*Usa la llave privada para importar en MetaMask. La red debe ser `Localhost 8545` (Chain ID 31337).*
+### HashKey Chain Testnet (133)
 
-| Rol | Dirección | Llave Privada (¡SOLO DEMO!) |
+Las llaves están en `backend/.env` (gitignoreado) y **no se publican**: en una red pública, cualquiera que las vea puede vaciar su gas. Para importar una en la wallet, cópiala de ese archivo en la máquina de la demo.
+
+| Rol | Dirección | Variable en `backend/.env` |
+|---|---|---|
+| **Operador** | `0x08eDd01f987bEAF8E3F40EFe7b9851d123872B45` | `OPERATOR_PRIVATE_KEY` |
+| **Constructora** | `0x683F3E3E141d21d1e2d2C03CaaD9089740C6A108` | `DEMO_DEVELOPER_KEY` |
+| **Verificador Legal** | `0xc7f3190F716B5b3DA7151737313F7F4019B6D919` | `DEMO_LEGAL_KEY` |
+| **Supervisor Obra** | `0x76D502Db328B75C9050e0d2c3496aA7886937C16` | `DEMO_SUPERVISOR_KEY` |
+| **Inversionista A** | `0x955435b8eB9ff5D162E815C21dF67355e5c8040D` | `DEMO_INVESTOR_A_KEY` |
+| **Inversionista B** | `0xe606D194a04718b80B5969689Bd10BD881E4Dbcf` | `DEMO_INVESTOR_B_KEY` |
+| **Inversionista C** | `0x7A4167b8a2033370E4A2C6aBaa6C84eCBdddF8DB` | `DEMO_INVESTOR_C_KEY` |
+| **Inversionista D (Rechazada)** | `0x9faee6d6064774F488A1810ad5C50b761F120673` | `DEMO_INVESTOR_D_KEY` |
+
+> Las credenciales ZK de estas cuentas las emitió el `seed` y están en `backend/data/demo-credentials.json`, no en el navegador. Para invertir desde la UI, lo más simple es usar una wallet con HSK y emitir su credencial en `/app/identity`.
+
+### Anvil local (31337)
+
+*Llaves públicas de Foundry: úsalas **solo** en la red local `Localhost 8545` (Chain ID 31337).*
+
+| Rol | Dirección | Llave Privada (¡SOLO LOCAL!) |
 |---|---|---|
 | **Operador** | `0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266` | `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80` |
 | **Constructora** | `0x70997970C51812dc3A010C7d01b50e0d17dc79C8` | `0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d` |
 | **Verificador Legal** | `0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC` | `0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a` |
 | **Supervisor Obra** | `0x90F79bf6EB2c4f870365E785982E1f101E93b906` | `0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6` |
 | **Inversionista A** | `0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65` | `0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a` |
-| **Inversionista D (Rechazada)** | `0x14dC79964da2C08b23698B3D3cc7Ca32193d9955` | `0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba` |
+| **Inversionista D (Rechazada)** | `0x14dC79964da2C08b23698B3D3cc7Ca32193d9955` | `0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356` |
 
 *(La Inversionista D tiene KYC aprobado, pero el sistema ZK rechazará su inversión por no alcanzar el patrimonio mínimo de la ronda, demostrando la efectividad de las pruebas ZK).*

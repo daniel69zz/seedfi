@@ -38,20 +38,26 @@ está del otro lado; el stack de viem, no.
 ```json
 {
   "ok": true,
-  "chainId": 31337,
-  "rpcUrl": "http://127.0.0.1:8545",
+  "chainId": 133,
+  "rpcUrl": "https://testnet.hsk.xyz",
   "deployed": true,
   "contracts": {
-    "vault": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    "usdt": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-    "eligibility": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    "verifier": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    "operator": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "feeRecipient": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-    "blockNumber": 1
-  }
+    "vault": "0xf1Da8fA04bE703cC52bc8Ac269a439111FeaD838",
+    "usdt": "0x3A1dFe4C26c41c34Ae7DdbCd389b722EE5d00A6D",
+    "eligibility": "0x2820abe6f9e299CDb8Fb46Fbc1F40C4401B5d346",
+    "verifier": "0x4BC765ABB1D686d1e7bEf955095A69735F42394b",
+    "operator": "0x08eDd01f987bEAF8E3F40EFe7b9851d123872B45",
+    "feeRecipient": "0x08eDd01f987bEAF8E3F40EFe7b9851d123872B45",
+    "chainId": 133,
+    "blockNumber": 33043874
+  },
+  "ipfs": false
 }
 ```
+
+Respuesta real contra HashKey Chain Testnet. En Anvil, `chainId` es `31337` y
+`rpcUrl` es `http://127.0.0.1:8545`. `ipfs` indica si hay `PINATA_JWT`
+configurado.
 
 `deployed: false` **no es un fallo**: el backend sirve dossiers sin cadena. Lo
 que no funciona sin cadena está marcado ruta por ruta con un `503`.
@@ -168,7 +174,7 @@ Ejecuta tres transacciones: `createProject` → `grantVerifier × N` → `setPol
 
 ```json
 {
-  "vault": "0x5FC8…", "chainId": 31337, "status": "ACTIVE",
+  "vault": "0xf1Da…", "chainId": 133, "status": "ACTIVE",
   "target": "900000000000", "raised": "900000000000",
   "released": "180000000000", "locked": "720000000000",
   "frozenRemaining": "0", "totalRepaid": "0",

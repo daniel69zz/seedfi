@@ -325,8 +325,9 @@ Medidos en la máquina de desarrollo, circuito de 4.096 gates:
 | Inputs públicos | 7 × 32 bytes |
 | Verificador Solidity | 2.491 líneas · ~18,5 KB de bytecode |
 
-El verificador usa `mcopy`, que es de **Cancun**. Anvil, Avalanche C-Chain y Base
-lo soportan; una red anterior no podría desplegarlo.
+El verificador usa `mcopy`, que es de **Cancun**. Anvil, HashKey Chain (donde
+está desplegado hoy), Avalanche C-Chain y Base lo soportan; una red anterior no
+podría desplegarlo.
 
 ---
 

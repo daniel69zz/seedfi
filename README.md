@@ -14,9 +14,20 @@ condicionado y una auditoría que nadie puede reescribir.**
 
 ## Arrancar
 
+La red la eligen `backend/.env` y `frontend/.env` (plantillas en `.env.example`).
+Hoy apuntan a **HashKey Chain Testnet (133)**, donde los contratos ya están
+desplegados y la demo sembrada:
+
 ```bash
 npm install
+npm run dev:backend    # API en :4000
+npm run dev:frontend   # UI  en :5173  → http://localhost:5173/app
+```
 
+Para correr todo en local, sin conexión, con Anvil (`CHAIN_ID=31337` y
+`VITE_CHAIN_ID=31337`, o sin los `.env`):
+
+```bash
 npm run chain                    # terminal 1 — Anvil en :8545
 ```
 
@@ -66,7 +77,9 @@ node --version && forge --version    # verificar
 
 ---
 
-## Paso a paso
+## Paso a paso (Anvil local)
+
+Para HashKey Chain ver [Despliegue a testnet](#despliegue-a-testnet).
 
 ### 1 · Dependencias
 
@@ -158,11 +171,14 @@ npm run e2e               # flujo completo contra la cadena
 | Comando | Qué hace |
 |---------|----------|
 | `npm run chain` | Anvil, chainId 31337 |
-| `npm run contracts:deploy:local` | Despliega los 4 contratos |
+| `npm run contracts:deploy:local` | Despliega los 4 contratos en Anvil |
+| `npm run contracts:deploy:hashkey` | Despliega en HashKey Chain Testnet |
+| `npm run fund:demo` | Recarga HSK a las cuentas demo (idempotente) |
 | `npm run seed -- --reset` | Limpia la base y siembra la demo |
 | `npm run e2e` | Flujo completo end-to-end |
 | `npm run dev:backend` | API en `:4000` |
 | `npm run dev:frontend` | UI en `:5173` |
+| `npm run check:conn` | 27 verificaciones frontend ↔ backend ↔ cadena |
 | `npm run contracts:build` · `contracts:test` | Compilar · testear contratos |
 | `npm run circuit:test` · `circuit:build` | Testear · recompilar el circuito **y el verificador** |
 | `node scripts/sync-abi.mjs` | Regenera los ABIs tipados desde `contracts/out` |
@@ -171,8 +187,14 @@ npm run e2e               # flujo completo contra la cadena
 
 ## Cuentas de la demo
 
-Las diez determinísticas de Anvil (`backend/src/demo-accounts.ts`). Su mnemónico
-es **público**: nunca uses estas llaves en una red con valor real.
+En Anvil son las diez determinísticas (`backend/src/demo-accounts.ts`). Su
+mnemónico es **público**: nunca uses estas llaves fuera de la red local.
+
+En HashKey Chain Testnet cada rol usa una llave propia de `backend/.env`
+(`DEMO_<ROL>_KEY`), con los mismos patrimonios. Direcciones en
+[`docs/operacion.md`](docs/operacion.md#6-cuentas-de-la-demo).
+
+Cuentas de Anvil:
 
 | Rol | # | Dirección | Patrimonio declarado |
 |-----|---|-----------|----------------------|
@@ -195,14 +217,17 @@ patrimonio mínimo de la ronda — y su patrimonio no se revela en ningún lado.
 
 | Síntoma | Solución |
 |---------|----------|
-| `No hay nodo en http://127.0.0.1:8545` | `npm run chain` |
-| `No hay despliegue para la red 31337` | `npm run contracts:deploy:local` |
+| `No hay nodo en http://127.0.0.1:8545` | `npm run chain` (o revisá `RPC_URL` si apuntás a testnet) |
+| `No hay despliegue para la red <chainId>` | `npm run contracts:deploy:local` · `npm run contracts:deploy:hashkey` |
 | `no hay proyecto sembrado` | `npm run seed -- --reset` |
 | `El circuito no está compilado` *(503)* | `npm run circuit:build` |
 | Reiniciaste Anvil y el backend sirve datos viejos | La base sobrevive, la cadena no: redesplegá y `npm run seed -- --reset` |
 | `PruebaVencida()` | Tomá `now` del **bloque**, no del reloj del host |
+| La UI avisa de red equivocada | `VITE_CHAIN_ID` y `CHAIN_ID` tienen que coincidir |
+| `insufficient funds` en testnet | Recargá HSK al operador; `npm run fund:demo` para las cuentas demo |
+| `RaizNoCoincide()` tras emitir una credencial | `POST /api/issuer/publish/:onChainId` |
 
-### Reset completo
+### Reset completo (solo Anvil)
 
 ```bash
 pkill -f anvil
@@ -224,9 +249,14 @@ desplegados:
 | Ruta | Qué hace |
 |------|----------|
 | `/app` | Panel: saldos, hitos e historial, todo leído **de la cadena** |
+| `/app/opportunities` | Rondas publicadas, con dossier y estado del vault |
 | `/app/identity` | Registro, KYC y emisión de la credencial verificable |
 | `/app/invest` | Prueba ZK → aprobar USDT → invertir |
+| `/app/portfolio` | Posiciones de la wallet, leídas del vault |
+| `/app/wallet` | Saldos HSK/USDT, KYC on-chain y movimientos |
+| `/app/projects` | Avanzar un dossier por revisión y publicarlo |
 | `/app/developer/new` | Crear el dossier, validarlo, publicarlo en cadena |
+| `/app/repayments` | Calendario de repago y pago de cuotas desde la wallet |
 | `/app/verify` | Subir evidencia, firmar la attestation, transmitirla |
 
 ### Autoprueba del prover
@@ -274,7 +304,9 @@ inversionista.
 | [`docs/contratos.md`](docs/contratos.md) | Superficie de los contratos, invariantes, modelo de amenaza |
 | [`docs/zk.md`](docs/zk.md) | El circuito de elegibilidad, generación y verificación de pruebas |
 | [`docs/api.md`](docs/api.md) | Los 29 endpoints, con ejemplos reales |
-| [`docs/operacion.md`](docs/operacion.md) | Despliegue a testnet, configuración, troubleshooting |
+| [`docs/operacion.md`](docs/operacion.md) | Despliegue (Anvil y HashKey Chain), configuración, cuentas, troubleshooting |
+| [`docs/guia-presentacion.md`](docs/guia-presentacion.md) | Manual de flujos, estado en testnet, guion de demo y Q&A |
+| [`docs/demo-guide.md`](docs/demo-guide.md) | Guion de pitch y demo |
 
 ---
 
@@ -319,24 +351,40 @@ seed2deed/
 | T14 | Dashboard de estado | ✅ |
 | T15 | Datos semilla | ✅ |
 | T16 | E2E del flujo completo | ✅ |
-| T17 | Guion de pitch | ⬜ |
+| T17 | Guion de pitch | ✅ |
 | T18 | IPFS + hash on-chain *(stretch)* | ⬜ |
 | T19 | Waterfall automático *(stretch)* | ⬜ |
 
 ## Despliegue a testnet
 
-```bash
-cd contracts
-export PRIVATE_KEY=0x…
-export RPC=https://api.avax-test.network/ext/bc/C/rpc
+Desplegado hoy en **HashKey Chain Testnet (133)**:
 
-forge script script/DeployVerifier.s.sol --rpc-url $RPC --broadcast
-export VERIFIER_ADDRESS=$(python3 -c "import json;print(json.load(open('deployments/verifier-43113.json'))['verifier'])")
-forge script script/Deploy.s.sol --rpc-url $RPC --broadcast
+| Contrato | Dirección |
+|----------|-----------|
+| ProjectVault | `0xf1Da8fA04bE703cC52bc8Ac269a439111FeaD838` |
+| EligibilityRegistry | `0x2820abe6f9e299CDb8Fb46Fbc1F40C4401B5d346` |
+| HonkVerifier | `0x4BC765ABB1D686d1e7bEf955095A69735F42394b` |
+| MockUSDT | `0x3A1dFe4C26c41c34Ae7DdbCd389b722EE5d00A6D` |
+
+Desde cero:
+
+```bash
+# contracts/.env → PRIVATE_KEY=0x…   (el desplegador queda como operador)
+npm run contracts:deploy:hashkey
+
+cp backend/.env.example backend/.env     # OPERATOR_PRIVATE_KEY = la misma llave, + DEMO_*_KEY
+cp frontend/.env.example frontend/.env
+npm run fund:demo
+npm run seed -- --reset
+npm run e2e
 ```
 
-Redes soportadas: Anvil `31337` · Avalanche Fuji `43113` · Base Sepolia `84532`
-· Ethereum Sepolia `11155111`.
+Las cuentas demo **no** pueden ser las de Anvil: en una red pública los bots
+vacían en segundos el gas que se les manda.
+
+Redes configuradas: Anvil `31337` · **HashKey Chain Testnet `133`** · HashKey
+Chain `177` · Avalanche Fuji `43113` *(legacy)* · Base Sepolia `84532` ·
+Ethereum Sepolia `11155111`.
 
 Detalle completo, incluido **por qué el despliegue son dos pasos**, en
 [`docs/operacion.md`](docs/operacion.md#4-despliegue).

@@ -8,6 +8,7 @@
 | [`zk.md`](zk.md) | El circuito, generación y verificación de pruebas | ZK, frontend |
 | [`api.md`](api.md) | Los 29 endpoints, con ejemplos reales | Frontend |
 | [`operacion.md`](operacion.md) | Despliegue, demo, troubleshooting | Todos |
+| [`guia-presentacion.md`](guia-presentacion.md) | Manual de flujos, estado en HashKey Testnet, guion de demo y Q&A | Quien presenta |
 
 ---
 
@@ -41,7 +42,7 @@ tiene.
    Tocar el circuito          →  zk.md  ·  contratos.md § EligibilityRegistry
    Entender el producto       →  arquitectura.md  ·  ../README.md
    Levantar la demo           →  operacion.md §2
-   Preparar el pitch          →  arquitectura.md §6-7  ·  operacion.md §7
+   Preparar el pitch          →  guia-presentacion.md  ·  arquitectura.md §6-7
 ```
 
 ---

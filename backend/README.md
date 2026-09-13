@@ -10,8 +10,18 @@ attestations e indexado de la cadena.
 
 ## Arrancar
 
+La red la define `backend/.env` (plantilla: `.env.example`). Hoy apunta a
+**HashKey Chain Testnet (133)**, con los contratos desplegados y la base
+sembrada:
+
 ```bash
 npm install                      # desde la raíz del monorepo
+npm run dev:backend              # :4000
+```
+
+En local con Anvil (`CHAIN_ID=31337`, o sin `.env`):
+
+```bash
 npm run chain                    # Anvil en :8545
 npm run contracts:deploy:local
 npm run seed -- --reset
@@ -29,11 +39,12 @@ toca contratos devuelve un `503` con un mensaje accionable en vez de un
 ### Sin paso de compilación en desarrollo
 
 ```json
-"dev":  "node --watch --experimental-strip-types src/index.ts"
+"dev":  "node --env-file-if-exists=.env --watch --experimental-strip-types src/index.ts"
 ```
 
 Node 20+ borra los tipos y ejecuta el TypeScript directo. No hay `tsc` en el
-loop de desarrollo.
+loop de desarrollo. Todos los scripts (`dev`, `seed`, `e2e`, `fund`) cargan
+`backend/.env` si existe.
 
 > ⚠️ **El type-stripping tiene límites.** No soporta *parameter properties*
 > (`constructor(readonly x: string)`), `enum`, ni `namespace`. Si escribís alguno
@@ -53,19 +64,27 @@ src/
 ├── index.ts              servidor, CORS, traductor de errores → HTTP
 ├── config.ts             env + lectura de deployments/<chainId>.json
 ├── db.ts                 esquema SQL y conexión
-├── chain.ts              clientes viem, EIP-712, lectura e indexado de eventos
-├── demo-accounts.ts      las diez cuentas de Anvil
+├── chain.ts              clientes viem, EIP-712, confirmaciones, lectura de eventos
+├── demo-accounts.ts      cuentas demo: Anvil en 31337, DEMO_*_KEY en otras redes
 ├── seed.ts               siembra la demo completa           (T15)
 ├── e2e.ts                flujo end-to-end contra la cadena  (T16)
+├── fund-demo.ts          recarga gas nativo a las cuentas demo (redes públicas)
 ├── routes/
 │   ├── projects.ts       dossier, revisión, publicación, evidencia
 │   ├── investors.ts      inversionistas, KYC, credenciales, circuito
-│   └── verification.ts   firma de hitos y transmisión       (T10)
+│   ├── verification.ts   firma de hitos y transmisión       (T10)
+│   └── repayment.ts      calendario de repago y confirmación de cuotas
 └── store/
     ├── projects.ts       CRUD, máquina de estados, evidencia
     ├── investors.ts      árbol de credenciales del emisor
     ├── attestations.ts   firma EIP-712
-    └── indexer.ts        sincronización con la cadena
+    ├── indexer.ts        sincronización con la cadena
+    ├── waterfall.ts      cálculo de cuotas de repago
+    └── ipfs.ts           anclaje opcional de evidencia (Pinata)
+
+scripts/
+├── connectivity-check.mjs   npm run check:conn (raíz) — 27 verificaciones por el proxy de Vite
+└── kyc-check.mjs            alta de inversionista de punta a punta
 ```
 
 ### Dependencias entre capas
@@ -285,23 +304,47 @@ Forzar una pasada: `POST /api/sync`
 
 ---
 
+## Redes públicas
+
+Anvil perdona cosas que un nodo público no. Lo que cambia fuera de 31337:
+
+| Diferencia | Cómo lo resuelve el backend |
+|------------|-----------------------------|
+| El RPC **no firma** (`unknown account`) | Toda escritura firma localmente con una cuenta de viem (`privateKeyToAccount`) |
+| Nonces repetidos en tx seguidas | `nonceManager` de viem: el nonce se lleva en memoria, no se le pregunta al nodo |
+| Lecturas desactualizadas: el RPC de HashKey está detrás de Cloudflare y otro nodo puede no haber visto la tx | `CONFIRMATIONS = 2` fuera de Anvil (1 en Anvil) |
+| La cadena persiste entre corridas | `seed` y `e2e` buscan un `onChainId` libre en el vault |
+| Las cuentas nacen sin gas | `npm run fund:demo` recarga cada rol hasta un piso |
+| Las llaves de Anvil son públicas | `demo-accounts.ts` exige `DEMO_<ROL>_KEY` y avisa si falta alguna |
+
+---
+
 ## Configuración
 
-| Variable | Default |
-|----------|---------|
-| `PORT` | `4000` |
-| `HOST` | `127.0.0.1` |
-| `CHAIN_ID` | `31337` |
-| `RPC_URL` | `http://127.0.0.1:8545` |
-| `DB_PATH` | `backend/data/seed2deed.db` |
-| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` |
-| `LOG_LEVEL` | `info` |
-| `OPERATOR_PRIVATE_KEY` | cuenta 0 de Anvil |
+Se lee de `backend/.env`. Plantilla con los valores de HashKey Testnet en
+`backend/.env.example`.
+
+| Variable | Default | HashKey Testnet |
+|----------|---------|-----------------|
+| `PORT` | `4000` | |
+| `HOST` | `127.0.0.1` | |
+| `CHAIN_ID` | `31337` | `133` |
+| `RPC_URL` | `http://127.0.0.1:8545` | `https://testnet.hsk.xyz` |
+| `DB_PATH` | `backend/data/seed2deed.db` | |
+| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | |
+| `LOG_LEVEL` | `info` | |
+| `OPERATOR_PRIVATE_KEY` | cuenta 0 de Anvil | La llave que desplegó los contratos |
+| `DEMO_DEVELOPER_KEY`, `DEMO_LEGAL_KEY`, `DEMO_SUPERVISOR_KEY`, `DEMO_INVESTOR_{A,B,C,D}_KEY` | llaves de Anvil | Llaves propias (`cast wallet new`) |
+| `PINATA_JWT` | — | Opcional: sin él, anclar en IPFS devuelve `null` sin fallar |
+
+`CHAIN_ID` tiene que coincidir con `VITE_CHAIN_ID` del frontend, y tiene que
+existir `contracts/deployments/<CHAIN_ID>.json`.
 
 ### ⚠️ La llave del operador
 
 En local es la cuenta 0 de Anvil, cuyo mnemónico es **público y está en la
-documentación de Foundry**.
+documentación de Foundry**. En testnet es la llave del desplegador: solo esa
+puede crear proyectos, dar KYC y fijar políticas.
 
 En producción esto **no** es una variable de entorno con una llave adentro: es
 una firma delegada a un KMS o a una multisig. Un backend que puede firmar como
@@ -332,7 +375,11 @@ audita por separado: evidencias, attestations, credenciales, eventos.
 ```bash
 npm run e2e                              # flujo completo contra la cadena
 npx tsc -p tsconfig.json --noEmit        # tipos
+npm run check:conn                       # desde la raíz, con backend y frontend corriendo
 ```
+
+En testnet el `e2e` consume HSK del operador (~0,015 por corrida) y crea
+proyectos nuevos en el vault: no correrlo por reflejo.
 
 El `e2e` es hoy la prueba de integración del backend: ejercita el store, la firma
 de attestations, el árbol de credenciales y el indexador contra contratos reales.
