@@ -89,6 +89,14 @@ tmp/
 !/frontend/README.md
 !/contracts/README.md
 
+# Ignorar pitch, prompts y diapositivas/slides
+docs/pitch-5min.md
+docs/*pitch*
+docs/*prompt*
+docs/*slide*
+*slides*
+*prompt-slides*
+
 # ── PDFs ─────────────────────────────────────────────────────
 # Ningún PDF se versiona: los reglamentos y bounties del evento son
 # material de referencia ajeno, no del proyecto.

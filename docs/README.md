@@ -9,6 +9,7 @@
 | [`api.md`](api.md) | Los 29 endpoints, con ejemplos reales | Frontend |
 | [`operacion.md`](operacion.md) | Despliegue, demo, troubleshooting | Todos |
 | [`guia-presentacion.md`](guia-presentacion.md) | Manual de flujos, estado en HashKey Testnet, guion de demo y Q&A | Quien presenta |
+| [`pitch-5min.md`](pitch-5min.md) | Guion de pitch deck de 5 minutos: problema, contexto boliviano, solución | Quien presenta |
 
 ---
 
