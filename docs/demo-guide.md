@@ -1,4 +1,4 @@
-# Guion de Pitch y Demo: Seed 2 Deed
+# Guion de Pitch y Demo: SeedFi
 
 **Tiempo estimado:** 10-12 minutos
 **Audiencia:** Jueces de hackathon, inversionistas, desarrolladores.
@@ -12,13 +12,13 @@ Si eres inversionista, entregas tu capital a ciegas y cruzas los dedos para que 
 Si eres un desarrollador honesto, no puedes acceder a capital internacional porque no hay forma de demostrar confianza a distancia.
 Y los intermediarios actuales extraen valor sin asumir responsabilidad cuando las cosas salen mal.
 
-Seed 2 Deed no es otra plataforma de crowdfunding. Es **infraestructura de financiamiento programable** que resuelve la confianza a través de código.»
+SeedFi no es otra plataforma de crowdfunding. Es **infraestructura de financiamiento programable** que resuelve la confianza a través de código.»
 
 ---
 
 ## 2. La solución (1 minuto)
 
-«Presentamos Seed 2 Deed: un **escrow programable con cumplimiento regulatorio de conocimiento cero (ZK)**.
+«Presentamos SeedFi: un **escrow programable con cumplimiento regulatorio de conocimiento cero (ZK)**.
 
 Nuestro sistema ofrece tres garantías inmutables escritas en la blockchain:
 1. **El dinero solo se mueve por tramos:** Se libera contra hitos de obra verificados por terceros independientes.
@@ -89,7 +89,7 @@ El inspector independiente revisa y **firma el hash de la evidencia**, no un tex
 «En el panel vemos la realidad on-chain. Vemos cuánto está en el escrow y cuánto se ha liberado. Todo auditable.»
 
 ### Paso 7: LA DEMO CLAVE - El Escenario de Fracaso
-«Cualquier sistema funciona cuando las cosas van bien. Seed 2 Deed brilla cuando las cosas van mal.
+«Cualquier sistema funciona cuando las cosas van bien. SeedFi brilla cuando las cosas van mal.
 Supongamos que el inspector va a la obra para el siguiente hito y descubre que la obra está paralizada.»
 *(En `/app/verify`, simula el rechazo de un hito o explica que un hito fue rechazado. En testnet ya existe **Condominio Sacaba** en `MILESTONE_FAILED`: selecciónalo en el Panel).*
 «El hito es **RECHAZADO**. El estado del contrato cambia automáticamente a `MILESTONE_FAILED`.
@@ -112,7 +112,7 @@ Al presionarlo, el 100% del capital que no se había liberado vuelve a su billet
 
 ## 6. Cierre (30 segundos)
 
-«Seed 2 Deed no es un experimento DeFi para especular con tokens. Es **infraestructura financiera para la economía real**.
+«SeedFi no es un experimento DeFi para especular con tokens. Es **infraestructura financiera para la economía real**.
 Alineamos los incentivos: la plataforma no cobra comisión de éxito hasta que el inversionista recupera su capital. Protegemos al inversor y abrimos las puertas al financiamiento global para desarrolladores honestos en LATAM.
 Gracias.»
 

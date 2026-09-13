@@ -1,4 +1,4 @@
-# Seed 2 Deed — Esquemas de datos
+# SeedFi — Esquemas de datos
 
 > Documento generado desde el código, no escrito aparte. Cada tabla de acá abajo
 > lleva la ruta del archivo del que salió. Si algo no coincide, **manda el código**.

@@ -1,4 +1,4 @@
-# Guía de funcionamiento para presentar Seed 2 Deed
+# Guía de funcionamiento para presentar SeedFi
 
 Manual para entender los flujos de punta a punta y presentarlos sin
 equivocarse. Refleja el estado del código y del despliegue en **HashKey Chain
@@ -52,7 +52,7 @@ desembolso si el proyecto se cae.
 | Actor | Qué hace | En la demo |
 |-------|----------|-----------|
 | **Constructora** (desarrollador) | Presenta el proyecto, sube evidencia, recibe los tramos, repaga | Wallet de la constructora |
-| **Operador** (Seed 2 Deed) | Cura el dossier, aprueba KYC, publica en cadena, cobra comisiones topeadas | Llave del backend (`OPERATOR_PRIVATE_KEY`) |
+| **Operador** (SeedFi) | Cura el dossier, aprueba KYC, publica en cadena, cobra comisiones topeadas | Llave del backend (`OPERATOR_PRIVATE_KEY`) |
 | **Inversionista** | Prueba elegibilidad en ZK, invierte USDT, cobra | Wallet del navegador |
 | **Verificador** (LEGAL o SUPERVISOR) | Revisa la evidencia y firma aprobación o rechazo del hito | Llave pegada en `/app/verify` (solo demo) |
 | **SPV** | Vehículo legal con patrimonio separado | Solo datos en el dossier |
@@ -310,7 +310,7 @@ Protecciones que se pueden mencionar:
 - En la demo, la llave del verificador se pega en un campo. En producción la
   firma sale de la wallet del verificador. **Decirlo antes de que lo pregunten.**
 
-**Qué decir:** «Si Seed 2 Deed desaparece mañana, una firma ya emitida sigue
+**Qué decir:** «Si SeedFi desaparece mañana, una firma ya emitida sigue
 liberando su tramo. El backend es una comodidad, no una llave.»
 
 ### Flujo 5 · El freno: hito rechazado o vencido

@@ -1,4 +1,4 @@
-# Seed 2 Deed
+# SeedFi
 
 **Infraestructura de financiamiento programable para proyectos inmobiliarios.**
 
@@ -276,7 +276,7 @@ la prueba corre en un worker y no en el hilo de UI.
 
 ## Qué lo diferencia
 
-Seed 2 Deed **es** un intermediario: cura los proyectos, corre el KYC/KYB y cobra
+SeedFi **es** un intermediario: cura los proyectos, corre el KYC/KYB y cobra
 por hacerlo. No lo disimula. Lo que cambia son cinco puertas cerradas **en
 código**, no en los términos y condiciones:
 
@@ -313,7 +313,7 @@ inversionista.
 ## Estructura
 
 ```text
-seed2deed/
+seedfi/
 ├── contracts/          Solidity + Foundry · 30 tests
 │   ├── src/            ProjectVault · EligibilityRegistry · MockUSDT
 │   ├── src/verifiers/  UltraHonk generado desde el circuito

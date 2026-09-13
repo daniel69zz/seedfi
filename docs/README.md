@@ -1,4 +1,4 @@
-# Documentación — Seed 2 Deed
+# Documentación — SeedFi
 
 | Documento | Qué contiene | Para quién |
 |-----------|--------------|------------|

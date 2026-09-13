@@ -1,8 +1,8 @@
 {
-  "name": "seed2deed",
+  "name": "seedfi",
   "private": true,
   "version": "1.0.0",
-  "description": "Seed 2 Deed — infraestructura de financiamiento programable para proyectos inmobiliarios",
+  "description": "SeedFi — infraestructura de financiamiento programable para proyectos inmobiliarios",
   "workspaces": [
     "packages/*"
   ],

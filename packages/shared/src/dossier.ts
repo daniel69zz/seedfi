@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-//  Seed 2 Deed — esquema de datos del Project Dossier   (backlog T1)
+//  SeedFi — esquema de datos del Project Dossier   (backlog T1)
 // ---------------------------------------------------------------------------
 //
 //  El dossier es el expediente del proyecto: lo que un comité de crédito

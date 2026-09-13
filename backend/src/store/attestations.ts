@@ -8,7 +8,7 @@
 //  El verificador firma una attestation EIP-712; queda guardada acá. Mandarla al
 //  contrato puede hacerlo cualquiera —el desarrollador, un inversionista, un
 //  script—: `releaseMilestone` autoriza por la FIRMA, no por el remitente. Si
-//  Seed 2 Deed desaparece mañana, una attestation ya firmada sigue liberando su
+//  SeedFi desaparece mañana, una attestation ya firmada sigue liberando su
 //  tramo. Este backend es una comodidad, no una llave.
 
 import { randomBytes } from 'node:crypto';

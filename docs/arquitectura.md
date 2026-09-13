@@ -8,7 +8,7 @@ sobre confianza personal: el inversionista no puede verificar el avance, no sabe
 en qué se gastó su plata, y si el proyecto se cae no tiene mecanismo para frenar
 el desembolso de lo que todavía no salió.
 
-Seed 2 Deed no inventa confianza. **Reemplaza los tramos donde la confianza era
+SeedFi no inventa confianza. **Reemplaza los tramos donde la confianza era
 la única garantía por mecanismos que no requieren confiar.**
 
 ---
@@ -19,7 +19,7 @@ la única garantía por mecanismos que no requieren confiar.**
 flowchart TB
     D["🏗️ <b>Desarrollador</b><br/>necesita capital<br/>presenta el dossier"]
     I["💰 <b>Inversionista</b><br/>aporta capital<br/>prueba elegibilidad en ZK"]
-    P["⚙️ <b>Operador — Seed 2 Deed</b><br/>cura, corre KYC/KYB, cobra<br/><i>intermediario declarado</i>"]
+    P["⚙️ <b>Operador — SeedFi</b><br/>cura, corre KYC/KYB, cobra<br/><i>intermediario declarado</i>"]
     V["🔍 <b>Verificador</b><br/>acredita hitos con su firma<br/><i>nunca es el operador</i>"]
     S["📄 <b>SPV</b><br/>vehículo legal del proyecto<br/>patrimonio separado"]
 
@@ -194,7 +194,7 @@ firmó. Con él, cambiar una foto del informe invalida la acreditación entera.
 `releaseMilestone` autoriza por la **firma**, no por el remitente. Cualquiera
 puede mandar la transacción: el desarrollador, un inversionista, un script.
 
-> Si Seed 2 Deed desaparece mañana, una attestation ya firmada sigue liberando
+> Si SeedFi desaparece mañana, una attestation ya firmada sigue liberando
 > su tramo. **El backend es una comodidad, no una llave.**
 
 En el `e2e`, las liberaciones las envía el desarrollador, no el operador.

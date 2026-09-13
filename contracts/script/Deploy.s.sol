@@ -7,7 +7,7 @@ import {ProjectVault} from "../src/ProjectVault.sol";
 import {EligibilityRegistry} from "../src/EligibilityRegistry.sol";
 import {MockUSDT} from "../src/mocks/MockUSDT.sol";
 
-/// @title  Deploy — despliegue completo de Seed 2 Deed   (backlog T11)
+/// @title  Deploy — despliegue completo de SeedFi   (backlog T11)
 ///
 /// @notice Orden de despliegue y por qué es ese:
 ///

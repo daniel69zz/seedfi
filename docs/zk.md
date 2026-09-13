@@ -2,7 +2,7 @@
 
 ## 1. La tensión que resuelve
 
-Seed 2 Deed es un intermediario y tiene que responder por quién entra a una
+SeedFi es un intermediario y tiene que responder por quién entra a una
 ronda: jurisdicción admitida, patrimonio suficiente, credencial KYC vigente y no
 revocada.
 

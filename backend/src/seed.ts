@@ -211,7 +211,7 @@ async function main() {
   // --------------------------------------------------- 2. ciclo de curaduría
   transition(project.id, 'SUBMITTED');
   transition(project.id, 'UNDER_REVIEW');
-  addReviewNote(project.id, 'comite@seed2deed.bo', 'UNDER_REVIEW',
+  addReviewNote(project.id, 'comite@seedfi.bo', 'UNDER_REVIEW',
     'Título y certificado de gravámenes verificados en Derechos Reales. La hipoteca de primer rango del BMSC queda declarada en el dossier: cobra antes que los inversionistas.');
 
   setPlatformFields(project.id, {
@@ -221,12 +221,12 @@ async function main() {
       rationale: 'Terreno pagado y escriturado al SPV, desarrollador con 6 proyectos entregados y preventas por 310k. '
         + 'Descuenta por la hipoteca de primer rango y por la concentración del repago en la venta de unidades.',
       assessedAt: new Date().toISOString(),
-      assessedBy: 'comite@seed2deed.bo',
+      assessedBy: 'comite@seedfi.bo',
     },
   });
 
   transition(project.id, 'APPROVED');
-  addReviewNote(project.id, 'comite@seed2deed.bo', 'APPROVED',
+  addReviewNote(project.id, 'comite@seedfi.bo', 'APPROVED',
     'Aprobado con calificación A. Originación 2 %, éxito 15 %, ambas por debajo del tope inmutable del contrato.');
   console.log('Due diligence completada: APPROVED, riesgo A.');
 

@@ -1,4 +1,4 @@
-# Backend — Seed 2 Deed
+# Backend — SeedFi
 
 API del expediente de proyectos, emisión de credenciales KYC, firma de
 attestations e indexado de la cadena.

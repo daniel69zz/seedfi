@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-//  Seed 2 Deed — servidor
+//  SeedFi — servidor
 // ---------------------------------------------------------------------------
 import Fastify from 'fastify';
 import cors from '@fastify/cors';

@@ -123,7 +123,7 @@ referenciado en cadena, y el estado se mueve por transiciones.
 { "scores": { "legal": 82, "financial": 71, "developer": 78,
               "market": 66, "property": 74, "construction": 70, "liquidity": 55 },
   "rationale": "Terreno pagado y escriturado al SPV…",
-  "assessedBy": "comite@seed2deed.bo" }
+  "assessedBy": "comite@seedfi.bo" }
 ```
 
 Calcula `total` ponderado y `grade`. Escribe aunque el dossier esté congelado:
@@ -145,7 +145,7 @@ Calcula `total` ponderado y `grade`. Escribe aunque el dossier esté congelado:
 ### `POST /api/projects/:id/review`
 
 ```json
-{ "decision": "APPROVED", "note": "Aprobado con calificación A…", "author": "comite@seed2deed.bo" }
+{ "decision": "APPROVED", "note": "Aprobado con calificación A…", "author": "comite@seedfi.bo" }
 ```
 
 `decision`: `UNDER_REVIEW | CHANGES_REQUESTED | APPROVED | REJECTED`

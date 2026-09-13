@@ -118,7 +118,7 @@ async function main() {
   const project = getProject(creds.projectId);
   assert.ok(project, 'no hay proyecto sembrado: corré `npm run seed -- --reset`');
 
-  console.log(`\nSeed 2 Deed — end-to-end sobre ${chain.name} (${config.rpcUrl})`);
+  console.log(`\nSeedFi — end-to-end sobre ${chain.name} (${config.rpcUrl})`);
   console.log(`Proyecto: ${project.name} · meta ${fmt(BigInt(project.terms.target))} USDT`);
 
   await escenarioFeliz(project, creds);

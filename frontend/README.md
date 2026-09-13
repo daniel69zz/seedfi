@@ -1,4 +1,4 @@
-# Frontend — Seed 2 Deed
+# Frontend — SeedFi
 
 React 19 · Vite · wagmi + viem · Feature-Sliced Design
 
