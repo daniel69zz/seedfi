@@ -1,0 +1,10 @@
+{
+  "blockNumber": 33043874,
+  "chainId": 133,
+  "eligibility": "0x2820abe6f9e299CDb8Fb46Fbc1F40C4401B5d346",
+  "feeRecipient": "0x08eDd01f987bEAF8E3F40EFe7b9851d123872B45",
+  "operator": "0x08eDd01f987bEAF8E3F40EFe7b9851d123872B45",
+  "usdt": "0x3A1dFe4C26c41c34Ae7DdbCd389b722EE5d00A6D",
+  "vault": "0xf1Da8fA04bE703cC52bc8Ac269a439111FeaD838",
+  "verifier": "0x4BC765ABB1D686d1e7bEf955095A69735F42394b"
+}
